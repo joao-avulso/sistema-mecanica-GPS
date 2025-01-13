@@ -24,14 +24,17 @@ public class StageReadyEventListener implements ApplicationListener<StageReadyEv
     @Override
     public void onApplicationEvent(StageReadyEvent event) {
         var stage = event.getStage();
+
         try {
             scene = new Scene(loadFXML("main"), 640, 480);
         } catch (IOException e) {
             System.out.println("Erro ao carregar o arquivo FXML: " + e.getMessage());
             e.printStackTrace();
         }
+
         stage.setScene(scene);
-        stage.setTitle("Sistema para Oficina Mecanica");
+        stage.setTitle(windowTitle);
+        stage.setMaximized(true);
         stage.show();
     }
 
