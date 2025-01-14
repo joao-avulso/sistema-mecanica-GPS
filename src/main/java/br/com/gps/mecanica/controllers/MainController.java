@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.MenuSelection;
 import br.com.gps.mecanica.models.VeiculoModel;
+import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.services.VeiculoService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -12,16 +13,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class MainController {
 
     private MenuSelection selection;
-
     private Object selected;
-
-    private TableView mainTable;
 
     @FXML
     private VBox mainVBox;
@@ -58,10 +58,10 @@ public class MainController {
 
         selection = MenuSelection.VEICULO;
 
-        VeiculoService veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
+        VeiculoService veiculoService = new VeiculoService(MecanicaFxMainApplication.getBean(VeiculoRepository.class));
 
         mainVBox.getChildren().clear();
-        mainTable = new TableView<VeiculoModel>();
+        TableView<VeiculoModel> mainTable = new TableView<VeiculoModel>();
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         for (Field field : VeiculoModel.class.getDeclaredFields()) {
@@ -99,9 +99,15 @@ public class MainController {
             }
         });
 
-        Button deleButton = new Button("Deletar");
+        BorderPane buttonBorderPane = new BorderPane();
+        buttonBorderPane.prefWidth(Region.USE_COMPUTED_SIZE);
+        buttonBorderPane.prefHeight(Region.USE_COMPUTED_SIZE);
+        buttonBorderPane.paddingProperty().setValue(new javafx.geometry.Insets(8, 8, 8, 8));
 
-        deleButton.setOnAction(e -> {
+        Button deleteButton = new Button("Deletar");
+        deleteButton.setStyle("-fx-background-color:rgb(219, 52, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+
+        deleteButton.setOnAction(e -> {
             if (selected != null) {
                 veiculoService.delete(((VeiculoModel)selected).getId());
                 mainTable.getItems().remove(selected);
@@ -109,7 +115,9 @@ public class MainController {
         });
 
         mainVBox.getChildren().add(mainTable);
-        mainVBox.getChildren().add(deleButton);
+        VBox.setVgrow(mainTable, Priority.ALWAYS);
+        buttonBorderPane.setRight(deleteButton);
+        mainVBox.getChildren().add(buttonBorderPane);
     }
 }
 
