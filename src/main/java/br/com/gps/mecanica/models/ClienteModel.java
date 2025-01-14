@@ -1,33 +1,43 @@
 package br.com.gps.mecanica.models;
 
-//import org.antlr.v4.runtime.misc.NotNull;
-
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-//import jakarta.persistence.CascadeType;
+import java.io.Serial;
+//import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+//import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-//import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios")
 public class ClienteModel {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true, nullable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Serial
+    private static final long serialVersionUID = 1L;
 
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(nullable = false)
     private String nome;
+
+    @Column(unique = true, nullable = false)
     private String cpf;
+
+    @Column(unique = true, nullable = false)
     private String email;
+    
     private String cep;
     private String rua;
     private String bairro;
@@ -36,15 +46,17 @@ public class ClienteModel {
     private String numero;
     private String complemento;
     private String referencia;
-    private List<String> telefones;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    private List<TelefoneModel> telefones;
     
-    //@OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
-    //private List<VeiculoModel> veiculos;
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    private List<VeiculoModel> veiculos;
 
     public ClienteModel(){}
 
     public ClienteModel(UUID id, String nome, String cpf, String email, String cep, String rua, String bairro,
-    String cidade, String estado, String numero, String complemento, String referencia, List<String> telefones) {
+    String cidade, String estado, String numero, String complemento, String referencia, List<TelefoneModel> telefones,  List<VeiculoModel> veiculos) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -58,6 +70,7 @@ public class ClienteModel {
         this.complemento = complemento;
         this.referencia = referencia;
         this.telefones = telefones;
+        this.veiculos = veiculos;
     }
 
     public UUID getId() {
@@ -156,15 +169,20 @@ public class ClienteModel {
         this.referencia = referencia;
     }
 
-    public List<String> getTelefones() {
+    public List<TelefoneModel> getTelefones() {
         return telefones;
     }
 
-    public void setTelefones(List<String> telefones) {
+    public void setTelefones(List<TelefoneModel> telefones) {
         this.telefones = telefones;
     }
 
-    //GET CARROS
-    //SET CARROS
+    public List<VeiculoModel> getVeiculos() {
+        return veiculos;
+    }
+
+    public void setVeiculos(List<VeiculoModel> veiculos) {
+        this.veiculos = veiculos;
+    }
 
 }
