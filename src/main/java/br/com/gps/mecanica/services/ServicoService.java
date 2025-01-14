@@ -6,15 +6,15 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.ServicoModel;
-import br.com.gps.mecanica.repositories.ServicosRepository;
+import br.com.gps.mecanica.repositories.ServicoRepository;
 import br.com.gps.mecanica.utils.Utils;
 
 @Service
 public class ServicoService {
 
-    final ServicosRepository servicoRepository;
+    final ServicoRepository servicoRepository;
 
-    public ServicoService(ServicosRepository servicoRepository) {
+    public ServicoService(ServicoRepository servicoRepository) {
         this.servicoRepository = servicoRepository;
     }
 
