@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TB_SERVICOS")
+@Table(name = "servicos")
 public class ServicoModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,8 +26,9 @@ public class ServicoModel implements Serializable {
     public ServicoModel() {
     }
 
-    public ServicoModel(String nome, Double valor) {
+    public ServicoModel(String nome, String descricao, Double valor) {
         this.nome = nome;
+        this.descricao = descricao;
         this.valor = valor;
     }
 
@@ -65,6 +66,6 @@ public class ServicoModel implements Serializable {
 
     @Override
     public String toString() {
-        return "ServicoModel [id=" + id + ", nome=" + nome + ", valor=" + valor + "]";
+        return "ServicoModel [id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", valor=" + valor + "]";
     }
 }

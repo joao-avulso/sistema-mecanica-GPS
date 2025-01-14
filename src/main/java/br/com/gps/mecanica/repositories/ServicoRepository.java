@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.gps.mecanica.models.ServicoModel;
 
-public interface ServicosRepository extends JpaRepository<ServicoModel, UUID> {
+public interface ServicoRepository extends JpaRepository<ServicoModel, UUID> {
 
     List<ServicoModel> findByNome(String nome);
 
