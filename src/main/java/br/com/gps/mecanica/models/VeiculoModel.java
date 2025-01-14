@@ -27,6 +27,9 @@ public class VeiculoModel implements Serializable {
     private Integer ano;
     private Cor cor;
 
+    public VeiculoModel() {
+    }
+
     public VeiculoModel(UUID idCliente, String placa, String modelo, String marca, Integer ano, Cor cor) {
         this.idCliente = idCliente;
         this.placa = placa;
@@ -90,5 +93,11 @@ public class VeiculoModel implements Serializable {
     
     public void setCor(Cor cor) {
         this.cor = cor;
+    }
+
+    @Override
+    public String toString() {
+        return "VeiculoModel [id=" + id + ", idCliente=" + idCliente + ", placa=" + placa + ", modelo=" + modelo
+                + ", marca=" + marca + ", ano=" + ano + ", cor=" + cor + "]";
     }
 }
