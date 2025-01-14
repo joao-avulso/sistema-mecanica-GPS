@@ -11,6 +11,8 @@ public interface VeiculoService {
 
     VeiculoModel get(UUID id);
 
+    VeiculoModel getByPlaca(String placa);
+
     List<VeiculoModel> getByModelo(String modelo);
 
     List<VeiculoModel> getByMarca(String marca);
