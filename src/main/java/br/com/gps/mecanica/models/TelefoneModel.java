@@ -1,5 +1,7 @@
 package br.com.gps.mecanica.models;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -13,7 +15,10 @@ import jakarta.persistence.Entity;
 
 @Entity
 @Table(name = "telefones")
-public class TelefoneModel {
+public class TelefoneModel implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,8 +35,7 @@ public class TelefoneModel {
 
     public TelefoneModel(){}
 
-    public TelefoneModel(UUID id, String numero, String tipo, ClienteModel cliente){
-        this.id = id;
+    public TelefoneModel(String numero, String tipo, ClienteModel cliente){
         this.numero = numero;
         this.tipo = tipo;
         this.cliente = cliente;
@@ -67,5 +71,10 @@ public class TelefoneModel {
 
     public void setCliente(ClienteModel cliente) {
         this.cliente = cliente;
+    }
+
+    @Override
+    public String toString() {
+        return "TelefoneModel [id=" + id + ", numero=" + numero + ", tipo=" + tipo + ", cliente=" + cliente + "]";
     }
 }

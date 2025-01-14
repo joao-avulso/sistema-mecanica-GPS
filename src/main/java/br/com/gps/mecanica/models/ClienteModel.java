@@ -4,26 +4,23 @@ import java.util.List;
 import java.util.UUID;
 
 import java.io.Serial;
-//import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-//import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios")
-public class ClienteModel {
+public class ClienteModel implements Serializable {
     
     @Serial
     private static final long serialVersionUID = 1L;
-
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -55,9 +52,8 @@ public class ClienteModel {
 
     public ClienteModel(){}
 
-    public ClienteModel(UUID id, String nome, String cpf, String email, String cep, String rua, String bairro,
+    public ClienteModel(String nome, String cpf, String email, String cep, String rua, String bairro,
     String cidade, String estado, String numero, String complemento, String referencia, List<TelefoneModel> telefones,  List<VeiculoModel> veiculos) {
-        this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
@@ -185,4 +181,11 @@ public class ClienteModel {
         this.veiculos = veiculos;
     }
 
+    @Override
+    public String toString() {
+        return "ClienteModel [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", cep=" + cep
+                + ", rua=" + rua + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado + ", numero="
+                + numero + ", complemento=" + complemento + ", referencia=" + referencia + ", telefones=" + telefones
+                + ", veiculos=" + veiculos + "]";
+    }
 }

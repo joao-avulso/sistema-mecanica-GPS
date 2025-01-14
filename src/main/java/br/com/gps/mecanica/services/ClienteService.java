@@ -2,9 +2,7 @@ package br.com.gps.mecanica.services;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.ClienteModel;
@@ -13,22 +11,25 @@ import br.com.gps.mecanica.repositories.ClienteRepository;
 @Service
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
+
+    public ClienteService(ClienteRepository clienteRepository){
+        this.clienteRepository = clienteRepository;
+    }
     
     public List<ClienteModel> get(){
         return clienteRepository.findAll();
     };
 
-    public Optional<ClienteModel> get(UUID id){
-        return clienteRepository.findById(id);
+    public ClienteModel get(UUID id){
+        return clienteRepository.findById(id).get();
     };
     
-    public Optional<ClienteModel> get(String cpf){
+    public ClienteModel get(String cpf){
         return clienteRepository.findByCpf(cpf);
     };
     
-    public Optional<ClienteModel> getByEmail(String email){
+    public ClienteModel getByEmail(String email){
         return clienteRepository.findByEmail(email);
     };
     
@@ -49,6 +50,7 @@ public class ClienteService {
     }
    
     public void delete(UUID id){
+        // Deletar veiculos e telefones antes de deletar o cliente
         clienteRepository.deleteById(id);
     }
 
