@@ -27,6 +27,15 @@ public class VeiculoModel implements Serializable {
     private Integer ano;
     private Cor cor;
 
+    public VeiculoModel(UUID idCliente, String placa, String modelo, String marca, Integer ano, Cor cor) {
+        this.idCliente = idCliente;
+        this.placa = placa;
+        this.modelo = modelo;
+        this.marca = marca;
+        this.ano = ano;
+        this.cor = cor;
+    }
+
     public UUID getId() {
         return id;
     }
