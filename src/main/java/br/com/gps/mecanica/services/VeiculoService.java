@@ -1,0 +1,28 @@
+package br.com.gps.mecanica.services;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import br.com.gps.mecanica.models.VeiculoModel;
+
+@Service
+public interface VeiculoService {
+
+    List<VeiculoModel> get();
+
+    VeiculoModel get(UUID id);
+
+    VeiculoModel getByPlaca(String placa);
+
+    List<VeiculoModel> getByModelo(String modelo);
+
+    List<VeiculoModel> getByMarca(String marca);
+
+    VeiculoModel create(VeiculoModel veiculo);
+
+    VeiculoModel update(UUID id, VeiculoModel veiculo);
+
+    void delete(UUID id);
+}
