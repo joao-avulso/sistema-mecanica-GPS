@@ -3,8 +3,11 @@ package br.com.gps.mecanica.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import br.com.gps.mecanica.models.VeiculoModel;
 
+@Service
 public interface VeiculoService {
 
     List<VeiculoModel> get();

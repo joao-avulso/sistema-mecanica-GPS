@@ -3,9 +3,12 @@ package br.com.gps.mecanica.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
 
+@Service
 public class VeiculoServiceImpl implements VeiculoService {
 
     final VeiculoRepository veiculoRepository;
