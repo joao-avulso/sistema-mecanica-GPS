@@ -44,6 +44,16 @@ public class VeiculoServiceImpl implements VeiculoService {
     }
 
     @Override
+    public VeiculoModel getByPlaca(String placa) {
+        try {
+            return veiculoRepository.findByPlaca(placa);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public List<VeiculoModel> getByMarca(String marca) {
         try {
             return veiculoRepository.findByMarca(marca);

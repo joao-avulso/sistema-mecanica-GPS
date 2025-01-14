@@ -34,7 +34,7 @@ public class StageReadyEventListener implements ApplicationListener<StageReadyEv
 
         stage.setScene(scene);
         stage.setTitle(windowTitle);
-        stage.setMaximized(true);
+        // stage.setMaximized(true);
         stage.show();
     }
 
