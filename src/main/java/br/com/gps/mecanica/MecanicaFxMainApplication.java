@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class MecanicaFxMainApplication extends Application {
 
-    private ConfigurableApplicationContext applicationContext;
+    private static ConfigurableApplicationContext applicationContext;
 
     @Override
     public void init() {
@@ -27,5 +27,9 @@ public class MecanicaFxMainApplication extends Application {
     public void stop() {
         applicationContext.close();
         Platform.exit();
+    }
+
+    public static <T> T getBean(Class<T> beanClass) {
+        return applicationContext.getBean(beanClass);
     }
 }
