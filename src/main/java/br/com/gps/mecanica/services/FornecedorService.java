@@ -89,17 +89,23 @@ public class FornecedorService {
         return fornecedorRepository.save(fornecedor);
     }
 
-    public FornecedorModel update(FornecedorModel fornecedor) throws Exception {
+    public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
+        FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
 
-        fornecedor.setNome(Utils.formatarString(fornecedor.getNome()));
-        fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
-        fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
-        fornecedor.setNome(Utils.formatarString(fornecedor.getNome()));
-        fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
-        fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
+        if (fornecedor.getNome() != null && !fornecedor.getNome().isEmpty()) {
+            fornecedorAtual.setNome(Utils.formatarString(fornecedor.getNome()));
+        }
+
+        if (fornecedor.getCnpj() != null && !fornecedor.getCnpj().isEmpty()) {
+            fornecedorAtual.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
+        }
+
+        if (fornecedor.getEmail() != null && !fornecedor.getEmail().isEmpty()) {
+            fornecedorAtual.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
+        }
 
         if (!fornecedor.getEnderecos().isEmpty()) {
-            List<EnderecoModel> enderecos = new ArrayList<>();
+            List<EnderecoModel> enderecos = fornecedorAtual.getEnderecos();
 
             for (EnderecoModel endereco : fornecedor.getEnderecos()) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
@@ -111,7 +117,7 @@ public class FornecedorService {
         }
 
         if (!fornecedor.getTelefones().isEmpty()) {
-            List<TelefoneModel> telefones = new ArrayList<>();
+            List<TelefoneModel> telefones = fornecedorAtual.getTelefones();
             for (TelefoneModel telefone : fornecedor.getTelefones()) {
                 telefones.add(Utils.formatarTelefone(telefone));
             }

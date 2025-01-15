@@ -14,6 +14,10 @@ import br.com.gps.mecanica.models.VeiculoModel;
 
 public class Utils {
     public static String formatarString(String string) {
+        if (string == null) {
+            return null;
+        }
+
         Map<String, String> caracteresEspeciais = new HashMap<>() {
             {
                 put("á", "a");
@@ -54,19 +58,30 @@ public class Utils {
     }
 
     public static String formatarPlaca(String placa) {
+        if (placa == null) {
+            return null;
+        }
+
         placa = formatarString(placa);
         placa = placa.replace("-", "");
         placa = placa.replace(" ", "");
         return placa;
     }
 
-    public static String formatarModeloVeiculo(String modelo) {
+    public static String formatarMarcaModeloVeiculo(String modelo) {
+        if (modelo == null) {
+            return null;
+        }
         modelo = formatarString(modelo);
         modelo = modelo.replace(" ", "");
         return modelo;
     }
 
     public static TelefoneModel formatarTelefone(TelefoneModel telefone) {
+        if (telefone == null) {
+            return null;
+        }
+
         String numero = telefone.getNumero();
         numero = formatarString(numero);
         numero = numero.replace("(", "");
@@ -79,6 +94,10 @@ public class Utils {
     }
 
     public static String formatarCpf(String cpf) {
+        if (cpf == null) {
+            return null;
+        }
+
         cpf = formatarString(cpf);
         cpf = cpf.replace(".", "");
         cpf = cpf.replace("-", "");
@@ -86,6 +105,10 @@ public class Utils {
     }
 
     public static Boolean verificarCpf(String cpf) {
+        if (cpf == null) {
+            return false;
+        }
+
         if (cpf.equals("00000000000") ||
                 cpf.equals("11111111111") ||
                 cpf.equals("22222222222") || cpf.equals("33333333333") ||
@@ -139,6 +162,10 @@ public class Utils {
     }
 
     public static String formatarCnpj(String cnpj) {
+        if (cnpj == null) {
+            return null;
+        }
+
         cnpj = formatarString(cnpj);
         cnpj = cnpj.replace(".", "");
         cnpj = cnpj.replace("/", "");
@@ -147,6 +174,10 @@ public class Utils {
     }
 
     public static Boolean verificarCnpj(String cnpj) {
+        if (cnpj == null) {
+            return false;
+        }
+
         if (cnpj.length() != 14) {
             return false;
         }
@@ -192,12 +223,20 @@ public class Utils {
     }
 
     public static String formatarCep(String cep) {
+        if (cep == null) {
+            return null;
+        }
+
         cep = formatarString(cep);
         cep = cep.replace("-", "");
         return cep;
     }
 
     public static EnderecoDto apurarEndereco(String cep) {
+        if (cep == null) {
+            return null;
+        }
+        cep = formatarCep(cep);
         try {
             String url = "https://viacep.com.br/ws/" + cep + "/json/";
             RestTemplate restTemplate = new RestTemplate();
@@ -209,17 +248,26 @@ public class Utils {
     }
 
     public static String formatarEmail(String email) {
+        if (email == null) {
+            return null;
+        }
         email = email.strip();
         email = email.toLowerCase();
         return email;
     }
 
     public static Boolean verificarEmail(String email) {
+        if (email == null) {
+            return false;
+        }
         String regex = "^(.+)@(.+)$";
         return Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(email).matches();
     }
 
     public static Boolean verificarPlaca(String placa) {
+        if (placa == null) {
+            return false;
+        }
         String regex = "^[a-zA-Z]{3}[0-9]{4}$";
         String regexMercosulCarro = "^[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}$";
         String regexMercosulMoto = "^[a-zA-Z]{3}[0-9]{2}[a-zA-Z]{1}[0-9]{1}$";
@@ -228,19 +276,23 @@ public class Utils {
                 || Pattern.compile(regexMercosulMoto, Pattern.CASE_INSENSITIVE).matcher(placa).matches();
     }
 
-    public static EnderecoModel formatarEndereco(EnderecoModel endereco) {
+    public static void formatarEndereco(EnderecoModel endereco) {
+        if (endereco == null) {
+            return;
+        }
         endereco.setRua(formatarString(endereco.getRua()));
         endereco.setBairro(formatarString(endereco.getBairro()));
         endereco.setCidade(formatarString(endereco.getCidade()));
         endereco.setEstado(formatarString(endereco.getEstado()));
         endereco.setComplemento(formatarString(endereco.getComplemento()));
         endereco.setReferencia(formatarString(endereco.getReferencia()));
-        return null;
     }
 
-    public static VeiculoModel formatarVeiculo(VeiculoModel veiculo) {
+    public static void formatarVeiculo(VeiculoModel veiculo) {
+        if (veiculo == null) {
+            return;
+        }
         veiculo.setPlaca(formatarPlaca(veiculo.getPlaca()));
-        veiculo.setModelo(formatarModeloVeiculo(veiculo.getModelo()));
-        return null;
+        veiculo.setModelo(formatarMarcaModeloVeiculo(veiculo.getModelo()));
     }
 }
