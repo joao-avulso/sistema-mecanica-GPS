@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
+import br.com.gps.mecanica.enums.Contato;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,18 +28,19 @@ public class TelefoneModel implements Serializable {
     @Column(nullable = false)
     private String numero;
 
-    private String tipo; // Exemplo: residencial, comercial, etc.
+    private Contato tipo;
 
     @ManyToOne
-    @JoinColumn(name = "idCliente", nullable = false)
-    private ClienteModel cliente;
+    @JoinColumn(name = "idPessoa", nullable = false)
+    private PessoaBaseModel pessoa;
 
-    public TelefoneModel(){}
+    public TelefoneModel() {
+    }
 
-    public TelefoneModel(String numero, String tipo, ClienteModel cliente){
+    public TelefoneModel(String numero, Contato tipo, PessoaBaseModel pessoa) {
         this.numero = numero;
         this.tipo = tipo;
-        this.cliente = cliente;
+        this.pessoa = pessoa;
     }
 
     public UUID getId() {
@@ -57,24 +59,24 @@ public class TelefoneModel implements Serializable {
         this.numero = numero;
     }
 
-    public String getTipo() {
+    public Contato getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(Contato tipo) {
         this.tipo = tipo;
     }
 
-    public ClienteModel getCliente() {
-        return cliente;
+    public PessoaBaseModel getPessoa() {
+        return pessoa;
     }
 
-    public void setCliente(ClienteModel cliente) {
-        this.cliente = cliente;
+    public void setPessoa(PessoaBaseModel pessoa) {
+        this.pessoa = pessoa;
     }
 
     @Override
     public String toString() {
-        return "TelefoneModel [id=" + id + ", numero=" + numero + ", tipo=" + tipo + ", cliente=" + cliente + "]";
+        return "TelefoneModel [id=" + id + ", numero=" + numero + ", tipo=" + tipo + ", pessoa=" + pessoa + "]";
     }
 }

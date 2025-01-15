@@ -46,8 +46,8 @@ public class ServicoService {
 
     public ServicoModel create(ServicoModel servico) {
         try {
-            servico.setNome(Utils.formatar_string(servico.getNome()));
-            servico.setDescricao(Utils.formatar_string(servico.getDescricao()));
+            servico.setNome(Utils.formatarString(servico.getNome()));
+            servico.setDescricao(Utils.formatarString(servico.getDescricao()));
             return servicoRepository.save(servico);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,8 +65,8 @@ public class ServicoService {
 
     public ServicoModel update(ServicoModel servico) {
         try {
-            servico.setNome(Utils.formatar_string(servico.getNome()));
-            servico.setDescricao(Utils.formatar_string(servico.getDescricao()));
+            servico.setNome(Utils.formatarString(servico.getNome()));
+            servico.setDescricao(Utils.formatarString(servico.getDescricao()));
             return servicoRepository.save(servico);
         } catch (Exception e) {
             e.printStackTrace();
