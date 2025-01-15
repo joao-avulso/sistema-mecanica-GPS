@@ -8,9 +8,12 @@ import java.util.regex.Pattern;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.gps.mecanica.dto.EnderecoDto;
+import br.com.gps.mecanica.models.EnderecoModel;
+import br.com.gps.mecanica.models.TelefoneModel;
+import br.com.gps.mecanica.models.VeiculoModel;
 
 public class Utils {
-    public static String formatar_string(String string) {
+    public static String formatarString(String string) {
         Map<String, String> caracteresEspeciais = new HashMap<>() {
             {
                 put("á", "a");
@@ -50,39 +53,47 @@ public class Utils {
         return string;
     }
 
-    public static String formatar_placa(String placa) {
+    public static String formatarPlaca(String placa) {
+        placa = formatarString(placa);
         placa = placa.replace("-", "");
         placa = placa.replace(" ", "");
-        placa = placa.strip();
-        placa = placa.toUpperCase();
         return placa;
     }
 
-    public static String formatar_telefone(String telefone) {
-        telefone = telefone.replace("(", "");
-        telefone = telefone.replace(")", "");
-        telefone = telefone.replace("-", "");
-        telefone = telefone.replace(" ", "");
-        telefone = telefone.strip();
-        return telefone;
+    public static String formatarModeloVeiculo(String modelo) {
+        modelo = formatarString(modelo);
+        modelo = modelo.replace(" ", "");
+        return modelo;
     }
 
-    public static String formatar_cpf(String cpf) {
+    public static TelefoneModel formatarTelefone(TelefoneModel telefone) {
+        String numero = telefone.getNumero();
+        numero = formatarString(numero);
+        numero = numero.replace("(", "");
+        numero = numero.replace(")", "");
+        numero = numero.replace("-", "");
+        numero = numero.replace(" ", "");
+
+        telefone.setNumero(numero);
+        return null;
+    }
+
+    public static String formatarCpf(String cpf) {
+        cpf = formatarString(cpf);
         cpf = cpf.replace(".", "");
         cpf = cpf.replace("-", "");
-        cpf = cpf.strip();
         return cpf;
     }
 
-    public static Boolean verificar_cpf(String cpf) {
+    public static Boolean verificarCpf(String cpf) {
         if (cpf.equals("00000000000") ||
-            cpf.equals("11111111111") ||
-            cpf.equals("22222222222") || cpf.equals("33333333333") ||
-            cpf.equals("44444444444") || cpf.equals("55555555555") ||
-            cpf.equals("66666666666") || cpf.equals("77777777777") ||
-            cpf.equals("88888888888") || cpf.equals("99999999999") ||
-            (cpf.length() != 11))
-            return(false);
+                cpf.equals("11111111111") ||
+                cpf.equals("22222222222") || cpf.equals("33333333333") ||
+                cpf.equals("44444444444") || cpf.equals("55555555555") ||
+                cpf.equals("66666666666") || cpf.equals("77777777777") ||
+                cpf.equals("88888888888") || cpf.equals("99999999999") ||
+                (cpf.length() != 11))
+            return (false);
 
         char dig10;
         char dig11;
@@ -91,8 +102,8 @@ public class Utils {
         try {
             sm = 0;
             peso = 10;
-            for (i=0; i<9; i++) {
-                num = (int)(cpf.charAt(i) - 48);
+            for (i = 0; i < 9; i++) {
+                num = (int) (cpf.charAt(i) - 48);
                 sm = sm + (num * peso);
                 peso = peso - 1;
             }
@@ -100,12 +111,13 @@ public class Utils {
             r = 11 - (sm % 11);
             if ((r == 10) || (r == 11))
                 dig10 = '0';
-            else dig10 = (char)(r + 48);
+            else
+                dig10 = (char) (r + 48);
 
             sm = 0;
             peso = 11;
-            for(i=0; i<10; i++) {
-                num = (int)(cpf.charAt(i) - 48);
+            for (i = 0; i < 10; i++) {
+                num = (int) (cpf.charAt(i) - 48);
                 sm = sm + (num * peso);
                 peso = peso - 1;
             }
@@ -113,26 +125,28 @@ public class Utils {
             r = 11 - (sm % 11);
             if ((r == 10) || (r == 11))
                 dig11 = '0';
-            else dig11 = (char)(r + 48);
+            else
+                dig11 = (char) (r + 48);
 
             if ((dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10)))
-                return(true);
-            else return(false);
+                return (true);
+            else
+                return (false);
 
         } catch (InputMismatchException erro) {
-            return(false);
+            return (false);
         }
     }
 
-    public static String formatar_cnpj(String cnpj) {
+    public static String formatarCnpj(String cnpj) {
+        cnpj = formatarString(cnpj);
         cnpj = cnpj.replace(".", "");
         cnpj = cnpj.replace("/", "");
         cnpj = cnpj.replace("-", "");
-        cnpj = cnpj.strip();
         return cnpj;
     }
 
-    public static Boolean verificar_cnpj(String cnpj) {
+    public static Boolean verificarCnpj(String cnpj) {
         if (cnpj.length() != 14) {
             return false;
         }
@@ -177,13 +191,13 @@ public class Utils {
         return false;
     }
 
-    public static String formatar_cep(String cep) {
+    public static String formatarCep(String cep) {
+        cep = formatarString(cep);
         cep = cep.replace("-", "");
-        cep = cep.strip();
         return cep;
     }
 
-    public static EnderecoDto apurar_endereco(String cep) {
+    public static EnderecoDto apurarEndereco(String cep) {
         try {
             String url = "https://viacep.com.br/ws/" + cep + "/json/";
             RestTemplate restTemplate = new RestTemplate();
@@ -194,21 +208,39 @@ public class Utils {
         }
     }
 
-    public static String formatar_email(String email) {
+    public static String formatarEmail(String email) {
         email = email.strip();
         email = email.toLowerCase();
         return email;
     }
 
-    public static Boolean verificar_email(String email) {
+    public static Boolean verificarEmail(String email) {
         String regex = "^(.+)@(.+)$";
         return Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(email).matches();
     }
 
-    public static Boolean verificar_placa(String placa) {
+    public static Boolean verificarPlaca(String placa) {
         String regex = "^[a-zA-Z]{3}[0-9]{4}$";
         String regexMercosulCarro = "^[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}$";
         String regexMercosulMoto = "^[a-zA-Z]{3}[0-9]{2}[a-zA-Z]{1}[0-9]{1}$";
-        return Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(placa).matches() || Pattern.compile(regexMercosulCarro, Pattern.CASE_INSENSITIVE).matcher(placa).matches() || Pattern.compile(regexMercosulMoto, Pattern.CASE_INSENSITIVE).matcher(placa).matches();
+        return Pattern.compile(regex, Pattern.CASE_INSENSITIVE).matcher(placa).matches()
+                || Pattern.compile(regexMercosulCarro, Pattern.CASE_INSENSITIVE).matcher(placa).matches()
+                || Pattern.compile(regexMercosulMoto, Pattern.CASE_INSENSITIVE).matcher(placa).matches();
+    }
+
+    public static EnderecoModel formatarEndereco(EnderecoModel endereco) {
+        endereco.setRua(formatarString(endereco.getRua()));
+        endereco.setBairro(formatarString(endereco.getBairro()));
+        endereco.setCidade(formatarString(endereco.getCidade()));
+        endereco.setEstado(formatarString(endereco.getEstado()));
+        endereco.setComplemento(formatarString(endereco.getComplemento()));
+        endereco.setReferencia(formatarString(endereco.getReferencia()));
+        return null;
+    }
+
+    public static VeiculoModel formatarVeiculo(VeiculoModel veiculo) {
+        veiculo.setPlaca(formatarPlaca(veiculo.getPlaca()));
+        veiculo.setModelo(formatarModeloVeiculo(veiculo.getModelo()));
+        return null;
     }
 }
