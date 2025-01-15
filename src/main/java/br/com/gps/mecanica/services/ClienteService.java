@@ -20,17 +20,25 @@ public class ClienteService {
 
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
-    }
+    };
 
     public List<ClienteModel> get() {
         return clienteRepository.findAll();
     };
 
-    public ClienteModel get(UUID id) {
+    public ClienteModel get(UUID id) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
         return clienteRepository.findById(id).get();
     };
 
-    public ClienteModel get(String cpf) {
+    public ClienteModel get(String cpf) throws Exception {
+        if (clienteRepository.findByCpf(cpf) == null) {
+            throw new Exception("Cliente não encontrado");
+        }
+
         return clienteRepository.findByCpf(cpf);
     };
 
@@ -38,13 +46,16 @@ public class ClienteService {
         return clienteRepository.findByNome(nome);
     };
 
-    public ClienteModel getByEmail(String email) {
+    public ClienteModel getByEmail(String email) throws Exception {
+        if (clienteRepository.findByEmail(email) == null) {
+            throw new Exception("Cliente não encontrado");
+        }
         return clienteRepository.findByEmail(email);
     };
 
     public ClienteModel getByVeiculo(List<VeiculoModel> veiculos) {
         return clienteRepository.findByVeiculos(veiculos);
-    }
+    };
 
     public ClienteModel create(ClienteModel cliente) throws Exception {
         cliente.setNome(Utils.formatarString(cliente.getNome()));
@@ -102,17 +113,29 @@ public class ClienteService {
         }
 
         return clienteRepository.save(cliente);
-    }
+    };
 
     public ClienteModel update(UUID id, ClienteModel cliente) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
 
-        cliente.setId(id);
-        cliente.setNome(Utils.formatarString(cliente.getNome()));
-        cliente.setCpf(Utils.formatarCpf(cliente.getCpf()));
-        cliente.setEmail(Utils.formatarEmail(cliente.getEmail()));
+        ClienteModel clienteAtual = clienteRepository.findById(id).get();
+
+        if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
+            clienteAtual.setNome(Utils.formatarString(cliente.getNome()));
+        }
+
+        if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
+            clienteAtual.setCpf(Utils.formatarCpf(cliente.getCpf()));
+        }
+
+        if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
+            clienteAtual.setEmail(Utils.formatarEmail(cliente.getEmail()));
+        }
 
         if (!cliente.getEnderecos().isEmpty()) {
-            List<EnderecoModel> enderecos = new ArrayList<>();
+            List<EnderecoModel> enderecos = clienteAtual.getEnderecos();
 
             for (EnderecoModel endereco : cliente.getEnderecos()) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
@@ -124,7 +147,7 @@ public class ClienteService {
         }
 
         if (!cliente.getTelefones().isEmpty()) {
-            List<TelefoneModel> telefones = new ArrayList<>();
+            List<TelefoneModel> telefones = clienteAtual.getTelefones();
 
             for (TelefoneModel telefone : cliente.getTelefones()) {
                 Utils.formatarTelefone(telefone);
@@ -162,15 +185,22 @@ public class ClienteService {
         }
 
         return clienteRepository.save(cliente);
-    }
+    };
 
-    public void delete(UUID id) {
+    public void delete(UUID id) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
         // Deletar veiculos e telefones antes de deletar o cliente
         clienteRepository.deleteById(id);
-    }
+    };
 
-    public void deleteByCpf(String cpf) {
+    public void deleteByCpf(String cpf) throws Exception {
+        if (clienteRepository.findByCpf(cpf) == null) {
+            throw new Exception("Cliente não encontrado");
+        }
+
         clienteRepository.deleteByCpf(cpf);
-    }
+    };
 
 }
