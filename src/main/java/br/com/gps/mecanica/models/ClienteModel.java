@@ -185,7 +185,6 @@ public class ClienteModel implements Serializable {
     public String toString() {
         return "ClienteModel [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", cep=" + cep
                 + ", rua=" + rua + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado + ", numero="
-                + numero + ", complemento=" + complemento + ", referencia=" + referencia + ", telefones=" + telefones
-                + ", veiculos=" + veiculos + "]";
+                + numero + ", complemento=" + complemento + ", referencia=" + referencia + "]";
     }
 }

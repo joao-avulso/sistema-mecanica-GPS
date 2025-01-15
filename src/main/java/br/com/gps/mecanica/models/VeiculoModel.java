@@ -9,18 +9,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "veiculos")
 public class VeiculoModel implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private UUID idCliente;
+
+    @ManyToOne
+    @JoinColumn(name = "idCliente")
+    private ClienteModel cliente;
+
     private String placa;
     private String modelo;
     private String marca;
@@ -30,13 +37,13 @@ public class VeiculoModel implements Serializable {
     public VeiculoModel() {
     }
 
-    public VeiculoModel(UUID idCliente, String placa, String modelo, String marca, Integer ano, Cor cor) {
-        this.idCliente = idCliente;
+    public VeiculoModel(String placa, String modelo, String marca, Integer ano, Cor cor, ClienteModel cliente) {
         this.placa = placa;
         this.modelo = modelo;
         this.marca = marca;
         this.ano = ano;
         this.cor = cor;
+        this.cliente = cliente;
     }
 
     public UUID getId() {
@@ -47,14 +54,14 @@ public class VeiculoModel implements Serializable {
         this.id = id;
     }
 
-    public UUID getIdCliente() {
-        return idCliente;
+    public ClienteModel getCliente() {
+        return cliente;
     }
 
-    public void setIdCliente(UUID idCliente) {
-        this.idCliente = idCliente;
+    public void setCliente(ClienteModel cliente) {
+        this.cliente = cliente;
     }
-    
+
     public String getPlaca() {
         return placa;
     }
@@ -97,7 +104,7 @@ public class VeiculoModel implements Serializable {
 
     @Override
     public String toString() {
-        return "VeiculoModel [id=" + id + ", idCliente=" + idCliente + ", placa=" + placa + ", modelo=" + modelo
+        return "VeiculoModel [id=" + id + ", cliente=" + cliente + ", placa=" + placa + ", modelo=" + modelo
                 + ", marca=" + marca + ", ano=" + ano + ", cor=" + cor + "]";
     }
 }
