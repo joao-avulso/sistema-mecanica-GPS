@@ -15,4 +15,8 @@ public interface ClienteRepository extends JpaRepository<ClienteModel, UUID> {
     ClienteModel findByEmail(String email);
 
     ClienteModel findByVeiculos(List<VeiculoModel> veiculos);
+
+    List<ClienteModel> findByNome(String nome);
+
+    void deleteByCpf(String cpf);
 }
