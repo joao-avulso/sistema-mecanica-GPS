@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
+import br.com.gps.mecanica.utils.Utils;
 
 @Service
 public class VeiculoService {
@@ -16,15 +17,24 @@ public class VeiculoService {
     public VeiculoService(VeiculoRepository veiculoRepository) {
         this.veiculoRepository = veiculoRepository;
     }
-
     
-    public VeiculoModel create(VeiculoModel veiculo) {
-        try {
-            return veiculoRepository.save(veiculo);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public VeiculoModel create(VeiculoModel veiculo) throws Exception {
+
+        String placa = Utils.formatar_placa(veiculo.getPlaca());
+
+        if (Utils.verificar_placa(placa) == false) {
+            throw new Exception("Placa inválida");
         }
-        return null;
+        
+        if (veiculoRepository.findByPlaca(veiculo.getPlaca()) != null) {
+            throw new Exception("Placa já cadastrada");
+        }
+
+        veiculo.setPlaca(placa);
+        veiculo.setModelo(Utils.formatar_string(veiculo.getModelo()));
+        veiculo.setMarca(Utils.formatar_string(veiculo.getMarca()));
+
+        return veiculoRepository.save(veiculo);
     }
 
     
@@ -77,13 +87,20 @@ public class VeiculoService {
     }
 
     
-    public VeiculoModel update(UUID id, VeiculoModel veiculo) {
-        try {
-            veiculo.setId(id);
-            return veiculoRepository.save(veiculo);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public VeiculoModel update(UUID id, VeiculoModel veiculo) throws Exception {
+        
+        String placa = Utils.formatar_placa(veiculo.getPlaca());
+
+        if (Utils.verificar_placa(placa) == false) {
+            throw new Exception("Placa inválida");
         }
-        return null;
+
+        veiculo.setPlaca(placa);
+        veiculo.setModelo(Utils.formatar_string(veiculo.getModelo()));
+        veiculo.setMarca(Utils.formatar_string(veiculo.getMarca()));
+
+        veiculo.setId(id);
+            
+        return veiculoRepository.save(veiculo);
     }
 }

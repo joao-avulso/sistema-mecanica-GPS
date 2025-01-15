@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.MenuSelection;
+import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.services.VeiculoService;
@@ -69,7 +70,7 @@ public class MainController {
                 continue;
             }
 
-            TableColumn<VeiculoModel, String> column = new TableColumn<>(field.getName().toUpperCase());
+            TableColumn<VeiculoModel, Object> column = new TableColumn<>(field.getName().toUpperCase());
             field.setAccessible(true);
 
             column.setCellValueFactory(data -> {
@@ -77,8 +78,10 @@ public class MainController {
                     Object value = field.get(data.getValue());
                     if (value == null) {
                         return new SimpleObjectProperty<>("N/A");
+                    } else if (value instanceof ClienteModel) {
+                        return new SimpleObjectProperty<>(((ClienteModel)value).getNome());
                     }
-                    return new SimpleObjectProperty<>(value.toString().toUpperCase());
+                    return new SimpleObjectProperty<>(value.toString());
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                     return null;
