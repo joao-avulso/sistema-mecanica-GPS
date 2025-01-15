@@ -17,27 +17,26 @@ public class VeiculoService {
     public VeiculoService(VeiculoRepository veiculoRepository) {
         this.veiculoRepository = veiculoRepository;
     }
-    
+
     public VeiculoModel create(VeiculoModel veiculo) throws Exception {
 
-        String placa = Utils.formatar_placa(veiculo.getPlaca());
+        String placa = Utils.formatarPlaca(veiculo.getPlaca());
 
-        if (Utils.verificar_placa(placa) == false) {
+        if (Utils.verificarPlaca(placa) == false) {
             throw new Exception("Placa inválida");
         }
-        
+
         if (veiculoRepository.findByPlaca(veiculo.getPlaca()) != null) {
             throw new Exception("Placa já cadastrada");
         }
 
         veiculo.setPlaca(placa);
-        veiculo.setModelo(Utils.formatar_string(veiculo.getModelo()));
-        veiculo.setMarca(Utils.formatar_string(veiculo.getMarca()));
+        veiculo.setModelo(Utils.formatarModeloVeiculo(veiculo.getModelo()));
+        veiculo.setMarca(Utils.formatarModeloVeiculo(veiculo.getMarca()));
 
         return veiculoRepository.save(veiculo);
     }
 
-    
     public void delete(UUID id) {
         try {
             veiculoRepository.deleteById(id);
@@ -46,17 +45,14 @@ public class VeiculoService {
         }
     }
 
-    
     public List<VeiculoModel> get() {
         return veiculoRepository.findAll();
     }
 
-    
     public VeiculoModel get(UUID id) {
         return veiculoRepository.findById(id).get();
     }
 
-    
     public VeiculoModel getByPlaca(String placa) {
         try {
             return veiculoRepository.findByPlaca(placa);
@@ -66,7 +62,6 @@ public class VeiculoService {
         return null;
     }
 
-    
     public List<VeiculoModel> getByMarca(String marca) {
         try {
             return veiculoRepository.findByMarca(marca);
@@ -76,7 +71,6 @@ public class VeiculoService {
         return null;
     }
 
-    
     public List<VeiculoModel> getByModelo(String modelo) {
         try {
             return veiculoRepository.findByModelo(modelo);
@@ -86,21 +80,20 @@ public class VeiculoService {
         return null;
     }
 
-    
     public VeiculoModel update(UUID id, VeiculoModel veiculo) throws Exception {
-        
-        String placa = Utils.formatar_placa(veiculo.getPlaca());
 
-        if (Utils.verificar_placa(placa) == false) {
+        String placa = Utils.formatarPlaca(veiculo.getPlaca());
+
+        if (Utils.verificarPlaca(placa) == false) {
             throw new Exception("Placa inválida");
         }
 
         veiculo.setPlaca(placa);
-        veiculo.setModelo(Utils.formatar_string(veiculo.getModelo()));
-        veiculo.setMarca(Utils.formatar_string(veiculo.getMarca()));
+        veiculo.setModelo(Utils.formatarModeloVeiculo(veiculo.getModelo()));
+        veiculo.setMarca(Utils.formatarModeloVeiculo(veiculo.getMarca()));
 
         veiculo.setId(id);
-            
+
         return veiculoRepository.save(veiculo);
     }
 }
