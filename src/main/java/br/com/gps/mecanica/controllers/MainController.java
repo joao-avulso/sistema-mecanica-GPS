@@ -51,6 +51,10 @@ public class MainController {
     @FXML
     private Button produtosButton;
 
+    private VeiculoService veiculoService = new VeiculoService(MecanicaFxMainApplication.getBean(VeiculoRepository.class));
+
+    // private ClienteService clienteService = new ClienteService(MecanicaFxMainApplication.getBean(ClienteRepository.class));
+
     @FXML
     void mostraVeiculos(ActionEvent event) {
         if (selection == MenuSelection.VEICULO) {
@@ -59,7 +63,20 @@ public class MainController {
 
         selection = MenuSelection.VEICULO;
 
-        VeiculoService veiculoService = new VeiculoService(MecanicaFxMainApplication.getBean(VeiculoRepository.class));
+        // ClienteModel cliente = new ClienteModel(Pessoa.FISICA, "João", "10451721977", "joaoalt0502@gmail.com", null, null, null);
+
+        // VeiculoModel veiculo1 = new VeiculoModel("ABC1234", "Fiat", "Uno", 2010, Cor.AMARELO, cliente);
+
+        // EnderecoModel endereco = new EnderecoModel("07083450", "Rua 123", "Bairro 1", "Cidade 1", "SP", "123", "complemento", "referencia", Contato.COMERCIAL, cliente);
+
+        // cliente.setEnderecos(List.of(endereco));
+        // cliente.setVeiculos(List.of(veiculo1));
+
+        // try {
+        //     clienteService.create(cliente);
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
 
         mainVBox.getChildren().clear();
         TableView<VeiculoModel> mainTable = new TableView<VeiculoModel>();
@@ -97,7 +114,7 @@ public class MainController {
 
         mainTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                System.out.println("Linha selecionada: " + ((VeiculoModel)newValue));
+                // System.out.println("Linha selecionada: " + ((VeiculoModel)newValue));
                 selected = ((VeiculoModel)newValue);
             }
         });
