@@ -62,39 +62,45 @@ public class ClienteService {
         cliente.setCpf(Utils.formatarCpf(cliente.getCpf()));
         cliente.setEmail(Utils.formatarEmail(cliente.getEmail()));
 
-        // if (!cliente.getEnderecos().isEmpty()) {
-        //     List<EnderecoModel> enderecos = new ArrayList<>();
+        List<EnderecoModel> enderecos = cliente.getEnderecos();
 
-        //     for (EnderecoModel endereco : cliente.getEnderecos()) {
-        //         endereco.setCep(Utils.formatarCep(endereco.getCep()));
-        //         Utils.formatarEndereco(endereco);
-        //         enderecos.add(endereco);
-        //     }
+        if (!enderecos.isEmpty() && enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = new ArrayList<>();
 
-        //     cliente.setEnderecos(enderecos);
-        // }
+            for (EnderecoModel endereco : enderecos) {
+                endereco.setCep(Utils.formatarCep(endereco.getCep()));
+                Utils.formatarEndereco(endereco);
+                enderecosFormatados.add(endereco);
+            }
 
-        // if (!cliente.getTelefones().isEmpty()) {
-        //     List<TelefoneModel> telefones = new ArrayList<>();
+            cliente.setEnderecos(enderecosFormatados);
+        }
 
-        //     for (TelefoneModel telefone : cliente.getTelefones()) {
-        //         Utils.formatarTelefone(telefone);
-        //         telefones.add(telefone);
-        //     }
+        List<TelefoneModel> telefones = cliente.getTelefones();
 
-        //     cliente.setTelefones(telefones);
-        // }
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = new ArrayList<>();
 
-        // if (!cliente.getVeiculos().isEmpty()) {
-        //     List<VeiculoModel> veiculos = new ArrayList<>();
+            for (TelefoneModel telefone : telefones) {
+                Utils.formatarTelefone(telefone);
+                telefonesFormatados.add(telefone);
+            }
 
-        //     for (VeiculoModel veiculo : cliente.getVeiculos()) {
-        //         Utils.formatarVeiculo(veiculo);
-        //         veiculos.add(veiculo);
-        //     }
+            cliente.setTelefones(telefonesFormatados);
+        }
 
-        //     cliente.setVeiculos(veiculos);
-        // }
+        List<VeiculoModel> veiculos = cliente.getVeiculos();
+
+        if (!veiculos.isEmpty() && veiculos != null) {
+            List<VeiculoModel> veiculosFormatados = new ArrayList<>();
+
+            for (VeiculoModel veiculo : veiculos) {
+                Utils.formatarVeiculo(veiculo);
+                veiculosFormatados.add(veiculo);
+            }
+
+            cliente.setVeiculos(veiculosFormatados);
+        }
 
         if (clienteRepository.findByCpf(cliente.getCpf()) != null) {
             throw new Exception("CPF já cadastrado");
@@ -122,50 +128,62 @@ public class ClienteService {
 
         ClienteModel clienteAtual = clienteRepository.findById(id).get();
 
-        if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
-            clienteAtual.setNome(Utils.formatarString(cliente.getNome()));
+        String nome = cliente.getNome();
+
+        if (nome != null && !nome.isEmpty()) {
+            clienteAtual.setNome(Utils.formatarString(nome));
         }
 
-        if (cliente.getCpf() != null && !cliente.getCpf().isEmpty()) {
-            clienteAtual.setCpf(Utils.formatarCpf(cliente.getCpf()));
+        String cpf = cliente.getCpf();
+
+        if (cpf != null && !cpf.isEmpty()) {
+            clienteAtual.setCpf(Utils.formatarCpf(cpf));
         }
 
-        if (cliente.getEmail() != null && !cliente.getEmail().isEmpty()) {
-            clienteAtual.setEmail(Utils.formatarEmail(cliente.getEmail()));
+        String email = cliente.getEmail();
+
+        if (email != null && !email.isEmpty()) {
+            clienteAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        if (!cliente.getEnderecos().isEmpty()) {
-            List<EnderecoModel> enderecos = clienteAtual.getEnderecos();
+        List<EnderecoModel> enderecos = cliente.getEnderecos();
 
-            for (EnderecoModel endereco : cliente.getEnderecos()) {
+        if (!enderecos.isEmpty() && enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = clienteAtual.getEnderecos();
+
+            for (EnderecoModel endereco : enderecos) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
                 Utils.formatarEndereco(endereco);
-                enderecos.add(endereco);
+                enderecosFormatados.add(endereco);
             }
 
-            cliente.setEnderecos(enderecos);
+            cliente.setEnderecos(enderecosFormatados);
         }
 
-        if (!cliente.getTelefones().isEmpty()) {
-            List<TelefoneModel> telefones = clienteAtual.getTelefones();
+        List<TelefoneModel> telefones = cliente.getTelefones();
 
-            for (TelefoneModel telefone : cliente.getTelefones()) {
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = clienteAtual.getTelefones();
+
+            for (TelefoneModel telefone : telefones) {
                 Utils.formatarTelefone(telefone);
-                telefones.add(telefone);
+                telefonesFormatados.add(telefone);
             }
 
-            cliente.setTelefones(telefones);
+            cliente.setTelefones(telefonesFormatados);
         }
 
-        if (!cliente.getVeiculos().isEmpty()) {
-            List<VeiculoModel> veiculos = new ArrayList<>();
+        List<VeiculoModel> veiculos = cliente.getVeiculos();
 
-            for (VeiculoModel veiculo : cliente.getVeiculos()) {
+        if (!veiculos.isEmpty() && veiculos != null) {
+            List<VeiculoModel> veiculosFormatados = new ArrayList<>();
+
+            for (VeiculoModel veiculo : veiculos) {
                 Utils.formatarVeiculo(veiculo);
-                veiculos.add(veiculo);
+                veiculosFormatados.add(veiculo);
             }
 
-            cliente.setVeiculos(veiculos);
+            cliente.setVeiculos(veiculosFormatados);
         }
 
         if (clienteRepository.findByCpf(cliente.getCpf()) != null) {
