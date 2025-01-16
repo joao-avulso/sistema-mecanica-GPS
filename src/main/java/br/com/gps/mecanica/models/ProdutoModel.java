@@ -44,11 +44,11 @@ public class ProdutoModel implements Serializable {
     public ProdutoModel() {
     }
 
-    public ProdutoModel(String nome, String descricao, Double valor_venda, Double valor_compra, Integer quantidade) {
+    public ProdutoModel(String nome, String descricao, Double valorVenda, Double valorCompra, Integer quantidade) {
         this.nome = nome;
         this.descricao = descricao;
-        this.valorVenda = valor_venda;
-        this.valorCompra = valor_compra;
+        this.valorVenda = valorVenda;
+        this.valorCompra = valorCompra;
         this.quantidade = quantidade;
     }
 

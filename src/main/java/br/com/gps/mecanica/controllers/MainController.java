@@ -96,7 +96,7 @@ public class MainController {
                     if (value == null) {
                         return new SimpleObjectProperty<>("N/A");
                     } else if (value instanceof ClienteModel) {
-                        return new SimpleObjectProperty<>(((ClienteModel)value).getNome());
+                        return new SimpleObjectProperty<>(((ClienteModel) value).getNome());
                     }
                     return new SimpleObjectProperty<>(value.toString());
                 } catch (IllegalAccessException e) {
@@ -125,12 +125,16 @@ public class MainController {
         buttonBorderPane.paddingProperty().setValue(new javafx.geometry.Insets(8, 8, 8, 8));
 
         Button deleteButton = new Button("Deletar");
-        deleteButton.setStyle("-fx-background-color:rgb(219, 52, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        deleteButton.setStyle(
+                "-fx-background-color:rgb(219, 52, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
 
         deleteButton.setOnAction(e -> {
             if (selected != null) {
-                veiculoService.delete(((VeiculoModel)selected).getId());
-                mainTable.getItems().remove(selected);
+                try {
+                    veiculoService.delete(((VeiculoModel) selected).getId());
+                    mainTable.getItems().remove(selected);
+                } catch (Exception ex) {
+                }
             }
         });
 
@@ -140,4 +144,3 @@ public class MainController {
         mainVBox.getChildren().add(buttonBorderPane);
     }
 }
-

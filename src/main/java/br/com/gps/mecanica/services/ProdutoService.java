@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.FornecedorModel;
 import br.com.gps.mecanica.models.ProdutoModel;
+import br.com.gps.mecanica.repositories.FornecedorRepository;
 import br.com.gps.mecanica.repositories.ProdutoRepository;
 import br.com.gps.mecanica.utils.Utils;
 
@@ -14,117 +15,91 @@ import br.com.gps.mecanica.utils.Utils;
 public class ProdutoService {
     final ProdutoRepository produtoRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    final FornecedorRepository fornecedorRepository;
+
+    public ProdutoService(ProdutoRepository produtoRepository, FornecedorRepository fornecedorRepository) {
         this.produtoRepository = produtoRepository;
+        this.fornecedorRepository = fornecedorRepository;
     }
 
     public List<ProdutoModel> get() {
         return produtoRepository.findAll();
     }
 
-    public ProdutoModel get(UUID id) {
+    public ProdutoModel get(UUID id) throws Exception {
+        if (!produtoRepository.existsById(id)) {
+            throw new Exception("Produto não encontrado");
+        }
+
         return produtoRepository.findById(id).get();
     }
 
     public List<ProdutoModel> getByNome(String nome) {
-        try {
-            return produtoRepository.findByNome(nome);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return produtoRepository.findByNome(nome);
     }
 
-    public List<ProdutoModel> getByValor_venda(Double valor_venda) {
-        try {
-            return produtoRepository.findByValorVenda(valor_venda);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public List<ProdutoModel> getByValorVenda(Double valorVenda) {
+        return produtoRepository.findByValorVenda(valorVenda);
     }
 
-    public List<ProdutoModel> getByValor_compra(Double valor_compra) {
-        try {
-            return produtoRepository.findByValorCompra(valor_compra);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public List<ProdutoModel> getByValorCompra(Double valorCompra) {
+        return produtoRepository.findByValorCompra(valorCompra);
     }
 
     public List<ProdutoModel> getByQuantidade(Integer quantidade) {
-        try {
-            return produtoRepository.findByQuantidade(quantidade);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public ProdutoModel create(ProdutoModel produto) {
-        try {
-            produto.setNome(Utils.formatarString(produto.getNome()));
-            produto.setDescricao(Utils.formatarString(produto.getDescricao()));
-            return produtoRepository.save(produto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void delete(UUID id) {
-        try {
-            produtoRepository.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ProdutoModel update(ProdutoModel produto) {
-        try {
-            produto.setNome(Utils.formatarString(produto.getNome()));
-            produto.setDescricao(Utils.formatarString(produto.getDescricao()));
-            return produtoRepository.save(produto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return produtoRepository.findByQuantidade(quantidade);
     }
 
     public List<ProdutoModel> getProdutosEmEstoque() {
-        try {
-            return produtoRepository.findByQuantidadeGreaterThan(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return produtoRepository.findByQuantidadeGreaterThan(0);
     }
 
     public List<ProdutoModel> getProdutosForaDeEstoque() {
-        try {
-            return produtoRepository.findByQuantidadeLessThan(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return produtoRepository.findByQuantidadeLessThan(1);
     }
 
     public List<ProdutoModel> getProdutosEmEstoqueEntre(Integer quantidade1, Integer quantidade2) {
-        try {
-            return produtoRepository.findByQuantidadeBetween(quantidade1, quantidade2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return produtoRepository.findByQuantidadeBetween(quantidade1, quantidade2);
     }
 
-    public List<ProdutoModel> getProdutosByFornecedor(FornecedorModel fornecedor) {
-        try {
-            return produtoRepository.findByFornecedor(fornecedor);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public List<ProdutoModel> getProdutosByFornecedor(FornecedorModel fornecedor) throws Exception {
+        if (fornecedor == null || fornecedor.getId() == null || !fornecedorRepository.existsById(fornecedor.getId())) {
+            throw new Exception("Fornecedor não encontrado");
         }
-        return null;
+
+        return produtoRepository.findByFornecedor(fornecedor);
+    }
+
+    public ProdutoModel create(ProdutoModel produto) throws Exception {
+        produto.setNome(Utils.formatarString(produto.getNome()));
+        produto.setDescricao(Utils.formatarString(produto.getDescricao()));
+        return produtoRepository.save(produto);
+    }
+
+    public void delete(UUID id) throws Exception {
+        if (!produtoRepository.existsById(id)) {
+            throw new Exception("Produto não encontrado");
+        }
+
+        produtoRepository.deleteById(id);
+    }
+
+    public ProdutoModel update(UUID id, ProdutoModel produto) throws Exception {
+        if (!produtoRepository.existsById(id)) {
+            throw new Exception("Produto não encontrado");
+        }
+
+        ProdutoModel produtoAtual = produtoRepository.findById(id).get();
+
+        if (produto.getNome() != null && !produto.getNome().isEmpty()) {
+            produtoAtual.setNome(Utils.formatarString(produto.getNome()));
+        }
+
+        if (produto.getDescricao() != null && !produto.getDescricao().isEmpty()) {
+            produtoAtual.setDescricao(Utils.formatarString(produto.getDescricao()));
+        }
+
+        return produtoRepository.save(produto);
+
     }
 }
