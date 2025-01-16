@@ -46,24 +46,28 @@ public class FornecedorService {
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
 
-        if (!fornecedor.getEnderecos().isEmpty()) {
-            List<EnderecoModel> enderecos = new ArrayList<>();
+        List<EnderecoModel> enderecos = new ArrayList<>();
 
-            for (EnderecoModel endereco : fornecedor.getEnderecos()) {
+        if (!enderecos.isEmpty() && enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = new ArrayList<>();
+
+            for (EnderecoModel endereco : enderecos) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
                 Utils.formatarEndereco(endereco);
-                enderecos.add(endereco);
+                enderecosFormatados.add(endereco);
             }
 
-            fornecedor.setEnderecos(enderecos);
+            fornecedor.setEnderecos(enderecosFormatados);
         }
 
-        if (!fornecedor.getTelefones().isEmpty()) {
-            List<TelefoneModel> telefones = new ArrayList<>();
-            for (TelefoneModel telefone : fornecedor.getTelefones()) {
-                telefones.add(Utils.formatarTelefone(telefone));
+        List<TelefoneModel> telefones = new ArrayList<>();
+
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = new ArrayList<>();
+            for (TelefoneModel telefone : telefones) {
+                telefonesFormatados.add(Utils.formatarTelefone(telefone));
             }
-            fornecedor.setTelefones(telefones);
+            fornecedor.setTelefones(telefonesFormatados);
         }
 
         if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
@@ -92,36 +96,46 @@ public class FornecedorService {
     public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
         FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
 
-        if (fornecedor.getNome() != null && !fornecedor.getNome().isEmpty()) {
-            fornecedorAtual.setNome(Utils.formatarString(fornecedor.getNome()));
+        String nome = fornecedor.getNome();
+
+        if (nome != null && !nome.isEmpty()) {
+            fornecedorAtual.setNome(Utils.formatarString(nome));
         }
 
-        if (fornecedor.getCnpj() != null && !fornecedor.getCnpj().isEmpty()) {
-            fornecedorAtual.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
+        String cnpj = fornecedor.getCnpj();
+
+        if (cnpj != null && !cnpj.isEmpty()) {
+            fornecedorAtual.setCnpj(Utils.formatarCnpj(cnpj));
         }
 
-        if (fornecedor.getEmail() != null && !fornecedor.getEmail().isEmpty()) {
-            fornecedorAtual.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
+        String email = fornecedor.getEmail();
+
+        if (email != null && !email.isEmpty()) {
+            fornecedorAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        if (!fornecedor.getEnderecos().isEmpty()) {
-            List<EnderecoModel> enderecos = fornecedorAtual.getEnderecos();
+        List<EnderecoModel> enderecos = fornecedor.getEnderecos();
 
-            for (EnderecoModel endereco : fornecedor.getEnderecos()) {
+        if (!enderecos.isEmpty() && enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = fornecedorAtual.getEnderecos();
+
+            for (EnderecoModel endereco : enderecos) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
                 Utils.formatarEndereco(endereco);
-                enderecos.add(endereco);
+                enderecosFormatados.add(endereco);
             }
 
-            fornecedor.setEnderecos(enderecos);
+            fornecedor.setEnderecos(enderecosFormatados);
         }
 
-        if (!fornecedor.getTelefones().isEmpty()) {
-            List<TelefoneModel> telefones = fornecedorAtual.getTelefones();
-            for (TelefoneModel telefone : fornecedor.getTelefones()) {
-                telefones.add(Utils.formatarTelefone(telefone));
+        List<TelefoneModel> telefones = fornecedor.getTelefones();
+
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = fornecedorAtual.getTelefones();
+            for (TelefoneModel telefone : telefones) {
+                telefonesFormatados.add(Utils.formatarTelefone(telefone));
             }
-            fornecedor.setTelefones(telefones);
+            fornecedor.setTelefones(telefonesFormatados);
         }
 
         if (Utils.verificarEmail(fornecedor.getEmail()) == false) {

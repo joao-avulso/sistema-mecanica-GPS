@@ -63,7 +63,7 @@ public class ProdutoService {
     }
 
     public List<ProdutoModel> getProdutosByFornecedor(FornecedorModel fornecedor) throws Exception {
-        if (fornecedor == null || fornecedor.getId() == null || !fornecedorRepository.existsById(fornecedor.getId())) {
+        if (fornecedor == null || !fornecedorRepository.existsById(fornecedor.getId())) {
             throw new Exception("Fornecedor não encontrado");
         }
 
@@ -91,15 +91,19 @@ public class ProdutoService {
 
         ProdutoModel produtoAtual = produtoRepository.findById(id).get();
 
-        if (produto.getNome() != null && !produto.getNome().isEmpty()) {
-            produtoAtual.setNome(Utils.formatarString(produto.getNome()));
+        String nome = produto.getNome();
+
+        if (nome != null && !nome.isEmpty()) {
+            produtoAtual.setNome(Utils.formatarString(nome));
         }
 
-        if (produto.getDescricao() != null && !produto.getDescricao().isEmpty()) {
-            produtoAtual.setDescricao(Utils.formatarString(produto.getDescricao()));
+        String descricao = produto.getDescricao();
+
+        if (descricao != null && !descricao.isEmpty()) {
+            produtoAtual.setDescricao(Utils.formatarString(descricao));
         }
 
-        return produtoRepository.save(produto);
+        return produtoRepository.save(produtoAtual);
 
     }
 }

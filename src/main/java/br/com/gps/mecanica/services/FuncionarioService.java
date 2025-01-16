@@ -1,11 +1,13 @@
 package br.com.gps.mecanica.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import br.com.gps.mecanica.enums.Cargo;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.FuncionarioModel;
 import br.com.gps.mecanica.models.TelefoneModel;
@@ -57,27 +59,28 @@ public class FuncionarioService {
         funcionario.setCpf(Utils.formatarCpf(funcionario.getCpf()));
         funcionario.setEmail(Utils.formatarEmail(funcionario.getEmail()));
 
-        if (!funcionario.getEnderecos().isEmpty()) {
-            List<EnderecoModel> enderecos = new ArrayList<>();
+        List<EnderecoModel> enderecos = funcionario.getEnderecos();
 
-            for (EnderecoModel endereco : funcionario.getEnderecos()) {
+        if (!enderecos.isEmpty() && enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = new ArrayList<>();
+
+            for (EnderecoModel endereco : enderecos) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
                 Utils.formatarEndereco(endereco);
-                enderecos.add(endereco);
+                enderecosFormatados.add(endereco);
             }
 
-            funcionario.setEnderecos(enderecos);
+            funcionario.setEnderecos(enderecosFormatados);
         }
 
-        if (!funcionario.getTelefones().isEmpty()) {
-            List<TelefoneModel> telefones = new ArrayList<>();
+        List<TelefoneModel> telefones = funcionario.getTelefones();
 
-            for (TelefoneModel telefone : funcionario.getTelefones()) {
-                Utils.formatarTelefone(telefone);
-                telefones.add(telefone);
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = new ArrayList<>();
+            for (TelefoneModel telefone : telefones) {
+                telefonesFormatados.add(Utils.formatarTelefone(telefone));
             }
-
-            funcionario.setTelefones(telefones);
+            funcionario.setTelefones(telefonesFormatados);
         }
 
         if (funcionarioRepository.findByCpf(funcionario.getCpf()) != null) {
@@ -106,47 +109,61 @@ public class FuncionarioService {
 
         FuncionarioModel funcionarioAtual = funcionarioRepository.findById(id).get();
 
-        if (funcionario.getNome() != null && !funcionario.getNome().isEmpty()) {
-            funcionarioAtual.setNome(Utils.formatarString(funcionario.getNome()));
+        String nome = funcionario.getNome();
+
+        if (nome != null && !nome.isEmpty()) {
+            funcionarioAtual.setNome(Utils.formatarString(nome));
         }
 
-        if (funcionario.getCpf() != null && !funcionario.getCpf().isEmpty()) {
-            funcionarioAtual.setCpf(Utils.formatarCpf(funcionario.getCpf()));
+        String cpf = funcionario.getCpf();
+
+        if (cpf != null && !cpf.isEmpty()) {
+            funcionarioAtual.setCpf(Utils.formatarCpf(cpf));
         }
 
-        if (funcionario.getEmail() != null && !funcionario.getEmail().isEmpty()) {
-            funcionarioAtual.setEmail(Utils.formatarEmail(funcionario.getEmail()));
+        String email = funcionario.getEmail();
+
+        if (email != null && !email.isEmpty()) {
+            funcionarioAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        if (funcionario.getCargo() != null) {
-            funcionarioAtual.setCargo(funcionario.getCargo());
+        Cargo cargo = funcionario.getCargo();
+
+        if (cargo != null && !cargo.toString().isEmpty()) {
+            funcionarioAtual.setCargo(cargo);
         }
 
-        if (funcionario.getDataAdmissao() != null && !funcionario.getDataAdmissao().toString().isEmpty()) {
-            funcionarioAtual.setDataAdmissao(funcionario.getDataAdmissao());
+        LocalDate dataNascimento = funcionario.getDataAdmissao();
+
+        if (dataNascimento != null && !dataNascimento.toString().isEmpty()) {
+            funcionarioAtual.setDataAdmissao(dataNascimento);
         }
 
-        if (!funcionario.getEnderecos().isEmpty() && funcionario.getEnderecos() != null) {
-            List<EnderecoModel> enderecos = funcionarioAtual.getEnderecos();
+        List<EnderecoModel> enderecos = funcionario.getEnderecos();
 
-            for (EnderecoModel endereco : funcionario.getEnderecos()) {
+        if (!enderecos.isEmpty() && enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = funcionarioAtual.getEnderecos();
+
+            for (EnderecoModel endereco : enderecos) {
                 endereco.setCep(Utils.formatarCep(endereco.getCep()));
                 Utils.formatarEndereco(endereco);
-                enderecos.add(endereco);
+                enderecosFormatados.add(endereco);
             }
 
-            funcionarioAtual.setEnderecos(enderecos);
+            funcionarioAtual.setEnderecos(enderecosFormatados);
         }
 
-        if (!funcionario.getTelefones().isEmpty() && funcionario.getTelefones() != null) {
-            List<TelefoneModel> telefones = funcionarioAtual.getTelefones();
+        List<TelefoneModel> telefones = funcionario.getTelefones();
+
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = funcionarioAtual.getTelefones();
 
             for (TelefoneModel telefone : funcionario.getTelefones()) {
                 Utils.formatarTelefone(telefone);
-                telefones.add(telefone);
+                telefonesFormatados.add(telefone);
             }
 
-            funcionarioAtual.setTelefones(telefones);
+            funcionarioAtual.setTelefones(telefonesFormatados);
         }
 
         if (funcionarioRepository.findByCpf(funcionario.getCpf()) != null
