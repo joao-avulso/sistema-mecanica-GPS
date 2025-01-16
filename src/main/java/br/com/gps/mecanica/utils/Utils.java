@@ -294,5 +294,6 @@ public class Utils {
         }
         veiculo.setPlaca(formatarPlaca(veiculo.getPlaca()));
         veiculo.setModelo(formatarMarcaModeloVeiculo(veiculo.getModelo()));
+        veiculo.setMarca(formatarMarcaModeloVeiculo(veiculo.getMarca()));
     }
 }

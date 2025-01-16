@@ -48,7 +48,7 @@ public class FornecedorService {
 
         List<EnderecoModel> enderecos = new ArrayList<>();
 
-        if (!enderecos.isEmpty() && enderecos != null) {
+        if (enderecos != null && !enderecos.isEmpty()) {
             List<EnderecoModel> enderecosFormatados = new ArrayList<>();
 
             for (EnderecoModel endereco : enderecos) {
@@ -62,7 +62,7 @@ public class FornecedorService {
 
         List<TelefoneModel> telefones = new ArrayList<>();
 
-        if (!telefones.isEmpty() && telefones != null) {
+        if (telefones != null && !telefones.isEmpty()) {
             List<TelefoneModel> telefonesFormatados = new ArrayList<>();
             for (TelefoneModel telefone : telefones) {
                 telefonesFormatados.add(Utils.formatarTelefone(telefone));

@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.gps.mecanica.enums.Pessoa;
+import br.com.gps.mecanica.enums.PessoaEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,10 +14,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 // @MappedSuperclass
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "pessoas")
 public class PessoaBaseModel {
 
     @Serial
@@ -28,7 +30,7 @@ public class PessoaBaseModel {
     protected UUID id;
 
     @Column(nullable = false)
-    protected Pessoa tipoPessoa;
+    protected PessoaEnum tipoPessoa;
 
     @Column(nullable = false)
     protected String nome;
@@ -45,7 +47,7 @@ public class PessoaBaseModel {
     public PessoaBaseModel() {
     }
 
-    public PessoaBaseModel(Pessoa tipoPessoa, String nome, String email, List<TelefoneModel> telefones,
+    public PessoaBaseModel(PessoaEnum tipoPessoa, String nome, String email, List<TelefoneModel> telefones,
             List<EnderecoModel> enderecos) {
         this.tipoPessoa = tipoPessoa;
         this.nome = nome;
@@ -62,11 +64,11 @@ public class PessoaBaseModel {
         this.id = id;
     }
 
-    public Pessoa getTipoPessoa() {
+    public PessoaEnum getTipoPessoa() {
         return tipoPessoa;
     }
 
-    public void setTipoPessoa(Pessoa tipoPessoa) {
+    public void setTipoPessoa(PessoaEnum tipoPessoa) {
         this.tipoPessoa = tipoPessoa;
     }
 

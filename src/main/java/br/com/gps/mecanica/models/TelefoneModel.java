@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-import br.com.gps.mecanica.enums.Contato;
+import br.com.gps.mecanica.enums.ContatoEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +28,7 @@ public class TelefoneModel implements Serializable {
     @Column(nullable = false)
     private String numero;
 
-    private Contato tipo;
+    private ContatoEnum tipo;
 
     @ManyToOne
     @JoinColumn(name = "idPessoa", nullable = false)
@@ -37,7 +37,7 @@ public class TelefoneModel implements Serializable {
     public TelefoneModel() {
     }
 
-    public TelefoneModel(String numero, Contato tipo, PessoaBaseModel pessoa) {
+    public TelefoneModel(String numero, ContatoEnum tipo, PessoaBaseModel pessoa) {
         this.numero = numero;
         this.tipo = tipo;
         this.pessoa = pessoa;
@@ -59,11 +59,11 @@ public class TelefoneModel implements Serializable {
         this.numero = numero;
     }
 
-    public Contato getTipo() {
+    public ContatoEnum getTipo() {
         return tipo;
     }
 
-    public void setTipo(Contato tipo) {
+    public void setTipo(ContatoEnum tipo) {
         this.tipo = tipo;
     }
 
