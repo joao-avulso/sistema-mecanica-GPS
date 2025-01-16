@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-import br.com.gps.mecanica.enums.Contato;
+import br.com.gps.mecanica.enums.ContatoEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,7 +47,7 @@ public class EnderecoModel implements Serializable {
 
     private String referencia;
 
-    private Contato tipo;
+    private ContatoEnum tipo;
 
     @ManyToOne
     @JoinColumn(name = "idPessoa", nullable = false)
@@ -57,7 +57,7 @@ public class EnderecoModel implements Serializable {
     }
 
     public EnderecoModel(String cep, String rua, String bairro, String cidade, String estado, String numero,
-            String complemento, String referencia, Contato tipo, PessoaBaseModel pessoa) {
+            String complemento, String referencia, ContatoEnum tipo, PessoaBaseModel pessoa) {
         this.cep = cep;
         this.rua = rua;
         this.bairro = bairro;
@@ -142,11 +142,11 @@ public class EnderecoModel implements Serializable {
         this.referencia = referencia;
     }
 
-    public Contato getTipo() {
+    public ContatoEnum getTipo() {
         return tipo;
     }
 
-    public void setTipo(Contato tipo) {
+    public void setTipo(ContatoEnum tipo) {
         this.tipo = tipo;
     }
 

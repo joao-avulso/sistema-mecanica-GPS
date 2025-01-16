@@ -1,6 +1,6 @@
 package br.com.gps.mecanica.enums;
 
-public enum Cargo {
+public enum CargoEnum {
     GERENTE,
     MECANICO,
     ATENDENTE,

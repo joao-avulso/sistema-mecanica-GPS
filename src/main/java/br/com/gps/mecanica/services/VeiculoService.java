@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import br.com.gps.mecanica.enums.Cor;
+import br.com.gps.mecanica.enums.CorEnum;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.utils.Utils;
@@ -103,7 +103,7 @@ public class VeiculoService {
             veiculoAtual.setAno(ano);
         }
 
-        Cor cor = veiculo.getCor();
+        CorEnum cor = veiculo.getCor();
 
         if (cor != null) {
             veiculoAtual.setCor(cor);

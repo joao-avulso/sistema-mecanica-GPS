@@ -64,7 +64,7 @@ public class ClienteService {
 
         List<EnderecoModel> enderecos = cliente.getEnderecos();
 
-        if (!enderecos.isEmpty() && enderecos != null) {
+        if (enderecos != null && !enderecos.isEmpty()) {
             List<EnderecoModel> enderecosFormatados = new ArrayList<>();
 
             for (EnderecoModel endereco : enderecos) {
@@ -78,7 +78,7 @@ public class ClienteService {
 
         List<TelefoneModel> telefones = cliente.getTelefones();
 
-        if (!telefones.isEmpty() && telefones != null) {
+        if (telefones != null && !telefones.isEmpty()) {
             List<TelefoneModel> telefonesFormatados = new ArrayList<>();
 
             for (TelefoneModel telefone : telefones) {
@@ -91,7 +91,7 @@ public class ClienteService {
 
         List<VeiculoModel> veiculos = cliente.getVeiculos();
 
-        if (!veiculos.isEmpty() && veiculos != null) {
+        if (veiculos != null && !veiculos.isEmpty()) {
             List<VeiculoModel> veiculosFormatados = new ArrayList<>();
 
             for (VeiculoModel veiculo : veiculos) {
@@ -131,7 +131,7 @@ public class ClienteService {
         String nome = cliente.getNome();
 
         if (nome != null && !nome.isEmpty()) {
-            clienteAtual.setNome(Utils.formatarString(nome));
+            clienteAtual.setNome(nome.toUpperCase());
         }
 
         String cpf = cliente.getCpf();
@@ -148,7 +148,7 @@ public class ClienteService {
 
         List<EnderecoModel> enderecos = cliente.getEnderecos();
 
-        if (!enderecos.isEmpty() && enderecos != null) {
+        if (enderecos != null && !enderecos.isEmpty()) {
             List<EnderecoModel> enderecosFormatados = clienteAtual.getEnderecos();
 
             for (EnderecoModel endereco : enderecos) {
@@ -162,7 +162,7 @@ public class ClienteService {
 
         List<TelefoneModel> telefones = cliente.getTelefones();
 
-        if (!telefones.isEmpty() && telefones != null) {
+        if (telefones != null && !telefones.isEmpty()) {
             List<TelefoneModel> telefonesFormatados = clienteAtual.getTelefones();
 
             for (TelefoneModel telefone : telefones) {
@@ -175,7 +175,7 @@ public class ClienteService {
 
         List<VeiculoModel> veiculos = cliente.getVeiculos();
 
-        if (!veiculos.isEmpty() && veiculos != null) {
+        if (veiculos != null && !veiculos.isEmpty()) {
             List<VeiculoModel> veiculosFormatados = new ArrayList<>();
 
             for (VeiculoModel veiculo : veiculos) {

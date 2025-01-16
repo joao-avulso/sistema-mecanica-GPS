@@ -1,6 +1,6 @@
 package br.com.gps.mecanica.enums;
 
-public enum Cor {
+public enum CorEnum {
     PRETO,
     BRANCO,
     PRATA,

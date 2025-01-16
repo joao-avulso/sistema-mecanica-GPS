@@ -3,8 +3,8 @@ package br.com.gps.mecanica.models;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.gps.mecanica.enums.Cargo;
-import br.com.gps.mecanica.enums.Pessoa;
+import br.com.gps.mecanica.enums.CargoEnum;
+import br.com.gps.mecanica.enums.PessoaEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -15,15 +15,15 @@ public class FuncionarioModel extends PessoaBaseModel {
     @Column(nullable = false, unique = true)
     private String cpf;
 
-    private Cargo cargo;
+    private CargoEnum cargo;
 
     private LocalDate dataAdmissao;
 
     public FuncionarioModel() {
     }
 
-    public FuncionarioModel(Pessoa tipoPessoa, String nome, String cpf, String email, List<TelefoneModel> telefones,
-            List<EnderecoModel> enderecos, Cargo cargo, LocalDate dataAdmissao) {
+    public FuncionarioModel(PessoaEnum tipoPessoa, String nome, String cpf, String email, List<TelefoneModel> telefones,
+            List<EnderecoModel> enderecos, CargoEnum cargo, LocalDate dataAdmissao) {
         super(tipoPessoa, nome, email, telefones, enderecos);
         this.cpf = cpf;
         this.cargo = cargo;
@@ -38,11 +38,11 @@ public class FuncionarioModel extends PessoaBaseModel {
         this.cpf = cpf;
     }
 
-    public Cargo getCargo() {
+    public CargoEnum getCargo() {
         return cargo;
     }
 
-    public void setCargo(Cargo cargo) {
+    public void setCargo(CargoEnum cargo) {
         this.cargo = cargo;
     }
 

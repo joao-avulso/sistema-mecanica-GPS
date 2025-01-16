@@ -2,7 +2,7 @@ package br.com.gps.mecanica.models;
 
 import java.util.List;
 
-import br.com.gps.mecanica.enums.Pessoa;
+import br.com.gps.mecanica.enums.PessoaEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +22,7 @@ public class FornecedorModel extends PessoaBaseModel {
     public FornecedorModel() {
     }
 
-    public FornecedorModel(Pessoa tipoPessoa, String nome, String email, List<EnderecoModel> enderecos,
+    public FornecedorModel(PessoaEnum tipoPessoa, String nome, String email, List<EnderecoModel> enderecos,
             List<TelefoneModel> telefones, String cnpj, List<ProdutoModel> produtos) {
         super(tipoPessoa, nome, email, telefones, enderecos);
         this.cnpj = cnpj;

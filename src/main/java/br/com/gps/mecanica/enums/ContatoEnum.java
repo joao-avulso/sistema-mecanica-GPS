@@ -1,6 +1,6 @@
 package br.com.gps.mecanica.enums;
 
-public enum Contato {
+public enum ContatoEnum {
     RESIDENCIAL,
     COMERCIAL;
 }

@@ -1,6 +1,6 @@
 package br.com.gps.mecanica.enums;
 
-public enum Pessoa {
+public enum PessoaEnum {
     FISICA,
     JURIDICA;
 }

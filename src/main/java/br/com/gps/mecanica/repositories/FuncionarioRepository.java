@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import br.com.gps.mecanica.enums.CargoEnum;
 import br.com.gps.mecanica.models.FuncionarioModel;
 
 public interface FuncionarioRepository extends JpaRepository<FuncionarioModel, UUID> {
@@ -14,7 +15,7 @@ public interface FuncionarioRepository extends JpaRepository<FuncionarioModel, U
 
     FuncionarioModel findByEmail(String email);
 
-    List<FuncionarioModel> findByCargo(String cargo);
+    List<FuncionarioModel> findByCargo(CargoEnum cargo);
 
     void deleteByCpf(String cpf);
 }

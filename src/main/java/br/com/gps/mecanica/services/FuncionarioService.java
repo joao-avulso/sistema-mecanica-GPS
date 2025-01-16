@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import br.com.gps.mecanica.enums.Cargo;
+import br.com.gps.mecanica.enums.CargoEnum;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.FuncionarioModel;
 import br.com.gps.mecanica.models.TelefoneModel;
@@ -127,9 +127,9 @@ public class FuncionarioService {
             funcionarioAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        Cargo cargo = funcionario.getCargo();
+        CargoEnum cargo = funcionario.getCargo();
 
-        if (cargo != null && !cargo.toString().isEmpty()) {
+        if (cargo != null) {
             funcionarioAtual.setCargo(cargo);
         }
 

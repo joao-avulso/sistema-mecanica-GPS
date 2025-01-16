@@ -1,12 +1,19 @@
 package br.com.gps.mecanica.controllers;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import br.com.gps.mecanica.MecanicaFxMainApplication;
-import br.com.gps.mecanica.enums.MenuSelection;
+import br.com.gps.mecanica.enums.ContatoEnum;
+import br.com.gps.mecanica.enums.CorEnum;
+import br.com.gps.mecanica.enums.MenuSelectionEnum;
+import br.com.gps.mecanica.enums.PessoaEnum;
 import br.com.gps.mecanica.models.ClienteModel;
+import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.VeiculoModel;
+import br.com.gps.mecanica.repositories.ClienteRepository;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
+import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.VeiculoService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
@@ -21,7 +28,8 @@ import javafx.scene.layout.VBox;
 
 public class MainController {
 
-    private MenuSelection selection;
+    private MenuSelectionEnum selection;
+    
     private Object selected;
 
     @FXML
@@ -53,30 +61,17 @@ public class MainController {
 
     private VeiculoService veiculoService = new VeiculoService(MecanicaFxMainApplication.getBean(VeiculoRepository.class));
 
-    // private ClienteService clienteService = new ClienteService(MecanicaFxMainApplication.getBean(ClienteRepository.class));
+    private ClienteService clienteService = new ClienteService(MecanicaFxMainApplication.getBean(ClienteRepository.class));
 
     @FXML
     void mostraVeiculos(ActionEvent event) {
-        if (selection == MenuSelection.VEICULO) {
+        if (selection == MenuSelectionEnum.VEICULO) {
             return;
         }
 
-        selection = MenuSelection.VEICULO;
+        selection = MenuSelectionEnum.VEICULO;
 
-        // ClienteModel cliente = new ClienteModel(Pessoa.FISICA, "João", "10451721977", "joaoalt0502@gmail.com", null, null, null);
-
-        // VeiculoModel veiculo1 = new VeiculoModel("ABC1234", "Fiat", "Uno", 2010, Cor.AMARELO, cliente);
-
-        // EnderecoModel endereco = new EnderecoModel("07083450", "Rua 123", "Bairro 1", "Cidade 1", "SP", "123", "complemento", "referencia", Contato.COMERCIAL, cliente);
-
-        // cliente.setEnderecos(List.of(endereco));
-        // cliente.setVeiculos(List.of(veiculo1));
-
-        // try {
-        //     clienteService.create(cliente);
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
+        //createTestClient();
 
         mainVBox.getChildren().clear();
         TableView<VeiculoModel> mainTable = new TableView<VeiculoModel>();
@@ -142,5 +137,22 @@ public class MainController {
         VBox.setVgrow(mainTable, Priority.ALWAYS);
         buttonBorderPane.setRight(deleteButton);
         mainVBox.getChildren().add(buttonBorderPane);
+    }
+
+    private void createTestClient() {
+        ClienteModel cliente = new ClienteModel(PessoaEnum.FISICA, "João", "10451721977", "joaoalt0502@gmail.com", null, null, null);
+
+        VeiculoModel veiculo1 = new VeiculoModel("ABC1234", "Uno", "Fiat", 2010, CorEnum.AMARELO, cliente);
+
+        EnderecoModel endereco = new EnderecoModel("07083450", "Rua 123", "Bairro 1", "Cidade 1", "SP", "123", "complemento", "referencia", ContatoEnum.COMERCIAL, cliente);
+
+        cliente.setEnderecos(List.of(endereco));
+        cliente.setVeiculos(List.of(veiculo1));
+
+        try {
+            clienteService.create(cliente);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

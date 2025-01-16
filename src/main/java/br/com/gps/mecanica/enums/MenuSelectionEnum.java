@@ -1,6 +1,6 @@
 package br.com.gps.mecanica.enums;
 
-public enum MenuSelection {
+public enum MenuSelectionEnum {
     CLIENTE,
     VEICULO,
     SERVICO,

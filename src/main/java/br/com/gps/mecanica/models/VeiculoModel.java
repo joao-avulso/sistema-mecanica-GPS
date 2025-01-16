@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-import br.com.gps.mecanica.enums.Cor;
+import br.com.gps.mecanica.enums.CorEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,12 +32,12 @@ public class VeiculoModel implements Serializable {
     private String modelo;
     private String marca;
     private Integer ano;
-    private Cor cor;
+    private CorEnum cor;
 
     public VeiculoModel() {
     }
 
-    public VeiculoModel(String placa, String modelo, String marca, Integer ano, Cor cor, ClienteModel cliente) {
+    public VeiculoModel(String placa, String modelo, String marca, Integer ano, CorEnum cor, ClienteModel cliente) {
         this.placa = placa;
         this.modelo = modelo;
         this.marca = marca;
@@ -94,11 +94,11 @@ public class VeiculoModel implements Serializable {
         this.ano = ano;
     }
     
-    public Cor getCor() {
+    public CorEnum getCor() {
         return cor;
     }
     
-    public void setCor(Cor cor) {
+    public void setCor(CorEnum cor) {
         this.cor = cor;
     }
 
