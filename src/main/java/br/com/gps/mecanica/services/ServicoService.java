@@ -22,55 +22,49 @@ public class ServicoService {
         return servicoRepository.findAll();
     }
 
-    public ServicoModel get(UUID id) {
+    public ServicoModel get(UUID id) throws Exception {
+        if (!servicoRepository.existsById(id)) {
+            throw new Exception("Serviço não encontrado");
+        }
+
         return servicoRepository.findById(id).get();
     }
 
     public List<ServicoModel> getByNome(String nome) {
-        try {
-            return servicoRepository.findByNome(nome);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return servicoRepository.findByNome(nome);
     }
 
     public List<ServicoModel> getByValor(Double valor) {
-        try {
-            return servicoRepository.findByValor(valor);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return servicoRepository.findByValor(valor);
     }
 
     public ServicoModel create(ServicoModel servico) {
-        try {
-            servico.setNome(Utils.formatarString(servico.getNome()));
-            servico.setDescricao(Utils.formatarString(servico.getDescricao()));
-            return servicoRepository.save(servico);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        servico.setNome(Utils.formatarString(servico.getNome()));
+        servico.setDescricao(Utils.formatarString(servico.getDescricao()));
+        return servicoRepository.save(servico);
     }
 
-    public void delete(UUID id) {
-        try {
-            servicoRepository.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void delete(UUID id) throws Exception {
+        if (!servicoRepository.existsById(id)) {
+            throw new Exception("Serviço não encontrado");
         }
+
+        servicoRepository.deleteById(id);
     }
 
-    public ServicoModel update(ServicoModel servico) {
-        try {
-            servico.setNome(Utils.formatarString(servico.getNome()));
-            servico.setDescricao(Utils.formatarString(servico.getDescricao()));
-            return servicoRepository.save(servico);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public ServicoModel update(UUID id, ServicoModel servico) throws Exception {
+        if (!servicoRepository.existsById(id)) {
+            throw new Exception("Serviço não encontrado");
         }
-        return null;
+
+        if (servico.getNome() != null && !servico.getNome().isEmpty()) {
+            servico.setNome(Utils.formatarString(servico.getNome()));
+        }
+
+        if (servico.getDescricao() != null && !servico.getDescricao().isEmpty()) {
+            servico.setDescricao(Utils.formatarString(servico.getDescricao()));
+        }
+
+        return servicoRepository.save(servico);
     }
 }
