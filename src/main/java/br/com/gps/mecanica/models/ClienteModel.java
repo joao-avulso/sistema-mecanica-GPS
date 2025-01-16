@@ -22,8 +22,7 @@ public class ClienteModel extends PessoaBaseModel {
     public ClienteModel() {
     }
 
-    public ClienteModel(Pessoa tipoPessoa, String nome, String cpf, String email, List<TelefoneModel> telefones,
-            List<EnderecoModel> enderecos, List<VeiculoModel> veiculos) {
+    public ClienteModel(Pessoa tipoPessoa, String nome, String cpf, String email, List<TelefoneModel> telefones, List<EnderecoModel> enderecos, List<VeiculoModel> veiculos) {
         super(tipoPessoa, nome, email, telefones, enderecos);
         this.cpf = cpf;
         this.veiculos = veiculos;
@@ -47,9 +46,8 @@ public class ClienteModel extends PessoaBaseModel {
 
     @Override
     public String toString() {
-        return "ClienteModel [cpf=" + cpf + ", veiculos=" + veiculos.toString() + "endereco="
-                + enderecos.toString()
-                + ", telefones=" + telefones.toString() + ", tipoPessoa=" + tipoPessoa + ", nome=" + nome + ", email="
+        return "ClienteModel [cpf=" + cpf + "endereco="
+                + enderecos.toString() + ", tipoPessoa=" + tipoPessoa + ", nome=" + nome + ", email="
                 + email + ", id=" + id + "]";
     }
 }
