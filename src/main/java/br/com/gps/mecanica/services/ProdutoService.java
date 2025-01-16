@@ -37,7 +37,7 @@ public class ProdutoService {
 
     public List<ProdutoModel> getByValor_venda(Double valor_venda) {
         try {
-            return produtoRepository.findByValor_venda(valor_venda);
+            return produtoRepository.findByValorVenda(valor_venda);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,7 +46,7 @@ public class ProdutoService {
 
     public List<ProdutoModel> getByValor_compra(Double valor_compra) {
         try {
-            return produtoRepository.findByValor_compra(valor_compra);
+            return produtoRepository.findByValorCompra(valor_compra);
         } catch (Exception e) {
             e.printStackTrace();
         }

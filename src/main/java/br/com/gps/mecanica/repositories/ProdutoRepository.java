@@ -12,9 +12,9 @@ public interface ProdutoRepository extends JpaRepository<ProdutoModel, UUID> {
 
     List<ProdutoModel> findByNome(String nome);
 
-    List<ProdutoModel> findByValor_venda(Double valor_venda);
+    List<ProdutoModel> findByValorVenda(Double valorVenda);
 
-    List<ProdutoModel> findByValor_compra(Double valor_compra);
+    List<ProdutoModel> findByValorCompra(Double valorCompra);
 
     List<ProdutoModel> findByQuantidade(Integer quantidade);
 

@@ -34,9 +34,9 @@ public class ProdutoModel implements Serializable {
     private String descricao;
 
     @Column(nullable = false)
-    private Double valor_venda;
+    private Double valorVenda;
 
-    private Double valor_compra;
+    private Double valorCompra;
 
     @Column(nullable = false)
     private Integer quantidade;
@@ -47,8 +47,8 @@ public class ProdutoModel implements Serializable {
     public ProdutoModel(String nome, String descricao, Double valor_venda, Double valor_compra, Integer quantidade) {
         this.nome = nome;
         this.descricao = descricao;
-        this.valor_venda = valor_venda;
-        this.valor_compra = valor_compra;
+        this.valorVenda = valor_venda;
+        this.valorCompra = valor_compra;
         this.quantidade = quantidade;
     }
 
@@ -76,20 +76,20 @@ public class ProdutoModel implements Serializable {
         this.descricao = descricao;
     }
 
-    public Double getValor_venda() {
-        return valor_venda;
+    public Double getValorVenda() {
+        return valorVenda;
     }
 
-    public void setValor_venda(Double valor_venda) {
-        this.valor_venda = valor_venda;
+    public void setValorVenda(Double valor_venda) {
+        this.valorVenda = valor_venda;
     }
 
-    public Double getValor_compra() {
-        return valor_compra;
+    public Double getValorCompra() {
+        return valorCompra;
     }
 
-    public void setValor_compra(Double valor_compra) {
-        this.valor_compra = valor_compra;
+    public void setValorCompra(Double valor_compra) {
+        this.valorCompra = valor_compra;
     }
 
     public Integer getQuantidade() {
@@ -111,7 +111,7 @@ public class ProdutoModel implements Serializable {
     @Override
     public String toString() {
         return "ProdutoModel [descricao=" + descricao + ", fornecedor=" + fornecedor + ", id=" + id + ", nome=" + nome
-                + ", quantidade=" + quantidade + ", valor_compra=" + valor_compra + ", valor_venda=" + valor_venda
+                + ", quantidade=" + quantidade + ", valor_compra=" + valorCompra + ", valor_venda=" + valorVenda
                 + "]";
     }
 }
