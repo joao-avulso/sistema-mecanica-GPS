@@ -41,6 +41,7 @@ public class ServicoService {
     public ServicoModel create(ServicoModel servico) {
         servico.setNome(Utils.formatarString(servico.getNome()));
         servico.setDescricao(Utils.formatarString(servico.getDescricao()));
+        servico.setValor(servico.getValor());
         return servicoRepository.save(servico);
     }
 
@@ -57,14 +58,26 @@ public class ServicoService {
             throw new Exception("Serviço não encontrado");
         }
 
-        if (servico.getNome() != null && !servico.getNome().isEmpty()) {
-            servico.setNome(Utils.formatarString(servico.getNome()));
+        ServicoModel servicoAtual = servicoRepository.findById(id).get();
+
+        String nome = servico.getNome();
+
+        if (nome != null && !nome.isEmpty()) {
+            servicoAtual.setNome(Utils.formatarString(nome));
         }
 
-        if (servico.getDescricao() != null && !servico.getDescricao().isEmpty()) {
-            servico.setDescricao(Utils.formatarString(servico.getDescricao()));
+        String descricao = servico.getDescricao();
+
+        if (descricao != null && !descricao.isEmpty()) {
+            servicoAtual.setDescricao(Utils.formatarString(descricao));
         }
 
-        return servicoRepository.save(servico);
+        Double valor = servico.getValor();
+
+        if (valor != null) {
+            servicoAtual.setValor(valor);
+        }
+
+        return servicoRepository.save(servicoAtual);
     }
 }

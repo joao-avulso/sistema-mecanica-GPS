@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import br.com.gps.mecanica.enums.Cor;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.utils.Utils;
@@ -72,22 +73,40 @@ public class VeiculoService {
 
         VeiculoModel veiculoAtual = veiculoRepository.findById(id).get();
 
-        if (veiculo.getPlaca() != null && !veiculo.getPlaca().isEmpty()) {
-            String placa = Utils.formatarPlaca(veiculo.getPlaca());
+        String placa = veiculo.getPlaca();
 
-            if (Utils.verificarPlaca(placa) == false) {
+        if (placa != null && !placa.isEmpty()) {
+            String placaFormatada = Utils.formatarPlaca(veiculo.getPlaca());
+
+            if (Utils.verificarPlaca(placaFormatada) == false) {
                 throw new Exception("Placa inválida");
             }
 
-            veiculoAtual.setPlaca(placa);
+            veiculoAtual.setPlaca(placaFormatada);
         }
 
-        if (veiculo.getMarca() != null && !veiculo.getMarca().isEmpty()) {
-            veiculoAtual.setMarca(Utils.formatarMarcaModeloVeiculo(veiculo.getMarca()));
+        String marca = veiculo.getMarca();
+
+        if (marca != null && !marca.isEmpty()) {
+            veiculoAtual.setMarca(Utils.formatarMarcaModeloVeiculo(marca));
         }
 
-        if (veiculo.getModelo() != null && !veiculo.getModelo().isEmpty()) {
-            veiculoAtual.setModelo(Utils.formatarMarcaModeloVeiculo(veiculo.getModelo()));
+        String modelo = veiculo.getModelo();
+
+        if (modelo != null && !modelo.isEmpty()) {
+            veiculoAtual.setModelo(Utils.formatarMarcaModeloVeiculo(modelo));
+        }
+
+        Integer ano = veiculo.getAno();
+
+        if (ano != null) {
+            veiculoAtual.setAno(ano);
+        }
+
+        Cor cor = veiculo.getCor();
+
+        if (cor != null) {
+            veiculoAtual.setCor(cor);
         }
 
         return veiculoRepository.save(veiculoAtual);
