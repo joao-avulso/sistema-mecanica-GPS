@@ -6,6 +6,7 @@ import br.com.gps.mecanica.enums.PessoaEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -16,7 +17,7 @@ public class FornecedorModel extends PessoaBaseModel {
     @Column(unique = true, nullable = false)
     private String cnpj;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProdutoModel> produtos;
 
     public FornecedorModel() {
