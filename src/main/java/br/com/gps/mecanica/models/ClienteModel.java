@@ -7,6 +7,7 @@ import br.com.gps.mecanica.enums.PessoaEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -16,7 +17,7 @@ public class ClienteModel extends PessoaBaseModel {
     @Column(unique = true, nullable = false)
     private String cpf;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<VeiculoModel> veiculos;
 
     public ClienteModel() {

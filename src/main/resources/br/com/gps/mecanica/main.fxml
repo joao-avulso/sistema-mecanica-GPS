@@ -25,14 +25,14 @@
       </Text>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-border-color: gray; -fx-border-width: 5px;" GridPane.rowIndex="1">
          <children>
-            <Button fx:id="clientesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="10000.0" text="Clientes" textAlignment="JUSTIFY" VBox.vgrow="ALWAYS" />
+            <Button fx:id="clientesButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#mostraClientes" prefWidth="10000.0" text="Clientes" textAlignment="JUSTIFY" VBox.vgrow="ALWAYS" />
             <Button fx:id="veiculosButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#mostraVeiculos" prefWidth="10000.0" text="Veiculos" textAlignment="JUSTIFY" VBox.vgrow="ALWAYS" />
-            <Button fx:id="produtosButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="55.0" mnemonicParsing="false" prefWidth="10000.0" text="Produtos" textAlignment="JUSTIFY" />
-            <Button fx:id="servicosButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="90.0" mnemonicParsing="false" prefWidth="10000.0" text="Serviços" textAlignment="JUSTIFY" />
-            <Button fx:id="orcamentoButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="125.0" mnemonicParsing="false" prefWidth="10000.0" text="Orçamentos" textAlignment="JUSTIFY" />
+            <Button fx:id="produtosButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="55.0" mnemonicParsing="false" onAction="#mostraProdutos" prefWidth="10000.0" text="Produtos" textAlignment="JUSTIFY" />
+            <Button fx:id="servicosButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#mostraServicos" prefWidth="10000.0" text="Serviços" textAlignment="JUSTIFY" />
+            <Button fx:id="fornecedoresButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="125.0" mnemonicParsing="false" onAction="#mostraFornecedores" prefWidth="10000.0" text="Fornecedores" textAlignment="JUSTIFY" />
             <Button fx:id="ordensButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="160.0" mnemonicParsing="false" prefWidth="10000.0" text="Ordens de Serviço" textAlignment="JUSTIFY" />
-            <Button fx:id="notasButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="195.0" mnemonicParsing="false" prefWidth="10000.0" text="Notas Fiscais" textAlignment="JUSTIFY" />
-            <Button fx:id="fornecedoresButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="230.0" mnemonicParsing="false" prefWidth="10000.0" text="Fornecedores" textAlignment="JUSTIFY" />
+            <Button fx:id="orcamentoButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="195.0" mnemonicParsing="false" prefWidth="10000.0" text="Orçamento" textAlignment="JUSTIFY" />
+            <Button fx:id="notasButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="230.0" mnemonicParsing="false" prefWidth="10000.0" text="Notas Fiscais" textAlignment="JUSTIFY" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

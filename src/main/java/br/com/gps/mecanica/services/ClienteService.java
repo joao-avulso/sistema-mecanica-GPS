@@ -30,7 +30,7 @@ public class ClienteService {
         if (!clienteRepository.existsById(id)) {
             throw new Exception("Cliente não encontrado");
         }
-
+        
         return clienteRepository.findById(id).get();
     };
 
@@ -58,7 +58,7 @@ public class ClienteService {
     };
 
     public ClienteModel create(ClienteModel cliente) throws Exception {
-        cliente.setNome(Utils.formatarString(cliente.getNome()));
+        cliente.setNome(cliente.getNome().toUpperCase());
         cliente.setCpf(Utils.formatarCpf(cliente.getCpf()));
         cliente.setEmail(Utils.formatarEmail(cliente.getEmail()));
 
