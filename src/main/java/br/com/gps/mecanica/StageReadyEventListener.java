@@ -26,7 +26,7 @@ public class StageReadyEventListener implements ApplicationListener<StageReadyEv
         var stage = event.getStage();
 
         try {
-            scene = new Scene(loadFXML("main"), 640, 480);
+            scene = new Scene(loadFXML("main"), 1280, 960);
         } catch (IOException e) {
             System.out.println("Erro ao carregar o arquivo FXML: " + e.getMessage());
             e.printStackTrace();
