@@ -11,14 +11,13 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.repositories.ServicoRepository;
 
 @SpringBootTest
-@Transactional // Garante que as operações no banco sejam revertidas após o teste
+@Transactional // Garante que as operações no banco sejam revertidas após cada método de teste
 public class ServicoServiceTest {
 
     @Autowired
@@ -27,8 +26,7 @@ public class ServicoServiceTest {
     @Autowired
     private ServicoRepository servicoRepository;
 
-    @Test
-    @Rollback // Reverte as alterações no banco após o teste
+    @Test // Reverte as alterações no banco após o teste
     void testGet() {
         //Testa o retorno vazio
         List<ServicoModel> result0 = servicoService.get();
