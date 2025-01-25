@@ -57,6 +57,12 @@ public class Utils {
         return string;
     }
 
+    public static String formatarNome(String nome) {
+        nome = formatarString(nome);
+        nome = nome.replace(" ", "");
+        return nome;
+    }
+
     public static String formatarPlaca(String placa) {
         if (placa == null) {
             return null;

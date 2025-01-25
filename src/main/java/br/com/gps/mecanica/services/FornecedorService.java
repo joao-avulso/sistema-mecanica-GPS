@@ -95,48 +95,6 @@ public class FornecedorService {
     public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
         FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
 
-        String nome = fornecedor.getNome();
-
-        if (nome != null && !nome.isEmpty()) {
-            fornecedorAtual.setNome(Utils.formatarString(nome));
-        }
-
-        String cnpj = fornecedor.getCnpj();
-
-        if (cnpj != null && !cnpj.isEmpty()) {
-            fornecedorAtual.setCnpj(Utils.formatarCnpj(cnpj));
-        }
-
-        String email = fornecedor.getEmail();
-
-        if (email != null && !email.isEmpty()) {
-            fornecedorAtual.setEmail(Utils.formatarEmail(email));
-        }
-
-        List<EnderecoModel> enderecos = fornecedor.getEnderecos();
-
-        if (!enderecos.isEmpty() && enderecos != null) {
-            List<EnderecoModel> enderecosFormatados = fornecedorAtual.getEnderecos();
-
-            for (EnderecoModel endereco : enderecos) {
-                endereco.setCep(Utils.formatarCep(endereco.getCep()));
-                Utils.formatarEndereco(endereco);
-                enderecosFormatados.add(endereco);
-            }
-
-            fornecedor.setEnderecos(enderecosFormatados);
-        }
-
-        List<TelefoneModel> telefones = fornecedor.getTelefones();
-
-        if (!telefones.isEmpty() && telefones != null) {
-            List<TelefoneModel> telefonesFormatados = fornecedorAtual.getTelefones();
-            for (TelefoneModel telefone : telefones) {
-                telefonesFormatados.add(Utils.formatarTelefone(telefone));
-            }
-            fornecedor.setTelefones(telefonesFormatados);
-        }
-
         if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
             throw new Exception("Email inválido");
         }
@@ -145,19 +103,57 @@ public class FornecedorService {
             throw new Exception("CNPJ inválido");
         }
 
-        if (fornecedorRepository.findByCnpj(fornecedor.getCnpj()) != null) {
-            throw new Exception("CNPJ já cadastrado");
+        String nome = fornecedor.getNome();
+
+        if (nome != null && nome != fornecedorAtual.getNome()) {
+            fornecedorAtual.setNome(Utils.formatarString(nome));
         }
 
-        if (fornecedorRepository.findByEmail(fornecedor.getEmail()) != null) {
-            throw new Exception("Email já cadastrado");
+        String cnpj = fornecedor.getCnpj();
+
+        if (cnpj != null && cnpj != fornecedorAtual.getCnpj() && !fornecedorRepository.existsByCnpj(cnpj)) {
+            fornecedorAtual.setCnpj(Utils.formatarCnpj(cnpj));
         }
 
-        if (fornecedorRepository.findByNome(fornecedor.getNome()) != null) {
-            throw new Exception("Nome já cadastrado");
+        String email = fornecedor.getEmail();
+
+        if (email != null && email != fornecedorAtual.getEmail() && !fornecedorRepository.existsByEmail(email)) {
+            fornecedorAtual.setEmail(Utils.formatarEmail(email));
         }
 
         return fornecedorRepository.save(fornecedor);
+    }
+
+    public FornecedorModel addEndereco(UUID id, EnderecoModel endereco) {
+        FornecedorModel fornecedor = fornecedorRepository.findById(id).get();
+        List<EnderecoModel> enderecos = fornecedor.getEnderecos();
+        enderecos.add(endereco);
+        fornecedor.setEnderecos(enderecos);
+        return fornecedorRepository.save(fornecedor);
+    }
+
+    public FornecedorModel addTelefone(UUID id, TelefoneModel telefone) {
+        FornecedorModel fornecedor = fornecedorRepository.findById(id).get();
+        List<TelefoneModel> telefones = fornecedor.getTelefones();
+        telefones.add(telefone);
+        fornecedor.setTelefones(telefones);
+        return fornecedorRepository.save(fornecedor);
+    }
+
+    public void deleteEndereco(UUID id, UUID idEndereco) {
+        FornecedorModel fornecedor = fornecedorRepository.findById(id).get();
+        List<EnderecoModel> enderecos = fornecedor.getEnderecos();
+        enderecos.removeIf(endereco -> endereco.getId().equals(idEndereco));
+        fornecedor.setEnderecos(enderecos);
+        fornecedorRepository.save(fornecedor);
+    }
+
+    public void deleteTelefone(UUID id, UUID idTelefone) {
+        FornecedorModel fornecedor = fornecedorRepository.findById(id).get();
+        List<TelefoneModel> telefones = fornecedor.getTelefones();
+        telefones.removeIf(telefone -> telefone.getId().equals(idTelefone));
+        fornecedor.setTelefones(telefones);
+        fornecedorRepository.save(fornecedor);
     }
 
     public void delete(UUID id) {
