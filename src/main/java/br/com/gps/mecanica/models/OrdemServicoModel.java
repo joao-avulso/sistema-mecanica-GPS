@@ -47,6 +47,10 @@ public class OrdemServicoModel implements Serializable {
 
     private String descricao;
 
+    private Boolean Contratada = false;
+
+    private Boolean finalizada = false;
+
     public OrdemServicoModel() {
     }
 
@@ -114,6 +118,22 @@ public class OrdemServicoModel implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Boolean getContratada() {
+        return Contratada;
+    }
+
+    public void setContratada() {
+        this.Contratada = !this.Contratada;
+    }
+
+    public Boolean getFinalizada() {
+        return finalizada;
+    }
+
+    public void setFinalizada() {
+        this.finalizada = !this.finalizada;
     }
 
     @Override
