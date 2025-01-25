@@ -3,6 +3,7 @@ package br.com.gps.mecanica.controllers;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import br.com.gps.mecanica.MecanicaApplication;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.CorEnum;
@@ -16,11 +17,6 @@ import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
-import br.com.gps.mecanica.repositories.ClienteRepository;
-import br.com.gps.mecanica.repositories.FornecedorRepository;
-import br.com.gps.mecanica.repositories.ProdutoRepository;
-import br.com.gps.mecanica.repositories.ServicoRepository;
-import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.FornecedorService;
 import br.com.gps.mecanica.services.ProdutoService;
@@ -29,7 +25,13 @@ import br.com.gps.mecanica.services.VeiculoService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -37,12 +39,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainController {
-
-    private MenuSelectionEnum selection;
-    
-    private Object selected;
 
     @FXML
     private VBox mainVBox;
@@ -71,15 +72,28 @@ public class MainController {
     @FXML
     private Button produtosButton;
 
-    private VeiculoService veiculoService = new VeiculoService(MecanicaFxMainApplication.getBean(VeiculoRepository.class));
+    private MenuSelectionEnum selection;
+    
+    private Object selected;
 
-    private ClienteService clienteService = new ClienteService(MecanicaFxMainApplication.getBean(ClienteRepository.class));
+    private VeiculoService veiculoService;
 
-    private ProdutoService produtoService = new ProdutoService(MecanicaFxMainApplication.getBean(ProdutoRepository.class), MecanicaFxMainApplication.getBean(FornecedorRepository.class));
+    private ClienteService clienteService;
 
-    private ServicoService servicoService = new ServicoService(MecanicaFxMainApplication.getBean(ServicoRepository.class));
+    private ProdutoService produtoService;
 
-    private FornecedorService fornecedorService = new FornecedorService(MecanicaFxMainApplication.getBean(FornecedorRepository.class));
+    private ServicoService servicoService;
+
+    private FornecedorService fornecedorService;
+
+    @FXML
+    void initialize() {
+        this.veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
+        this.clienteService = MecanicaFxMainApplication.getBean(ClienteService.class);
+        this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
+        this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
+        this.fornecedorService = MecanicaFxMainApplication.getBean(FornecedorService.class);
+    }
 
     @FXML
     void mostraClientes(ActionEvent event) {
@@ -249,20 +263,56 @@ public class MainController {
         mainVBox.getChildren().add(buttonBorderPane);
     }
 
+    private void atualizaTabela() {
+        if (selection == MenuSelectionEnum.CLIENTE) {
+            criaTabela(List.of(PessoaBaseModel.class, ClienteModel.class), clienteService, List.of("id", "ID", "tipoPessoa"));
+        } else if (selection == MenuSelectionEnum.VEICULO) {
+            criaTabela(List.of(VeiculoModel.class), veiculoService, List.of("id", "ID"));
+        } else if (selection == MenuSelectionEnum.PRODUTO) {
+            criaTabela(List.of(ProdutoModel.class), produtoService, List.of("id", "ID"));
+        } else if (selection == MenuSelectionEnum.SERVICO) {
+            criaTabela(List.of(ServicoModel.class), servicoService, List.of("id", "ID"));
+        } else if (selection == MenuSelectionEnum.FORNECEDOR) {
+            criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService, List.of("id", "ID", "tipoPessoa"));
+        }
+    }
+
     private Button criarBotaoAdd(TableView<Object> tabela, Object service) {
         Button addButton = new Button("Adicionar");
         addButton.setStyle(
                 "-fx-background-color:rgb(52, 219, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
 
-        // addButton.setOnAction(event -> {
-        //     if (selected != null) {
-        //         try {
-                    
-        //         } catch (Exception e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // });
+                
+        try {
+            FXMLLoader loader;
+            if (selection == MenuSelectionEnum.VEICULO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
+            else if (selection == MenuSelectionEnum.CLIENTE) loader = new FXMLLoader(MecanicaApplication.class.getResource("addCliente.fxml"));
+            // else if (selection == MenuSelectionEnum.PRODUTO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addProduto.fxml"));
+            // else if (selection == MenuSelectionEnum.SERVICO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addServico.fxml"));
+            // else if (selection == MenuSelectionEnum.FORNECEDOR) loader = new FXMLLoader(MecanicaApplication.class.getResource("addFornecedor.fxml"));
+            else return addButton;
+
+            addButton.setOnAction(event -> {
+                Parent root;
+                try {
+                    root = loader.load();
+                    Stage stage = new Stage();
+                    stage.initStyle(StageStyle.UTILITY);
+                    stage.setResizable(false);
+                    stage.setTitle("Adicionar");
+                    stage.setScene(new Scene(root));
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.showAndWait();
+                    atualizaTabela();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         return addButton;
     }
@@ -274,28 +324,42 @@ public class MainController {
 
         deleteButton.setOnAction(event -> {
             if (selected != null) {
-                try {
-                    
-                    if (service instanceof ClienteService) {
-                        clienteService.delete(((ClienteModel) selected).getId());
-                    } else if (service instanceof VeiculoService) {
-                        veiculoService.delete(((VeiculoModel) selected).getId());
-                    } else if (service instanceof ProdutoService) {
-                        produtoService.delete(((ProdutoModel) selected).getId());
-                    } else if (service instanceof ServicoService) {
-                        servicoService.delete(((ServicoModel) selected).getId());
-                    } else if (service instanceof FornecedorService) {
-                        fornecedorService.delete(((FornecedorModel) selected).getId());
-                    }
 
-                    tabela.getItems().remove(selected);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Delete");
+                alert.setHeaderText("Você tem certeza que deseja deletar este item?");
+
+                ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setDefaultButton(false);
+                ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setDefaultButton(true);
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        deleteAction(service, selected);
+                        tabela.getItems().remove(selected);
+                    }
+                });
             }
         });
 
         return deleteButton;
+    }
+
+    private void deleteAction(Object service, Object obj) {
+        try {
+            if (service instanceof ClienteService) {
+                clienteService.delete(((ClienteModel) obj).getId());
+            } else if (service instanceof VeiculoService) {
+                veiculoService.delete(((VeiculoModel) obj).getId());
+            } else if (service instanceof ProdutoService) {
+                produtoService.delete(((ProdutoModel) obj).getId());
+            } else if (service instanceof ServicoService) {
+                servicoService.delete(((ServicoModel) obj).getId());
+            } else if (service instanceof FornecedorService) {
+                fornecedorService.delete(((FornecedorModel) obj).getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

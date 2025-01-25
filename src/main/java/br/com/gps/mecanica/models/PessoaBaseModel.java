@@ -17,7 +17,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-// @MappedSuperclass
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "pessoas")
@@ -36,7 +35,7 @@ public class PessoaBaseModel {
     @Column(nullable = false)
     protected String nome;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     protected String email;
 
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

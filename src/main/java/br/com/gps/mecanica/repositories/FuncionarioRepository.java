@@ -18,4 +18,8 @@ public interface FuncionarioRepository extends JpaRepository<FuncionarioModel, U
     List<FuncionarioModel> findByCargo(CargoEnum cargo);
 
     void deleteByCpf(String cpf);
+
+    Boolean existsByCpf(String cpf);
+
+    Boolean existsByEmail(String email);
 }

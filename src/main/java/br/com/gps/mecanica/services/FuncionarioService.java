@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.enums.CargoEnum;
@@ -16,11 +17,9 @@ import br.com.gps.mecanica.utils.Utils;
 
 @Service
 public class FuncionarioService {
-    final FuncionarioRepository funcionarioRepository;
 
-    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
-        this.funcionarioRepository = funcionarioRepository;
-    };
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
 
     public List<FuncionarioModel> get() {
         return funcionarioRepository.findAll();

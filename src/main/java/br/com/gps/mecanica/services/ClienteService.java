@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.ClienteModel;
@@ -16,11 +18,8 @@ import br.com.gps.mecanica.utils.Utils;
 @Service
 public class ClienteService {
 
-    private final ClienteRepository clienteRepository;
-
-    public ClienteService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    };
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     public List<ClienteModel> get() {
         return clienteRepository.findAll();
@@ -30,7 +29,7 @@ public class ClienteService {
         if (!clienteRepository.existsById(id)) {
             throw new Exception("Cliente não encontrado");
         }
-        
+
         return clienteRepository.findById(id).get();
     };
 
@@ -126,73 +125,6 @@ public class ClienteService {
             throw new Exception("Cliente não encontrado");
         }
 
-        ClienteModel clienteAtual = clienteRepository.findById(id).get();
-
-        String nome = cliente.getNome();
-
-        if (nome != null && !nome.isEmpty()) {
-            clienteAtual.setNome(nome.toUpperCase());
-        }
-
-        String cpf = cliente.getCpf();
-
-        if (cpf != null && !cpf.isEmpty()) {
-            clienteAtual.setCpf(Utils.formatarCpf(cpf));
-        }
-
-        String email = cliente.getEmail();
-
-        if (email != null && !email.isEmpty()) {
-            clienteAtual.setEmail(Utils.formatarEmail(email));
-        }
-
-        List<EnderecoModel> enderecos = cliente.getEnderecos();
-
-        if (enderecos != null && !enderecos.isEmpty()) {
-            List<EnderecoModel> enderecosFormatados = clienteAtual.getEnderecos();
-
-            for (EnderecoModel endereco : enderecos) {
-                endereco.setCep(Utils.formatarCep(endereco.getCep()));
-                Utils.formatarEndereco(endereco);
-                enderecosFormatados.add(endereco);
-            }
-
-            cliente.setEnderecos(enderecosFormatados);
-        }
-
-        List<TelefoneModel> telefones = cliente.getTelefones();
-
-        if (telefones != null && !telefones.isEmpty()) {
-            List<TelefoneModel> telefonesFormatados = clienteAtual.getTelefones();
-
-            for (TelefoneModel telefone : telefones) {
-                Utils.formatarTelefone(telefone);
-                telefonesFormatados.add(telefone);
-            }
-
-            cliente.setTelefones(telefonesFormatados);
-        }
-
-        List<VeiculoModel> veiculos = cliente.getVeiculos();
-
-        if (veiculos != null && !veiculos.isEmpty()) {
-            List<VeiculoModel> veiculosFormatados = new ArrayList<>();
-
-            for (VeiculoModel veiculo : veiculos) {
-                Utils.formatarVeiculo(veiculo);
-                veiculosFormatados.add(veiculo);
-            }
-
-            cliente.setVeiculos(veiculosFormatados);
-        }
-
-        if (clienteRepository.findByCpf(cliente.getCpf()) != null) {
-            throw new Exception("CPF já cadastrado");
-        }
-
-        if (clienteRepository.findByEmail(cliente.getEmail()) != null) {
-            throw new Exception("Email já cadastrado");
-        }
 
         if (Utils.verificarEmail(cliente.getEmail()) == false) {
             throw new Exception("Email inválido");
@@ -202,7 +134,158 @@ public class ClienteService {
             throw new Exception("CPF inválido");
         }
 
+        ClienteModel clienteAtual = clienteRepository.findById(id).get();
+
+        String nome = cliente.getNome();
+
+ 
+        if (nome != null && nome != clienteAtual.getNome()) {
+            clienteAtual.setNome(Utils.formatarNome(nome));
+        }
+
+        String cpf = cliente.getCpf();
+
+        if (cpf != null && cpf != clienteAtual.getCpf() && !clienteRepository.existsByCpf(cpf)) {
+            clienteAtual.setCpf(Utils.formatarCpf(cpf));
+        }
+
+        String email = cliente.getEmail();
+
+        if (email != null && email != clienteAtual.getCpf() && !clienteRepository.existsByEmail(email)) {
+            clienteAtual.setEmail(Utils.formatarEmail(email));
+        }
+
         return clienteRepository.save(cliente);
+    };
+
+    public ClienteModel addEndereco(UUID id, EnderecoModel endereco) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel cliente = clienteRepository.findById(id).get();
+        List<EnderecoModel> enderecos = cliente.getEnderecos();
+
+        if (enderecos == null) {
+            enderecos = new ArrayList<>();
+        }
+
+        endereco.setCep(Utils.formatarCep(endereco.getCep()));
+        Utils.formatarEndereco(endereco);
+        enderecos.add(endereco);
+        cliente.setEnderecos(enderecos);
+
+        return clienteRepository.save(cliente);
+    };
+
+    public ClienteModel addTelefone(UUID id, TelefoneModel telefone) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel cliente = clienteRepository.findById(id).get();
+        List<TelefoneModel> telefones = cliente.getTelefones();
+
+        if (telefones == null) {
+            telefones = new ArrayList<>();
+        }
+
+        Utils.formatarTelefone(telefone);
+        telefones.add(telefone);
+        cliente.setTelefones(telefones);
+
+        return clienteRepository.save(cliente);
+    };
+
+    public ClienteModel addVeiculo(UUID id, VeiculoModel veiculo) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel cliente = clienteRepository.findById(id).get();
+        List<VeiculoModel> veiculos = cliente.getVeiculos();
+
+        if (veiculos == null) {
+            veiculos = new ArrayList<>();
+        }
+
+        Utils.formatarVeiculo(veiculo);
+        veiculos.add(veiculo);
+        cliente.setVeiculos(veiculos);
+
+        return clienteRepository.save(cliente);
+    };
+
+    public void deleteEndereco(UUID id, UUID idEndereco) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel cliente = clienteRepository.findById(id).get();
+        List<EnderecoModel> enderecos = cliente.getEnderecos();
+
+        if (enderecos == null || enderecos.isEmpty()) {
+            throw new Exception("Endereço não encontrado");
+        }
+
+        for (EnderecoModel endereco : enderecos) {
+            if (endereco.getId().equals(idEndereco)) {
+                enderecos.remove(endereco);
+                cliente.setEnderecos(enderecos);
+                clienteRepository.save(cliente);
+                return;
+            }
+        }
+
+        throw new Exception("Endereço não encontrado");
+    };
+
+    public void deleteTelefone(UUID id, UUID idTelefone) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel cliente = clienteRepository.findById(id).get();
+        List<TelefoneModel> telefones = cliente.getTelefones();
+
+        if (telefones == null || telefones.isEmpty()) {
+            throw new Exception("Telefone não encontrado");
+        }
+
+        for (TelefoneModel telefone : telefones) {
+            if (telefone.getId().equals(idTelefone)) {
+                telefones.remove(telefone);
+                cliente.setTelefones(telefones);
+                clienteRepository.save(cliente);
+                return;
+            }
+        }
+
+        throw new Exception("Telefone não encontrado");
+    };
+
+    public void deleteVeiculo(UUID id, UUID idVeiculo) throws Exception {
+        if (!clienteRepository.existsById(id)) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel cliente = clienteRepository.findById(id).get();
+        List<VeiculoModel> veiculos = cliente.getVeiculos();
+
+        if (veiculos == null || veiculos.isEmpty()) {
+            throw new Exception("Veículo não encontrado");
+        }
+
+        for (VeiculoModel veiculo : veiculos) {
+            if (veiculo.getId().equals(idVeiculo)) {
+                veiculos.remove(veiculo);
+                cliente.setVeiculos(veiculos);
+                clienteRepository.save(cliente);
+                return;
+            }
+        }
+
+        throw new Exception("Veículo não encontrado");
     };
 
     public void delete(UUID id) throws Exception {

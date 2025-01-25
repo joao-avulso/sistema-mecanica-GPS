@@ -26,7 +26,7 @@ public class ServicoServiceTest {
     @Autowired
     private ServicoRepository servicoRepository;
 
-    @Test
+    @Test // Reverte as alterações no banco após o teste
     void testGet() {
         //Testa o retorno vazio
         List<ServicoModel> result0 = servicoService.get();

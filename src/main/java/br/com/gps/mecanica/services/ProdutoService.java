@@ -3,6 +3,7 @@ package br.com.gps.mecanica.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.FornecedorModel;
@@ -13,14 +14,14 @@ import br.com.gps.mecanica.utils.Utils;
 
 @Service
 public class ProdutoService {
-    final ProdutoRepository produtoRepository;
 
-    final FornecedorRepository fornecedorRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository, FornecedorRepository fornecedorRepository) {
-        this.produtoRepository = produtoRepository;
-        this.fornecedorRepository = fornecedorRepository;
-    }
+    @Autowired
+    private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
+
 
     public List<ProdutoModel> get() {
         return produtoRepository.findAll();
