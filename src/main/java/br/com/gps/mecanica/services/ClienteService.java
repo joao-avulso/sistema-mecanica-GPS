@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.ClienteModel;
@@ -16,11 +17,8 @@ import br.com.gps.mecanica.utils.Utils;
 @Service
 public class ClienteService {
 
-    private final ClienteRepository clienteRepository;
-
-    public ClienteService(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
-    };
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     public List<ClienteModel> get() {
         return clienteRepository.findAll();

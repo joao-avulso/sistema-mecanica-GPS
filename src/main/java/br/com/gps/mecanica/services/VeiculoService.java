@@ -3,21 +3,24 @@ package br.com.gps.mecanica.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.enums.CorEnum;
+import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.VeiculoModel;
+import br.com.gps.mecanica.repositories.ClienteRepository;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.utils.Utils;
 
 @Service
 public class VeiculoService {
 
-    final VeiculoRepository veiculoRepository;
+    @Autowired
+    private VeiculoRepository veiculoRepository;
 
-    public VeiculoService(VeiculoRepository veiculoRepository) {
-        this.veiculoRepository = veiculoRepository;
-    }
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     public VeiculoModel create(VeiculoModel veiculo) throws Exception {
 
@@ -113,10 +116,21 @@ public class VeiculoService {
     }
 
     public void delete(UUID id) throws Exception {
-        if (veiculoRepository.findById(id).isEmpty()) {
+        VeiculoModel veiculo = veiculoRepository.findById(id).get();
+        
+        if (veiculo == null) {
             throw new Exception("Veículo não encontrado");
         }
+        
+        ClienteModel cliente = veiculo.getCliente();
 
-        veiculoRepository.deleteById(id);
+        if (cliente != null) {
+            veiculo.setCliente(null);
+            veiculoRepository.save(veiculo);
+            cliente.getVeiculos().remove(veiculo);
+            clienteRepository.save(cliente);
+        }
+
+        veiculoRepository.delete(veiculo);
     }
 }

@@ -3,6 +3,7 @@ package br.com.gps.mecanica.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.ServicoModel;
@@ -12,11 +13,8 @@ import br.com.gps.mecanica.utils.Utils;
 @Service
 public class ServicoService {
 
-    final ServicoRepository servicoRepository;
-
-    public ServicoService(ServicoRepository servicoRepository) {
-        this.servicoRepository = servicoRepository;
-    }
+    @Autowired
+    private ServicoRepository servicoRepository;
 
     public List<ServicoModel> get() {
         return servicoRepository.findAll();

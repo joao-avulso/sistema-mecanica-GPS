@@ -16,11 +16,6 @@ import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
-import br.com.gps.mecanica.repositories.ClienteRepository;
-import br.com.gps.mecanica.repositories.FornecedorRepository;
-import br.com.gps.mecanica.repositories.ProdutoRepository;
-import br.com.gps.mecanica.repositories.ServicoRepository;
-import br.com.gps.mecanica.repositories.VeiculoRepository;
 import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.FornecedorService;
 import br.com.gps.mecanica.services.ProdutoService;
@@ -71,15 +66,23 @@ public class MainController {
     @FXML
     private Button produtosButton;
 
-    private VeiculoService veiculoService = new VeiculoService(MecanicaFxMainApplication.getBean(VeiculoRepository.class));
+    private VeiculoService veiculoService;
 
-    private ClienteService clienteService = new ClienteService(MecanicaFxMainApplication.getBean(ClienteRepository.class));
+    private ClienteService clienteService;
 
-    private ProdutoService produtoService = new ProdutoService(MecanicaFxMainApplication.getBean(ProdutoRepository.class), MecanicaFxMainApplication.getBean(FornecedorRepository.class));
+    private ProdutoService produtoService;
 
-    private ServicoService servicoService = new ServicoService(MecanicaFxMainApplication.getBean(ServicoRepository.class));
+    private ServicoService servicoService;
 
-    private FornecedorService fornecedorService = new FornecedorService(MecanicaFxMainApplication.getBean(FornecedorRepository.class));
+    private FornecedorService fornecedorService;
+
+    public MainController() {
+        this.veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
+        this.clienteService = MecanicaFxMainApplication.getBean(ClienteService.class);
+        this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
+        this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
+        this.fornecedorService = MecanicaFxMainApplication.getBean(FornecedorService.class);
+    }
 
     @FXML
     void mostraClientes(ActionEvent event) {
