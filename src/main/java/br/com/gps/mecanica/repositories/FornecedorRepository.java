@@ -16,4 +16,8 @@ public interface FornecedorRepository extends JpaRepository<FornecedorModel, UUI
     List<FornecedorModel> findByNome(String nome);
 
     void deleteByCnpj(String cnpj);
+
+    Boolean existsByCnpj(String cnpj);
+
+    Boolean existsByEmail(String email);
 }
