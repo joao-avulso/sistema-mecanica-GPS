@@ -3,6 +3,7 @@ package br.com.gps.mecanica.controllers;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import br.com.gps.mecanica.MecanicaApplication;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.CorEnum;
@@ -24,7 +25,13 @@ import br.com.gps.mecanica.services.VeiculoService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -32,12 +39,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainController {
-
-    private MenuSelectionEnum selection;
-    
-    private Object selected;
 
     @FXML
     private VBox mainVBox;
@@ -66,6 +72,10 @@ public class MainController {
     @FXML
     private Button produtosButton;
 
+    private MenuSelectionEnum selection;
+    
+    private Object selected;
+
     private VeiculoService veiculoService;
 
     private ClienteService clienteService;
@@ -76,7 +86,8 @@ public class MainController {
 
     private FornecedorService fornecedorService;
 
-    public MainController() {
+    @FXML
+    void initialize() {
         this.veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
         this.clienteService = MecanicaFxMainApplication.getBean(ClienteService.class);
         this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
@@ -252,20 +263,44 @@ public class MainController {
         mainVBox.getChildren().add(buttonBorderPane);
     }
 
+    private void atualizaTabela() {
+        if (selection == MenuSelectionEnum.CLIENTE) {
+            criaTabela(List.of(PessoaBaseModel.class, ClienteModel.class), clienteService, List.of("id", "ID", "tipoPessoa"));
+        } else if (selection == MenuSelectionEnum.VEICULO) {
+            criaTabela(List.of(VeiculoModel.class), veiculoService, List.of("id", "ID"));
+        } else if (selection == MenuSelectionEnum.PRODUTO) {
+            criaTabela(List.of(ProdutoModel.class), produtoService, List.of("id", "ID"));
+        } else if (selection == MenuSelectionEnum.SERVICO) {
+            criaTabela(List.of(ServicoModel.class), servicoService, List.of("id", "ID"));
+        } else if (selection == MenuSelectionEnum.FORNECEDOR) {
+            criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService, List.of("id", "ID", "tipoPessoa"));
+        }
+    }
+
     private Button criarBotaoAdd(TableView<Object> tabela, Object service) {
         Button addButton = new Button("Adicionar");
         addButton.setStyle(
                 "-fx-background-color:rgb(52, 219, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
 
-        // addButton.setOnAction(event -> {
-        //     if (selected != null) {
-        //         try {
-                    
-        //         } catch (Exception e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // });
+        if (selection == MenuSelectionEnum.VEICULO) {
+            addButton.setOnAction(event -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
+                    Parent root = loader.load();
+    
+                    Stage stage = new Stage();
+                    stage.initStyle(StageStyle.UTILITY);
+                    stage.setResizable(false);
+                    stage.setTitle("Adicionar Veículo");
+                    stage.setScene(new Scene(root));
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.showAndWait();
+                    atualizaTabela();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
 
         return addButton;
     }
@@ -277,28 +312,41 @@ public class MainController {
 
         deleteButton.setOnAction(event -> {
             if (selected != null) {
-                try {
-                    
-                    if (service instanceof ClienteService) {
-                        clienteService.delete(((ClienteModel) selected).getId());
-                    } else if (service instanceof VeiculoService) {
-                        veiculoService.delete(((VeiculoModel) selected).getId());
-                    } else if (service instanceof ProdutoService) {
-                        produtoService.delete(((ProdutoModel) selected).getId());
-                    } else if (service instanceof ServicoService) {
-                        servicoService.delete(((ServicoModel) selected).getId());
-                    } else if (service instanceof FornecedorService) {
-                        fornecedorService.delete(((FornecedorModel) selected).getId());
-                    }
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Delete");
+                alert.setHeaderText("Você tem certeza que deseja deletar este item?");
 
-                    tabela.getItems().remove(selected);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                ((Button) alert.getDialogPane().lookupButton(ButtonType.OK)).setDefaultButton(false);
+                ((Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL)).setDefaultButton(true);
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        deleteAction(service, selected);
+                        tabela.getItems().remove(selected);
+                    }
+                });
             }
         });
 
         return deleteButton;
+    }
+
+    private void deleteAction(Object service, Object obj) {
+        try {
+            if (service instanceof ClienteService) {
+                clienteService.delete(((ClienteModel) obj).getId());
+            } else if (service instanceof VeiculoService) {
+                veiculoService.delete(((VeiculoModel) obj).getId());
+            } else if (service instanceof ProdutoService) {
+                produtoService.delete(((ProdutoModel) obj).getId());
+            } else if (service instanceof ServicoService) {
+                servicoService.delete(((ServicoModel) obj).getId());
+            } else if (service instanceof FornecedorService) {
+                fornecedorService.delete(((FornecedorModel) obj).getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
