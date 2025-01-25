@@ -57,6 +57,12 @@ public class Utils {
         return string;
     }
 
+    public static String formatarNome(String nome) {
+        nome = nome.strip();
+        nome = nome.toUpperCase();
+        return nome;
+    }
+
     public static String formatarPlaca(String placa) {
         if (placa == null) {
             return null;
