@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.gps.mecanica.models.EnderecoModel;
@@ -14,11 +15,9 @@ import br.com.gps.mecanica.utils.Utils;
 
 @Service
 public class FornecedorService {
-    final FornecedorRepository fornecedorRepository;
 
-    public FornecedorService(FornecedorRepository fornecedorRepository) {
-        this.fornecedorRepository = fornecedorRepository;
-    }
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
 
     public List<FornecedorModel> get() {
         return fornecedorRepository.findAll();
