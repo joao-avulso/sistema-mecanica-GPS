@@ -34,3 +34,6 @@ nbactions.xml
 .vscode/
 
 saida.txt
+
+# Ignore application.properties
+src/main/resources/application.properties
