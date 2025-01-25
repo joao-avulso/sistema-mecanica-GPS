@@ -1,6 +1,7 @@
 package br.com.gps.mecanica.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List; 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  
 import br.com.gps.mecanica.models.FornecedorModel;
 import br.com.gps.mecanica.models.TelefoneModel;
+import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.PessoaEnum; 
 import br.com.gps.mecanica.repositories.FornecedorRepository;
@@ -34,10 +36,8 @@ public class FornecedorServiceTest {
         List<FornecedorModel> result0 = fornecedorService.get();
         assertEquals(0, result0.size());
 
-
         //FORNECEDOR
-        PessoaEnum pessoaEnum = PessoaEnum.JURIDICA;
-        FornecedorModel fornecedor1 = new FornecedorModel(pessoaEnum, "Alvo Dumbledor","dumbledore@gmail.com",
+        FornecedorModel fornecedor1 = new FornecedorModel(PessoaEnum.FISICA, "Alvo Dumbledor","dumbledore@gmail.com",
         new ArrayList<>(),new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
         fornecedorRepository.save(fornecedor1);
 
@@ -47,8 +47,7 @@ public class FornecedorServiceTest {
         assertEquals("33.113.309/0001-47", result.get(0).getCnpj());
 
         //FORNECEDOR2
-        PessoaEnum pessoaEnum2 = PessoaEnum.FISICA;
-        FornecedorModel fornecedor2 = new FornecedorModel(pessoaEnum2, "Alvo Dumbledore","dumbledoree@gmail.com",
+        FornecedorModel fornecedor2 = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledore","dumbledoree@gmail.com",
         new ArrayList<>(),new ArrayList<>(),"33.113.300/0001-47",new ArrayList<>());
         fornecedorRepository.save(fornecedor2);
 
@@ -58,8 +57,7 @@ public class FornecedorServiceTest {
 
     @Test
     void testGetById() {
-        PessoaEnum pessoaEnum = PessoaEnum.JURIDICA;
-        FornecedorModel fornecedor1 = new FornecedorModel(pessoaEnum, "Alvo Dumbledor","dumbledore@gmail.com",
+        FornecedorModel fornecedor1 = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
         new ArrayList<>(),new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
         FornecedorModel retorno = fornecedorRepository.save(fornecedor1);
 
@@ -72,8 +70,7 @@ public class FornecedorServiceTest {
 
     @Test
     void testGetByCnpj() {
-        PessoaEnum pessoaEnum = PessoaEnum.JURIDICA;
-        FornecedorModel fornecedor1 = new FornecedorModel(pessoaEnum, "Alvo Dumbledor","dumbledore@gmail.com",
+        FornecedorModel fornecedor1 = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
         new ArrayList<>(),new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
         fornecedorRepository.save(fornecedor1);
 
@@ -84,8 +81,7 @@ public class FornecedorServiceTest {
 
     @Test
     void testGetByEmail() {
-        PessoaEnum pessoaEnum = PessoaEnum.JURIDICA;
-        FornecedorModel fornecedor1 = new FornecedorModel(pessoaEnum, "Alvo Dumbledor","dumbledore@gmail.com",
+        FornecedorModel fornecedor1 = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
         new ArrayList<>(),new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
         fornecedorRepository.save(fornecedor1);
 
@@ -96,8 +92,7 @@ public class FornecedorServiceTest {
 
     @Test
     void testGetByNome() {
-        PessoaEnum pessoaEnum = PessoaEnum.JURIDICA;
-        FornecedorModel fornecedor1 = new FornecedorModel(pessoaEnum, "Alvo Dumbledor","dumbledore@gmail.com",
+        FornecedorModel fornecedor1 = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
         new ArrayList<>(),new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
         fornecedorRepository.save(fornecedor1);
 
@@ -108,28 +103,36 @@ public class FornecedorServiceTest {
 
     @Test
     void testCreate() {
-        PessoaEnum pessoaEnum = PessoaEnum.JURIDICA;
-        FornecedorModel fornecedor1 = new FornecedorModel(pessoaEnum, "Alvo Dumbledor","dumbledore@gmail.com",
-        new ArrayList<>(),new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
-        fornecedorRepository.save(fornecedor1);
+        
+        //FORNECEDOR
+        FornecedorModel fornecedor = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
+        new ArrayList<>() ,new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
 
-        List<FornecedorModel> result = fornecedorService.getByNome("Alvo Dumbledor");
-        assertEquals("Alvo Dumbledor", result.get(0).getNome());
-        assertEquals("33.113.309/0001-47", result.get(0).getCnpj());
+        //TELEFONE
+        TelefoneModel telefone1 = new TelefoneModel("44945676362", ContatoEnum.RESIDENCIAL, fornecedor);
+        TelefoneModel telefone2 = new TelefoneModel("44945676363", ContatoEnum.RESIDENCIAL, fornecedor);
+
+        //ENDERECO
+        EnderecoModel endereco1 = new EnderecoModel("81230370", "Rua dos Jardins", "Zona 44", "Marilha", "SP",
+         "1231", "Casa germinada", "", ContatoEnum.RESIDENCIAL, fornecedor);
+         EnderecoModel endereco2 = new EnderecoModel("85670370", "Rua dos Rios", "Zona 4", "Marilha", "SP",
+         "1231", "Casa germinada", "", ContatoEnum.COMERCIAL, fornecedor);
+
+        //PRODUTOS
+        fornecedor.setTelefones(List.of(telefone1, telefone2));
+        fornecedor.setEnderecos(List.of(endereco1, endereco2));
+
+        try {
+            FornecedorModel novo = fornecedorService.create(fornecedor);    
+            
+            assertEquals("ALVO DUMBLEDOR",novo.getNome());
+        
+        } catch (Exception e) {
+            fail("Nao foi possivel criar o fornecedor");
+        }
     }
 
-}
 
+    //FALTA TESTAR O UPDATEV
 
-
-/*        //TELEFONE
-        ContatoEnum contatoEnum = ContatoEnum.RESIDENCIAL;
-        TelefoneModel telefone1 = new TelefoneModel();
-        telefone1.setNumero("44945676362");
-        telefone1.setTipo(contatoEnum);
-        telefone1.setPessoa(retorno1);
-
-        List<TelefoneModel> telefones = new ArrayList<>();
-        telefones.add(telefone1);
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println(telefones.get(0)); */
+} 

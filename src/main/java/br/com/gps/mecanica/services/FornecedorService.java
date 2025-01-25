@@ -46,6 +46,7 @@ public class FornecedorService {
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
 
+
         List<EnderecoModel> enderecos = new ArrayList<>();
 
         if (enderecos != null && !enderecos.isEmpty()) {
@@ -60,6 +61,7 @@ public class FornecedorService {
             fornecedor.setEnderecos(enderecosFormatados);
         }
 
+
         List<TelefoneModel> telefones = new ArrayList<>();
 
         if (telefones != null && !telefones.isEmpty()) {
@@ -69,6 +71,7 @@ public class FornecedorService {
             }
             fornecedor.setTelefones(telefonesFormatados);
         }
+        
 
         if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
             throw new Exception("Email inválido");
@@ -86,10 +89,11 @@ public class FornecedorService {
             throw new Exception("Email já cadastrado");
         }
 
-        if (fornecedorRepository.findByNome(fornecedor.getNome()) != null) {
+        if ( fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
             throw new Exception("Nome já cadastrado");
         }
 
+        
         return fornecedorRepository.save(fornecedor);
     }
 
@@ -154,9 +158,13 @@ public class FornecedorService {
             throw new Exception("Email já cadastrado");
         }
 
-        if (fornecedorRepository.findByNome(fornecedor.getNome()) != null) {
+        if (fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
             throw new Exception("Nome já cadastrado");
         }
+
+        //if (fornecedorRepository.findByNome(fornecedor.getNome()) != null) {
+        //    throw new Exception("Nome já cadastrado");
+        //}
 
         return fornecedorRepository.save(fornecedor);
     }
