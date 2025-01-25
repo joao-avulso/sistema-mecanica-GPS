@@ -109,7 +109,7 @@ public class AddVeiculoController {
     }
 
     void errorMessage(String message) {
-        erroLabel.setText(message + "*");
+        erroLabel.setText(message + ".*");
         erroLabel.setVisible(true);
 
         // Fecha a mensagem de erro após 5 segundos
