@@ -281,17 +281,24 @@ public class MainController {
         Button addButton = new Button("Adicionar");
         addButton.setStyle(
                 "-fx-background-color:rgb(52, 219, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+                
+        try {
+            FXMLLoader loader;
+            if (selection == MenuSelectionEnum.VEICULO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
+            else if (selection == MenuSelectionEnum.CLIENTE) loader = new FXMLLoader(MecanicaApplication.class.getResource("addCliente.fxml"));
+            // else if (selection == MenuSelectionEnum.PRODUTO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addProduto.fxml"));
+            // else if (selection == MenuSelectionEnum.SERVICO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addServico.fxml"));
+            // else if (selection == MenuSelectionEnum.FORNECEDOR) loader = new FXMLLoader(MecanicaApplication.class.getResource("addFornecedor.fxml"));
+            else return addButton;
 
-        if (selection == MenuSelectionEnum.VEICULO) {
             addButton.setOnAction(event -> {
+                Parent root;
                 try {
-                    FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
-                    Parent root = loader.load();
-    
+                    root = loader.load();
                     Stage stage = new Stage();
                     stage.initStyle(StageStyle.UTILITY);
                     stage.setResizable(false);
-                    stage.setTitle("Adicionar Veículo");
+                    stage.setTitle("Adicionar");
                     stage.setScene(new Scene(root));
                     stage.initModality(Modality.APPLICATION_MODAL);
                     stage.showAndWait();
@@ -300,7 +307,11 @@ public class MainController {
                     e.printStackTrace();
                 }
             });
+            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         return addButton;
     }
