@@ -3,7 +3,6 @@ package br.com.gps.mecanica;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;

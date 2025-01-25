@@ -281,6 +281,7 @@ public class MainController {
         Button addButton = new Button("Adicionar");
         addButton.setStyle(
                 "-fx-background-color:rgb(52, 219, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+
                 
         try {
             FXMLLoader loader;
@@ -323,6 +324,7 @@ public class MainController {
 
         deleteButton.setOnAction(event -> {
             if (selected != null) {
+
                 Alert alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Delete");
                 alert.setHeaderText("Você tem certeza que deseja deletar este item?");

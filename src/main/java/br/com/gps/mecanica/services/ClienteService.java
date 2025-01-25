@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -124,6 +125,7 @@ public class ClienteService {
             throw new Exception("Cliente não encontrado");
         }
 
+
         if (Utils.verificarEmail(cliente.getEmail()) == false) {
             throw new Exception("Email inválido");
         }
@@ -136,6 +138,7 @@ public class ClienteService {
 
         String nome = cliente.getNome();
 
+ 
         if (nome != null && nome != clienteAtual.getNome()) {
             clienteAtual.setNome(Utils.formatarNome(nome));
         }

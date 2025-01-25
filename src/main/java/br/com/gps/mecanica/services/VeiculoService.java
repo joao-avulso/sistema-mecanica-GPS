@@ -3,6 +3,7 @@ package br.com.gps.mecanica.services;
 import java.util.List;
 import java.util.UUID;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -116,6 +117,7 @@ public class VeiculoService {
     }
 
     public void delete(UUID id) throws Exception {
+
         VeiculoModel veiculo = veiculoRepository.findById(id).get();
         
         if (veiculo == null) {

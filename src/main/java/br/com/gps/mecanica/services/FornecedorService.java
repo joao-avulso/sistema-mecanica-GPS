@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,15 +86,17 @@ public class FornecedorService {
             throw new Exception("Email já cadastrado");
         }
 
-        if (fornecedorRepository.findByNome(fornecedor.getNome()) != null) {
+        if ( fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
             throw new Exception("Nome já cadastrado");
         }
+
 
         return fornecedorRepository.save(fornecedor);
     }
 
     public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
         FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
+
 
         if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
             throw new Exception("Email inválido");
@@ -116,6 +119,7 @@ public class FornecedorService {
         }
 
         String email = fornecedor.getEmail();
+
 
         if (email != null && email != fornecedorAtual.getEmail() && !fornecedorRepository.existsByEmail(email)) {
             fornecedorAtual.setEmail(Utils.formatarEmail(email));

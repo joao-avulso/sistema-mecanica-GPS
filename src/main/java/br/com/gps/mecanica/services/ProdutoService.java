@@ -15,11 +15,13 @@ import br.com.gps.mecanica.utils.Utils;
 @Service
 public class ProdutoService {
 
+
     @Autowired
     private ProdutoRepository produtoRepository;
 
     @Autowired
     private FornecedorRepository fornecedorRepository;
+
 
     public List<ProdutoModel> get() {
         return produtoRepository.findAll();
@@ -103,5 +105,6 @@ public class ProdutoService {
         }
 
         return produtoRepository.save(produtoAtual);
+
     }
 }
