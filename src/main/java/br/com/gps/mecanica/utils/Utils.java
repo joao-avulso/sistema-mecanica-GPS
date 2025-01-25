@@ -58,8 +58,8 @@ public class Utils {
     }
 
     public static String formatarNome(String nome) {
-        nome = formatarString(nome);
-        nome = nome.replace(" ", "");
+        nome = nome.strip();
+        nome = nome.toUpperCase();
         return nome;
     }
 
