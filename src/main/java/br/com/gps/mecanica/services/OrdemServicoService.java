@@ -59,6 +59,30 @@ public class OrdemServicoService {
         return ordemServicoRepository.findByVeiculo(veiculoRepository.findByPlaca(placa));
     }
 
+    public void ContratarOrdemServico(UUID id) throws Exception {
+        if (ordemServicoRepository.findById(id).isEmpty()) {
+            throw new Exception("Ordem de serviço não encontrada");
+        }
+
+        OrdemServicoModel ordemServico = ordemServicoRepository.findById(id).get();
+
+        ordemServico.setContratada();
+
+        ordemServicoRepository.save(ordemServico);
+    }
+
+    public void FinalizarOrdemServico(UUID id) throws Exception {
+        if (ordemServicoRepository.findById(id).isEmpty()) {
+            throw new Exception("Ordem de serviço não encontrada");
+        }
+
+        OrdemServicoModel ordemServico = ordemServicoRepository.findById(id).get();
+
+        ordemServico.setFinalizada();
+
+        ordemServicoRepository.save(ordemServico);
+    }
+
     public OrdemServicoModel create(OrdemServicoModel ordemServico) throws Exception {
         ClienteModel cliente = clienteRepository.findByCpf(ordemServico.getCliente().getCpf());
 
