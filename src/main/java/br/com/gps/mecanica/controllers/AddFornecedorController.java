@@ -5,13 +5,11 @@ import java.util.List;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.dto.EnderecoDto;
 import br.com.gps.mecanica.enums.ContatoEnum;
-import br.com.gps.mecanica.enums.CorEnum;
 import br.com.gps.mecanica.enums.PessoaEnum;
-import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.EnderecoModel;
+import br.com.gps.mecanica.models.FornecedorModel;
 import br.com.gps.mecanica.models.TelefoneModel;
-import br.com.gps.mecanica.models.VeiculoModel;
-import br.com.gps.mecanica.services.ClienteService;
+import br.com.gps.mecanica.services.FornecedorService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,13 +18,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class AddClienteController {
+public class AddFornecedorController {
 
     @FXML
     private TextField estadoTextField;
-
-    @FXML
-    private TextField modeloTextField;
 
     @FXML
     private TextField emailTextField;
@@ -38,10 +33,10 @@ public class AddClienteController {
     private TextField complementoTextField;
 
     @FXML
-    private TextField telefoneTextField;
+    private ChoiceBox<ContatoEnum> contatoChoiceBox;
 
     @FXML
-    private TextField anoTextField;
+    private TextField telefoneTextField;
 
     @FXML
     private Button addButton;
@@ -56,22 +51,10 @@ public class AddClienteController {
     private TextField referenciaTextField;
 
     @FXML
-    private TextField placaTextField;
-
-    @FXML
-    private ChoiceBox<CorEnum> corChoiceBox;
-
-    @FXML
-    private ChoiceBox<ContatoEnum> contatoChoiceBox;
-
-    @FXML
     private TextField nomeTextField;
 
     @FXML
     private TextField numeroTextField;
-
-    @FXML
-    private TextField marcaTextField;
 
     @FXML
     private Label erroLabel;
@@ -82,19 +65,15 @@ public class AddClienteController {
     @FXML
     private TextField cidadeTextField;
 
-    private ClienteService clienteService;
+    private FornecedorService fornecedorService;
 
     @FXML
     void initialize() {
-        this.clienteService = MecanicaFxMainApplication.getBean(ClienteService.class);
+        this.fornecedorService = MecanicaFxMainApplication.getBean(FornecedorService.class);
 
-        corChoiceBox.getItems().addAll(CorEnum.values());
-        corChoiceBox.setValue(CorEnum.BRANCO);
-
-        contatoChoiceBox.getItems().addAll(ContatoEnum.values());
         contatoChoiceBox.setValue(ContatoEnum.RESIDENCIAL);
+        contatoChoiceBox.getItems().addAll(ContatoEnum.values());
 
-        Utils.formatterInt(anoTextField);
         Utils.formatterInt(telefoneTextField);
 
         cepTextField.setOnKeyTyped(e -> {
@@ -120,34 +99,28 @@ public class AddClienteController {
     @FXML
     void adicionar(ActionEvent event) {
         try {
-            String cpf = cpfTextField.getText();
+            String cnpj = cpfTextField.getText();
             String nome = nomeTextField.getText();
             String email = emailTextField.getText();
             String telefone = telefoneTextField.getText();
+            String cep = cepTextField.getText();
             String rua = ruaTextField.getText();
             String numero = numeroTextField.getText();
-            String complemento = complementoTextField.getText();
             String bairro = bairroTextField.getText();
             String cidade = cidadeTextField.getText();
             String estado = estadoTextField.getText();
-            String cep = cepTextField.getText();
+            String complemento = complementoTextField.getText();
             String referencia = referenciaTextField.getText();
-            String placa = placaTextField.getText();
-            String marca = marcaTextField.getText();
-            String modelo = modeloTextField.getText();
-            String ano = anoTextField.getText();
-            CorEnum cor = corChoiceBox.getValue();
-            ContatoEnum contato = contatoChoiceBox.getValue();
 
-            if (cpf.isEmpty() || nome.isEmpty()) {
-                Utils.errorMessage(erroLabel, "Preencha os campos obrigatórios CPF e NOME");
-                return;
+            if (cnpj.isEmpty() || nome.isEmpty() || email.isEmpty()) {
+                throw new Exception("Preencha todos os campos obrigatórios");
             }
 
-            ClienteModel cliente = new ClienteModel(PessoaEnum.FISICA, nome, cpf, email, null, null, null);
+            FornecedorModel fornecedor = new FornecedorModel(PessoaEnum.JURIDICA, nome, email, null, null,
+                    cnpj, null);
 
             if (!telefone.isEmpty()) {
-                cliente.setTelefones(List.of(new TelefoneModel(telefone, contato, cliente)));
+                fornecedor.setTelefones(List.of(new TelefoneModel(telefone, contatoChoiceBox.getValue(), fornecedor)));
             }
 
             if (!cep.isEmpty() || !rua.isEmpty() || !numero.isEmpty() || !bairro.isEmpty() || !cidade.isEmpty()
@@ -158,22 +131,12 @@ public class AddClienteController {
                     return;
                 }
 
-                cliente.setEnderecos(List.of(new EnderecoModel(cep, rua, bairro, cidade, estado, numero, complemento,
-                        referencia, contato, cliente)));
+                fornecedor.setEnderecos(List.of(new EnderecoModel(cep, rua, bairro, cidade, estado, numero, complemento,
+                        referencia, contatoChoiceBox.getValue(), fornecedor)));
             }
 
-            if (!placa.isEmpty() || !marca.isEmpty() || !modelo.isEmpty() || !ano.isEmpty()) {
-                if (placa.isEmpty() || marca.isEmpty() || modelo.isEmpty() || ano.isEmpty()) {
-                    Utils.errorMessage(erroLabel, "Preencha todos os campos do veículo");
-                    return;
-                }
-
-                cliente.setVeiculos(
-                        List.of(new VeiculoModel(placa, marca, modelo, Integer.parseInt(ano), cor, cliente)));
-            }
-
-            clienteService.create(cliente);
-            modeloTextField.getScene().getWindow().hide();
+            fornecedorService.create(fornecedor);
+            nomeTextField.getScene().getWindow().hide();
         } catch (Exception e) {
             Utils.errorMessage(erroLabel, e.getMessage());
         }
@@ -181,6 +144,7 @@ public class AddClienteController {
 
     @FXML
     void cancelar(ActionEvent event) {
-        modeloTextField.getScene().getWindow().hide();
+        nomeTextField.getScene().getWindow().hide();
     }
+
 }
