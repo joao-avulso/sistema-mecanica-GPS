@@ -30,8 +30,9 @@
             <Button fx:id="produtosButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="55.0" mnemonicParsing="false" onAction="#mostraProdutos" prefWidth="10000.0" text="Produtos" textAlignment="JUSTIFY" />
             <Button fx:id="servicosButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#mostraServicos" prefWidth="10000.0" text="Serviços" textAlignment="JUSTIFY" />
             <Button fx:id="fornecedoresButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="125.0" mnemonicParsing="false" onAction="#mostraFornecedores" prefWidth="10000.0" text="Fornecedores" textAlignment="JUSTIFY" />
-            <Button fx:id="ordensButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="160.0" mnemonicParsing="false" prefWidth="10000.0" text="Ordens de Serviço" textAlignment="JUSTIFY" />
-            <Button fx:id="orcamentoButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="195.0" mnemonicParsing="false" prefWidth="10000.0" text="Orçamento" textAlignment="JUSTIFY" />
+            <Button fx:id="funcionarioButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="160.0" mnemonicParsing="false" onAction="#mostraFuncionarios" prefWidth="10000.0" text="Funcionarios" textAlignment="JUSTIFY" />
+            <Button fx:id="ordensButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="160.0" mnemonicParsing="false" onAction="#mostraOrdem" prefWidth="10000.0" text="Ordens de Serviço" textAlignment="JUSTIFY" />
+            <Button fx:id="orcamentoButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="195.0" mnemonicParsing="false" onAction="#mostraOrcamentos" prefWidth="10000.0" text="Orçamento" textAlignment="JUSTIFY" />
             <Button fx:id="notasButton" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="230.0" mnemonicParsing="false" prefWidth="10000.0" text="Notas Fiscais" textAlignment="JUSTIFY" />
          </children>
          <padding>

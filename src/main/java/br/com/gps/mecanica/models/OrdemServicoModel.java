@@ -2,10 +2,11 @@ package br.com.gps.mecanica.models;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,13 +34,13 @@ public class OrdemServicoModel implements Serializable {
     @JoinColumn(name = "idVeiculo")
     private VeiculoModel veiculo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "servicos_ordem_servico", joinColumns = @JoinColumn(name = "idOrdemServico"), inverseJoinColumns = @JoinColumn(name = "idServico"))
-    private Set<ServicoModel> servicos;
+    private List<ServicoModel> servicos;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "produtos_ordem_servico", joinColumns = @JoinColumn(name = "idOrdemServico"), inverseJoinColumns = @JoinColumn(name = "idProdutos"))
-    private Set<ProdutoModel> produtos;
+    private List<ProdutoModel> produtos;
 
     @ManyToOne
     @JoinColumn(name = "idFuncionario")
@@ -47,15 +48,15 @@ public class OrdemServicoModel implements Serializable {
 
     private String descricao;
 
-    private Boolean Contratada = false;
+    private Boolean contratada = false;
 
     private Boolean finalizada = false;
 
     public OrdemServicoModel() {
     }
 
-    public OrdemServicoModel(ClienteModel cliente, VeiculoModel veiculo, Set<ServicoModel> servicos,
-            Set<ProdutoModel> produtos, FuncionarioModel funcionario, String descricao) {
+    public OrdemServicoModel(ClienteModel cliente, VeiculoModel veiculo, List<ServicoModel> servicos,
+            List<ProdutoModel> produtos, FuncionarioModel funcionario, String descricao) {
         this.cliente = cliente;
         this.veiculo = veiculo;
         this.servicos = servicos;
@@ -88,19 +89,19 @@ public class OrdemServicoModel implements Serializable {
         this.veiculo = veiculo;
     }
 
-    public Set<ServicoModel> getServicos() {
+    public List<ServicoModel> getServicos() {
         return servicos;
     }
 
-    public void setServicos(Set<ServicoModel> servicos) {
+    public void setServicos(List<ServicoModel> servicos) {
         this.servicos = servicos;
     }
 
-    public Set<ProdutoModel> getProdutos() {
+    public List<ProdutoModel> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(Set<ProdutoModel> produtos) {
+    public void setProdutos(List<ProdutoModel> produtos) {
         this.produtos = produtos;
     }
 
@@ -121,11 +122,11 @@ public class OrdemServicoModel implements Serializable {
     }
 
     public Boolean getContratada() {
-        return Contratada;
+        return contratada;
     }
 
     public void setContratada() {
-        this.Contratada = !this.Contratada;
+        this.contratada = !this.contratada;
     }
 
     public Boolean getFinalizada() {
