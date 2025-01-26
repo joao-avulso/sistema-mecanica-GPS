@@ -5,6 +5,7 @@ import br.com.gps.mecanica.enums.CorEnum;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.VeiculoService;
+import br.com.gps.mecanica.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -69,14 +70,7 @@ public class AddVeiculoController {
             }
         });
 
-        // Configura um filtro para aceitar apenas números inteiros
-        anoTextField.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
+        Utils.formatterInt(anoTextField);
     }
 
     @FXML
@@ -88,7 +82,7 @@ public class AddVeiculoController {
         CorEnum cor = corChoiceBox.getValue();
 
         if (placa.isEmpty() || modelo.isEmpty() || marca.isEmpty() || cpf.isEmpty() || anoTextField.getText().isEmpty()) {
-            errorMessage("Preencha todos os campos");
+            Utils.errorMessage(erroLabel, "Preencha todos os campos");
             return;
         }
 
@@ -99,7 +93,7 @@ public class AddVeiculoController {
             veiculoService.create(veiculo);
             modeloTextField.getScene().getWindow().hide();
         } catch (Exception e) {
-            errorMessage(e.getMessage());
+            Utils.errorMessage(erroLabel, e.getMessage());
         }
     }
 
@@ -107,19 +101,5 @@ public class AddVeiculoController {
     void cancelar(ActionEvent event) {
         modeloTextField.getScene().getWindow().hide();
     }
-
-    void errorMessage(String message) {
-        erroLabel.setText(message + ".*");
-        erroLabel.setVisible(true);
-
-        // Fecha a mensagem de erro após 5 segundos
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-                erroLabel.setVisible(false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
+    
 }
