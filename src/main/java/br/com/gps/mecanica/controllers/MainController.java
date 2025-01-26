@@ -332,6 +332,14 @@ public class MainController {
             }
         });
 
+        mainTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && selected != null) {
+                if (selected instanceof ClienteModel) {
+                    lerCliente((ClienteModel) selected);
+                }
+            }
+        });
+
         BorderPane buttonBorderPane = new BorderPane();
         buttonBorderPane.prefWidth(Region.USE_COMPUTED_SIZE);
         buttonBorderPane.prefHeight(Region.USE_COMPUTED_SIZE);
@@ -349,6 +357,28 @@ public class MainController {
         VBox.setVgrow(mainTable, Priority.ALWAYS);
         buttonBorderPane.setRight(buttonHBox);
         mainVBox.getChildren().add(buttonBorderPane);
+    }
+
+    private void lerCliente(ClienteModel cliente) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readCliente.fxml"));
+            Parent root = loader.load();
+
+            readClienteController controller = loader.getController();
+            controller.carregarCliente(cliente);
+
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(false);
+            stage.setTitle("Detalhes do Cliente");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            atualizaTabela();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void atualizaTabela() {

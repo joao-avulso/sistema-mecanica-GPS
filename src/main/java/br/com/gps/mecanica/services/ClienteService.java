@@ -143,16 +143,30 @@ public class ClienteService {
         String cpf = cliente.getCpf();
 
         if (cpf != null && cpf != clienteAtual.getCpf() && !clienteRepository.existsByCpf(cpf)) {
+            if (clienteRepository.existsByCpf(cpf)) {
+                throw new Exception("CPF já cadastrado");
+            }
+
+            if (!Utils.verificarCpf(Utils.formatarCpf(cpf))) {
+                throw new Exception("CPF inválido");
+            }
             clienteAtual.setCpf(Utils.formatarCpf(cpf));
         }
 
         String email = cliente.getEmail();
 
-        if (email != null && email != clienteAtual.getCpf() && !clienteRepository.existsByEmail(email)) {
+        if (email != null && email != clienteAtual.getEmail() && !clienteRepository.existsByEmail(email)) {
+            if (clienteRepository.existsByEmail(email)) {
+                throw new Exception("Email já cadastrado");
+            }
+
+            if (!Utils.verificarEmail(Utils.formatarEmail(email))) {
+                throw new Exception("Email inválido");
+            }
             clienteAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        return clienteRepository.save(cliente);
+        return clienteRepository.save(clienteAtual);
     };
 
     public ClienteModel addEndereco(UUID id, EnderecoModel endereco) throws Exception {
