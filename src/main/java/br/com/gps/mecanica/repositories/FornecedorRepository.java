@@ -20,4 +20,6 @@ public interface FornecedorRepository extends JpaRepository<FornecedorModel, UUI
     Boolean existsByCnpj(String cnpj);
 
     Boolean existsByEmail(String email);
+
+    Boolean existsByNome(String nome);
 }

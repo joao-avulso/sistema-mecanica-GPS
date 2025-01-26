@@ -31,7 +31,7 @@ public class VeiculoService {
         }
 
         if (veiculoRepository.findByPlaca(veiculo.getPlaca()) != null) {
-            throw new Exception("Placa já cadastrada");
+            throw new Exception("Placa já cadastrada " + veiculo.getPlaca());
         }
 
         veiculo.setPlaca(placa);

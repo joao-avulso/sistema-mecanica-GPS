@@ -84,19 +84,19 @@ public class OrdemServicoService {
     }
 
     public OrdemServicoModel create(OrdemServicoModel ordemServico) throws Exception {
-        ClienteModel cliente = clienteRepository.findByCpf(ordemServico.getCliente().getCpf());
+        ClienteModel cliente = ordemServico.getCliente();
 
         if (clienteRepository.findByCpf(cliente.getCpf()) == null) {
             throw new Exception("Cliente não encontrado");
         }
 
-        VeiculoModel veiculo = veiculoRepository.findByPlaca(ordemServico.getVeiculo().getPlaca());
+        VeiculoModel veiculo = ordemServico.getVeiculo();
 
         if (veiculoRepository.findByPlaca(veiculo.getPlaca()) == null) {
             throw new Exception("Veículo não encontrado");
         }
 
-        FuncionarioModel funcionario = funcionarioRepository.findById(ordemServico.getFuncionario().getId()).get();
+        FuncionarioModel funcionario = ordemServico.getFuncionario();
 
         if (funcionarioRepository.findById(funcionario.getId()).isEmpty()) {
             throw new Exception("Funcionário não encontrado");

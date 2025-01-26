@@ -1,10 +1,14 @@
 package br.com.gps.mecanica.controllers;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.cglib.core.Local;
 
 import br.com.gps.mecanica.MecanicaApplication;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
+import br.com.gps.mecanica.data.DadosTeste;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.CorEnum;
 import br.com.gps.mecanica.enums.MenuSelectionEnum;
@@ -12,6 +16,8 @@ import br.com.gps.mecanica.enums.PessoaEnum;
 import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.FornecedorModel;
+import br.com.gps.mecanica.models.FuncionarioModel;
+import br.com.gps.mecanica.models.OrdemServicoModel;
 import br.com.gps.mecanica.models.PessoaBaseModel;
 import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
@@ -19,6 +25,8 @@ import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.FornecedorService;
+import br.com.gps.mecanica.services.FuncionarioService;
+import br.com.gps.mecanica.services.OrdemServicoService;
 import br.com.gps.mecanica.services.ProdutoService;
 import br.com.gps.mecanica.services.ServicoService;
 import br.com.gps.mecanica.services.VeiculoService;
@@ -50,6 +58,9 @@ public class MainController {
 
     @FXML
     private Button fornecedoresButton;
+
+    @FXML
+    private Button funcionariosButton;
 
     @FXML
     private Button servicosButton;
@@ -86,6 +97,10 @@ public class MainController {
 
     private FornecedorService fornecedorService;
 
+    private FuncionarioService funcionarioService;
+
+    private OrdemServicoService ordemServicoService;
+
     @FXML
     void initialize() {
         this.veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
@@ -93,6 +108,8 @@ public class MainController {
         this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
         this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
         this.fornecedorService = MecanicaFxMainApplication.getBean(FornecedorService.class);
+        this.funcionarioService = MecanicaFxMainApplication.getBean(FuncionarioService.class);
+        this.ordemServicoService = MecanicaFxMainApplication.getBean(OrdemServicoService.class);
     }
 
     @FXML
@@ -101,7 +118,7 @@ public class MainController {
             return;
         }
 
-        createTestClient();
+        createTestData();
 
         selection = MenuSelectionEnum.CLIENTE;
 
@@ -152,6 +169,39 @@ public class MainController {
         criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService, List.of("id", "ID", "tipoPessoa"));
     }
 
+    @FXML
+    void mostraFuncionarios(ActionEvent event) {
+        if (selection == MenuSelectionEnum.FUNCIONARIO) {
+            return;
+        }
+
+        selection = MenuSelectionEnum.FUNCIONARIO;
+
+        criaTabela(List.of(PessoaBaseModel.class, FuncionarioModel.class), funcionarioService, List.of("id", "ID", "tipoPessoa"));
+    }
+
+    @FXML
+    void mostraOrdem(ActionEvent event) {
+        if (selection == MenuSelectionEnum.ORDEM) {
+            return;
+        }
+
+        selection = MenuSelectionEnum.ORDEM;
+
+        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
+    }
+
+    @FXML
+    void mostraOrcamentos(ActionEvent event) {
+        if (selection == MenuSelectionEnum.ORCAMENTO) {
+            return;
+        }
+
+        selection = MenuSelectionEnum.ORCAMENTO;
+
+        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
+    }
+
     private void criaTabela(List<Class<?>> models, Object service, List<String> camposIgnorados) {
 
         mainVBox.getChildren().clear();
@@ -200,9 +250,25 @@ public class MainController {
                                 for (Object o : obj) str += ((VeiculoModel) o).getPlaca() + "\n";
                             } else if (obj.get(0) instanceof ProdutoModel) {
                                 for (Object o : obj) str += ((ProdutoModel) o).getNome() + "\n";
+                            } else if (obj.get(0) instanceof ServicoModel) {
+                                for (Object o : obj) str += ((ServicoModel) o).getNome() + "\n";
                             }
 
                             return new SimpleObjectProperty<>(str);
+                        } else if (value instanceof FornecedorModel) {
+                            return new SimpleObjectProperty<>(((FornecedorModel) value).getNome());
+                        } else if (value instanceof VeiculoModel) {
+                            return new SimpleObjectProperty<>(((VeiculoModel) value).getPlaca());
+                        } else if (value instanceof ProdutoModel) {
+                            return new SimpleObjectProperty<>(((ProdutoModel) value).getNome());
+                        } else if (value instanceof ServicoModel) {
+                            return new SimpleObjectProperty<>(((ServicoModel) value).getNome());
+                        } else if (value instanceof FuncionarioModel) {
+                            return new SimpleObjectProperty<>(((FuncionarioModel) value).getNome());
+                        } else if (value instanceof OrdemServicoModel) {
+                            return new SimpleObjectProperty<>(((OrdemServicoModel) value).getId());
+                        } else if (value instanceof LocalDate) {
+                            return new SimpleObjectProperty<>(((LocalDate) value).getDayOfMonth() + "/" + ((LocalDate) value).getMonthValue() + "/" + ((LocalDate) value).getYear());
                         }
                 
                         return new SimpleObjectProperty<>(value.toString());
@@ -235,6 +301,18 @@ public class MainController {
         } else if (service instanceof FornecedorService) {
             fornecedorService.get().forEach(fornecedor -> {
                 mainTable.getItems().add(fornecedor);
+            });
+        } else if (service instanceof FuncionarioService) {
+            funcionarioService.get().forEach(funcionario -> {
+                mainTable.getItems().add(funcionario);
+            });
+        } else if (service instanceof OrdemServicoService) {
+            ordemServicoService.get().forEach(ordemServico -> {
+                if (selection == MenuSelectionEnum.ORDEM && ordemServico.getContratada()) {
+                    mainTable.getItems().add(ordemServico);
+                } else if (selection == MenuSelectionEnum.ORCAMENTO && !ordemServico.getContratada()) {
+                    mainTable.getItems().add(ordemServico);
+                }
             });
         }
 
@@ -274,6 +352,10 @@ public class MainController {
             criaTabela(List.of(ServicoModel.class), servicoService, List.of("id", "ID"));
         } else if (selection == MenuSelectionEnum.FORNECEDOR) {
             criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService, List.of("id", "ID", "tipoPessoa"));
+        } else if (selection == MenuSelectionEnum.FUNCIONARIO) {
+            criaTabela(List.of(PessoaBaseModel.class, FuncionarioModel.class), funcionarioService, List.of("id", "ID", "tipoPessoa"));
+        } else if (selection == MenuSelectionEnum.ORDEM) {
+            criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID"));
         }
     }
 
@@ -354,6 +436,10 @@ public class MainController {
                 servicoService.delete(((ServicoModel) obj).getId());
             } else if (service instanceof FornecedorService) {
                 fornecedorService.delete(((FornecedorModel) obj).getId());
+            } else if (service instanceof FuncionarioService) {
+                funcionarioService.delete(((FuncionarioModel) obj).getId());
+            } else if (service instanceof OrdemServicoService) {
+                ordemServicoService.delete(((OrdemServicoModel) obj).getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -390,6 +476,78 @@ public class MainController {
             clienteService.create(cliente);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    @SuppressWarnings("unused")
+    private void createTestData() {
+
+        if (!clienteService.get().isEmpty()) {
+            return;
+        }
+
+        for (ClienteModel cliente : DadosTeste.getClientes()) {
+            try {
+                clienteService.create(cliente);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+
+        for (VeiculoModel veiculo : DadosTeste.getVeiculos()) {
+            try {
+                veiculoService.create(veiculo);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+
+        for (ProdutoModel produto : DadosTeste.getProdutos()) {
+            try {
+                produtoService.create(produto);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+
+        for (ServicoModel servico : DadosTeste.getServicos()) {
+            try {
+                servicoService.create(servico);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+
+        for (FornecedorModel fornecedor : DadosTeste.getFornecedores()) {
+            try {
+                fornecedorService.create(fornecedor);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+
+        for (FuncionarioModel funcionario : DadosTeste.getFuncionarios()) {
+            try {
+                funcionarioService.create(funcionario);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+
+        for (OrdemServicoModel ordemServico : DadosTeste.getOrdensServico()) {
+            try {
+                ordemServicoService.create(ordemServico);
+            } catch (Exception e) {
+                // e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

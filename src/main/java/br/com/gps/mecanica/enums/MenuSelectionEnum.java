@@ -8,5 +8,6 @@ public enum MenuSelectionEnum {
     ORCAMENTO,
     FORNECEDOR,
     ORDEM,
-    PRODUTO;
+    PRODUTO,
+    FUNCIONARIO
 }
