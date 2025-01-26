@@ -97,7 +97,11 @@ public class FornecedorService {
     public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
         FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
 
-
+        
+        fornecedor.setNome(Utils.formatarString(fornecedor.getNome()));
+        fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
+        fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
+        
         if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
             throw new Exception("Email inválido");
         }
@@ -117,7 +121,7 @@ public class FornecedorService {
         if (cnpj != null && cnpj != fornecedorAtual.getCnpj() && !fornecedorRepository.existsByCnpj(cnpj)) {
             fornecedorAtual.setCnpj(Utils.formatarCnpj(cnpj));
         }
-
+        
         String email = fornecedor.getEmail();
 
 

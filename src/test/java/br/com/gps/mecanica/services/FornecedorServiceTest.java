@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
  
 import br.com.gps.mecanica.models.FornecedorModel;
+import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.enums.ContatoEnum;
@@ -119,20 +120,79 @@ public class FornecedorServiceTest {
          "1231", "Casa germinada", "", ContatoEnum.COMERCIAL, fornecedor);
 
         //PRODUTOS
+        ProdutoModel produto1 = new ProdutoModel("Carburador", "Carburador de fusca veio", 200.00, 20.00, 20);
+
+        fornecedor.setProdutos(List.of(produto1));
         fornecedor.setTelefones(List.of(telefone1, telefone2));
         fornecedor.setEnderecos(List.of(endereco1, endereco2));
 
         try {
             FornecedorModel novo = fornecedorService.create(fornecedor);    
-            
             assertEquals("ALVO DUMBLEDOR",novo.getNome());
-        
+
+            // Asserts na lista de telefones
+            assertEquals(2, novo.getTelefones().size()); 
+            assertEquals("44945676362", novo.getTelefones().get(0).getNumero()); 
+            assertEquals("44945676363", novo.getTelefones().get(1).getNumero()); 
+
+            // Asserts na lista de endereços
+            assertEquals(2, novo.getEnderecos().size()); 
+            assertEquals("81230370", novo.getEnderecos().get(0).getCep());  
+            assertEquals("85670370", novo.getEnderecos().get(1).getCep());  
+
+            // Asserts na lista de produtos
+            assertEquals(1, novo.getProdutos().size());  
+            assertEquals("Carburador", novo.getProdutos().get(0).getNome());  
+
         } catch (Exception e) {
-            fail("Nao foi possivel criar o fornecedor");
+            fail("Nao foi possivel criar o fornecedor no testCreate do FornecedorServiceTest");
         }
     }
 
+    @Test
+    void testUpdate() {
+        
+        //FORNECEDOR
+        FornecedorModel fornecedor = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
+        new ArrayList<>() ,new ArrayList<>(),"33.113.309/0001-47",new ArrayList<>());
 
-    //FALTA TESTAR O UPDATEV
+
+        FornecedorModel fornecedor2 = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor2","dumbledore@gmail.com",
+        new ArrayList<>() ,new ArrayList<>(),"33.113.309/0002-47",new ArrayList<>());
+
+        //TELEFONE
+        TelefoneModel telefone1 = new TelefoneModel("44945676362", ContatoEnum.RESIDENCIAL, fornecedor);
+        TelefoneModel telefone2 = new TelefoneModel("44945676363", ContatoEnum.RESIDENCIAL, fornecedor);
+
+        //ENDERECO
+        EnderecoModel endereco1 = new EnderecoModel("81230370", "Rua dos Jardins", "Zona 44", "Marilha", "SP",
+         "1231", "Casa germinada", "", ContatoEnum.RESIDENCIAL, fornecedor);
+        EnderecoModel endereco2 = new EnderecoModel("85670370", "Rua dos Rios", "Zona 4", "Marilha", "SP",
+         "1231", "Casa germinada", "", ContatoEnum.COMERCIAL, fornecedor);
+
+        //PRODUTOS
+        ProdutoModel produto1 = new ProdutoModel("Carburador", "Carburador de fusca veio", 200.00, 20.00, 20);
+
+        fornecedor2.setProdutos(List.of(produto1));
+        fornecedor2.setTelefones(List.of(telefone1, telefone2));
+        fornecedor2.setEnderecos(List.of(endereco1, endereco2));
+        
+        try {
+            //System.out.println("AAAAAAAAAAAA1");
+            FornecedorModel velho = fornecedorService.create(fornecedor);  
+            //System.out.println("AAAAAAAAAAAA1");
+            FornecedorModel novo = fornecedorService.update(velho.getId(), fornecedor2);   
+            //System.out.println("AAAAAAAAAAAA1");
+            assertEquals("ALVO DUMBLEDOR2",novo.getNome()); 
+            //System.out.println("AAAAAAAAAAAA1");
+            assertEquals("33113309000247",novo.getCnpj()); 
+            //System.out.println("AAAAAAAAAAAA1");
+
+        } catch (Exception e) {
+            fail("Nao foi possivel criar o fornecedor no testUpdate do FornecedorServiceTest");
+        }
+
+     
+    }
 
 } 
