@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.cglib.core.Local;
-
 import br.com.gps.mecanica.MecanicaApplication;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.data.DadosTeste;
@@ -393,7 +391,36 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    
+        try {
+            FXMLLoader loader;
+            if (selection == MenuSelectionEnum.VEICULO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
+            else if (selection == MenuSelectionEnum.CLIENTE) loader = new FXMLLoader(MecanicaApplication.class.getResource("addCliente.fxml"));
+            // else if (selection == MenuSelectionEnum.PRODUTO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addProduto.fxml"));
+            // else if (selection == MenuSelectionEnum.SERVICO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addServico.fxml"));
+            // else if (selection == MenuSelectionEnum.FORNECEDOR) loader = new FXMLLoader(MecanicaApplication.class.getResource("addFornecedor.fxml"));
+            else return addButton;
 
+            addButton.setOnAction(event -> {
+                Parent root;
+                try {
+                    root = loader.load();
+                    Stage stage = new Stage();
+                    stage.initStyle(StageStyle.UTILITY);
+                    stage.setResizable(false);
+                    stage.setTitle("Adicionar");
+                    stage.setScene(new Scene(root));
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.showAndWait();
+                    atualizaTabela();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return addButton;
     }

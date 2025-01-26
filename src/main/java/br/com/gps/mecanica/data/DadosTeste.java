@@ -3,7 +3,7 @@ package br.com.gps.mecanica.data;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.gps.mecanica.MecanicaFxMainApplication;
+import br.com.gps.mecanica.MecanicaFxMainApplication
 import br.com.gps.mecanica.enums.CargoEnum;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.CorEnum;
@@ -45,7 +45,6 @@ public class DadosTeste {
                         "456", "Complemento Y", "Perto do parque", ContatoEnum.COMERCIAL, cliente2)));
         cliente2.setTelefones(List.of(new TelefoneModel("987654321", ContatoEnum.RESIDENCIAL, cliente2)));
         cliente2.setVeiculos(List.of(new VeiculoModel("XYZ9876", "Corolla", "Toyota", 2019, CorEnum.BRANCO, cliente2)));
-        
 
         ClienteModel cliente3 = new ClienteModel(
                 PessoaEnum.FISICA,
@@ -419,6 +418,5 @@ public class DadosTeste {
 
         return List.of(ordem1, ordem2, ordem3, ordem4);
         }
-
 
 }
