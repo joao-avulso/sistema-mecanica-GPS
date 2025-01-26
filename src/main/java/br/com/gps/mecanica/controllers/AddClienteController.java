@@ -94,21 +94,8 @@ public class AddClienteController {
         contatoChoiceBox.getItems().addAll(ContatoEnum.values());
         contatoChoiceBox.setValue(ContatoEnum.RESIDENCIAL);
 
-        anoTextField.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
-
-        telefoneTextField.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
+        Utils.formatterInt(anoTextField);
+        Utils.formatterInt(telefoneTextField);
 
         cepTextField.setOnKeyTyped(e -> {
             String cep = cepTextField.getText();
@@ -122,7 +109,7 @@ public class AddClienteController {
                     ruaTextField.setText(endereco.getLogradouro());
                     complementoTextField.setText(endereco.getComplemento());
                 } catch (Exception ex) {
-                    errorMessage(ex.getMessage());
+                    Utils.errorMessage(erroLabel, ex.getMessage());
                 }
             }
 
@@ -153,7 +140,7 @@ public class AddClienteController {
             ContatoEnum contato = contatoChoiceBox.getValue();
 
             if (cpf.isEmpty() || nome.isEmpty()) {
-                errorMessage("Preencha os campos obrigatórios CPF e NOME");
+                Utils.errorMessage(erroLabel, "Preencha os campos obrigatórios CPF e NOME");
                 return;
             }
 
@@ -165,7 +152,7 @@ public class AddClienteController {
 
             if (!cep.isEmpty() || !rua.isEmpty() || !numero.isEmpty() || !bairro.isEmpty() || !cidade.isEmpty() || !estado.isEmpty()) {
                 if (cep.isEmpty() || rua.isEmpty() || numero.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
-                    errorMessage("Preencha todos os campos do endereço");
+                    Utils.errorMessage(erroLabel, "Preencha todos os campos do endereço");
                     return;
                 }
                 
@@ -174,7 +161,7 @@ public class AddClienteController {
 
             if (!placa.isEmpty() || !marca.isEmpty() || !modelo.isEmpty() || !ano.isEmpty()) {
                 if (placa.isEmpty() || marca.isEmpty() || modelo.isEmpty() || ano.isEmpty()) {
-                    errorMessage("Preencha todos os campos do veículo");
+                    Utils.errorMessage(erroLabel, "Preencha todos os campos do veículo");
                     return;
                 }
 
@@ -185,27 +172,12 @@ public class AddClienteController {
             clienteService.create(cliente);
             modeloTextField.getScene().getWindow().hide();
         } catch (Exception e) {
-            errorMessage(e.getMessage());
+            Utils.errorMessage(erroLabel, e.getMessage());
         }
     }
 
     @FXML
     void cancelar(ActionEvent event) {
         modeloTextField.getScene().getWindow().hide();
-    }
-
-    void errorMessage(String message) {
-        erroLabel.setText(message + ".*");
-        erroLabel.setVisible(true);
-
-        // Fecha a mensagem de erro após 5 segundos
-        new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-                erroLabel.setVisible(false);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 }

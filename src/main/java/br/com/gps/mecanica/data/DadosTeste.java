@@ -3,7 +3,7 @@ package br.com.gps.mecanica.data;
 import java.time.LocalDate;
 import java.util.List;
 
-import br.com.gps.mecanica.MecanicaFxMainApplication
+import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.CargoEnum;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.CorEnum;

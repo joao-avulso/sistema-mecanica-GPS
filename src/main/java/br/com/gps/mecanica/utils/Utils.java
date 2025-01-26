@@ -11,6 +11,8 @@ import br.com.gps.mecanica.dto.EnderecoDto;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 public class Utils {
     public static String formatarString(String string) {
@@ -301,5 +303,40 @@ public class Utils {
         veiculo.setPlaca(formatarPlaca(veiculo.getPlaca()));
         veiculo.setModelo(formatarMarcaModeloVeiculo(veiculo.getModelo()));
         veiculo.setMarca(formatarMarcaModeloVeiculo(veiculo.getMarca()));
+    }
+
+    public static void formatterInt(TextField textField) {
+        textField.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+    }
+
+    public static void formatterDouble(TextField textField) {
+        textField.setTextFormatter(new javafx.scene.control.TextFormatter<String>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*(\\.\\d*)?")) {
+                return change;
+            }
+            return null;
+        }));
+    }
+
+    public static void errorMessage(Label erroLabel, String message) {
+        erroLabel.setText(message + ".*");
+        erroLabel.setVisible(true);
+
+        // Fecha a mensagem de erro após 5 segundos
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                erroLabel.setVisible(false);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
