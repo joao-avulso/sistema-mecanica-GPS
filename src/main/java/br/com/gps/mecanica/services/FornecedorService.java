@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +45,26 @@ public class FornecedorService {
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
 
+        if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
+            throw new Exception("Email inválido");
+        }
+
+        if (Utils.verificarCnpj(fornecedor.getCnpj()) == false) {
+            throw new Exception("CNPJ inválido");
+        }
+
+        if (fornecedorRepository.findByCnpj(fornecedor.getCnpj()) != null) {
+            throw new Exception("CNPJ já cadastrado");
+        }
+
+        if (fornecedorRepository.findByEmail(fornecedor.getEmail()) != null) {
+            throw new Exception("Email já cadastrado");
+        }
+
+        if (fornecedorRepository.existsByNome(fornecedor.getNome())) {
+            throw new Exception("Nome já cadastrado " + fornecedor.getNome());
+        }
+
         List<EnderecoModel> enderecos = new ArrayList<>();
 
         if (enderecos != null && !enderecos.isEmpty()) {
@@ -69,27 +88,6 @@ public class FornecedorService {
             }
             fornecedor.setTelefones(telefonesFormatados);
         }
-
-        if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
-            throw new Exception("Email inválido");
-        }
-
-        if (Utils.verificarCnpj(fornecedor.getCnpj()) == false) {
-            throw new Exception("CNPJ inválido");
-        }
-
-        if (fornecedorRepository.findByCnpj(fornecedor.getCnpj()) != null) {
-            throw new Exception("CNPJ já cadastrado");
-        }
-
-        if (fornecedorRepository.findByEmail(fornecedor.getEmail()) != null) {
-            throw new Exception("Email já cadastrado");
-        }
-
-        if ( fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
-            throw new Exception("Nome já cadastrado");
-        }
-
 
         return fornecedorRepository.save(fornecedor);
     }
@@ -123,7 +121,6 @@ public class FornecedorService {
         }
         
         String email = fornecedor.getEmail();
-
 
         if (email != null && email != fornecedorAtual.getEmail() && !fornecedorRepository.existsByEmail(email)) {
             fornecedorAtual.setEmail(Utils.formatarEmail(email));
