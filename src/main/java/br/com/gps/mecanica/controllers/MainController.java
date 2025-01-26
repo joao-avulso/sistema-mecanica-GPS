@@ -82,7 +82,7 @@ public class MainController {
     private Button produtosButton;
 
     private MenuSelectionEnum selection;
-    
+
     private Object selected;
 
     private VeiculoService veiculoService;
@@ -120,7 +120,8 @@ public class MainController {
 
         selection = MenuSelectionEnum.CLIENTE;
 
-        criaTabela(List.of(PessoaBaseModel.class, ClienteModel.class), clienteService, List.of("id", "ID", "tipoPessoa"));
+        criaTabela(List.of(PessoaBaseModel.class, ClienteModel.class), clienteService,
+                List.of("id", "ID", "tipoPessoa"));
     }
 
     @FXML
@@ -164,7 +165,8 @@ public class MainController {
 
         selection = MenuSelectionEnum.FORNECEDOR;
 
-        criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService, List.of("id", "ID", "tipoPessoa"));
+        criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService,
+                List.of("id", "ID", "tipoPessoa"));
     }
 
     @FXML
@@ -175,7 +177,8 @@ public class MainController {
 
         selection = MenuSelectionEnum.FUNCIONARIO;
 
-        criaTabela(List.of(PessoaBaseModel.class, FuncionarioModel.class), funcionarioService, List.of("id", "ID", "tipoPessoa"));
+        criaTabela(List.of(PessoaBaseModel.class, FuncionarioModel.class), funcionarioService,
+                List.of("id", "ID", "tipoPessoa"));
     }
 
     @FXML
@@ -208,23 +211,25 @@ public class MainController {
         TableView<Object> mainTable = new TableView<>();
         mainTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        if (camposIgnorados == null) camposIgnorados = List.of();
+        if (camposIgnorados == null)
+            camposIgnorados = List.of();
 
         for (Class<?> modelClass : models) {
             for (Field field : modelClass.getDeclaredFields()) {
-                
+
                 Boolean skip = false;
                 for (String campo : camposIgnorados) {
                     if (field.getName().contains(campo)) {
                         skip = true;
-                        break;     
+                        break;
                     }
                 }
-                if (skip) continue;
-    
+                if (skip)
+                    continue;
+
                 TableColumn<Object, Object> column = new TableColumn<>(field.getName().toUpperCase());
                 field.setAccessible(true);
-    
+
                 column.setCellValueFactory(data -> {
                     try {
                         Object value = field.get(data.getValue());
@@ -233,23 +238,29 @@ public class MainController {
                         } else if (value instanceof ClienteModel) {
                             return new SimpleObjectProperty<>(((ClienteModel) value).getNome());
                         } else if (value instanceof List) {
-                            
+
                             List<?> obj = ((List<?>) value);
 
-                            if (obj.isEmpty()) return new SimpleObjectProperty<>("N/A");
+                            if (obj.isEmpty())
+                                return new SimpleObjectProperty<>("N/A");
 
                             String str = "";
 
                             if (obj.get(0) instanceof EnderecoModel) {
-                                for (Object o : obj) str += ((EnderecoModel) o).getRua() + "\n";
+                                for (Object o : obj)
+                                    str += ((EnderecoModel) o).getRua() + "\n";
                             } else if (obj.get(0) instanceof TelefoneModel) {
-                                for (Object o : obj) str += ((TelefoneModel) o).getNumero() + "\n";
+                                for (Object o : obj)
+                                    str += ((TelefoneModel) o).getNumero() + "\n";
                             } else if (obj.get(0) instanceof VeiculoModel) {
-                                for (Object o : obj) str += ((VeiculoModel) o).getPlaca() + "\n";
+                                for (Object o : obj)
+                                    str += ((VeiculoModel) o).getPlaca() + "\n";
                             } else if (obj.get(0) instanceof ProdutoModel) {
-                                for (Object o : obj) str += ((ProdutoModel) o).getNome() + "\n";
+                                for (Object o : obj)
+                                    str += ((ProdutoModel) o).getNome() + "\n";
                             } else if (obj.get(0) instanceof ServicoModel) {
-                                for (Object o : obj) str += ((ServicoModel) o).getNome() + "\n";
+                                for (Object o : obj)
+                                    str += ((ServicoModel) o).getNome() + "\n";
                             }
 
                             return new SimpleObjectProperty<>(str);
@@ -266,16 +277,17 @@ public class MainController {
                         } else if (value instanceof OrdemServicoModel) {
                             return new SimpleObjectProperty<>(((OrdemServicoModel) value).getId());
                         } else if (value instanceof LocalDate) {
-                            return new SimpleObjectProperty<>(((LocalDate) value).getDayOfMonth() + "/" + ((LocalDate) value).getMonthValue() + "/" + ((LocalDate) value).getYear());
+                            return new SimpleObjectProperty<>(((LocalDate) value).getDayOfMonth() + "/"
+                                    + ((LocalDate) value).getMonthValue() + "/" + ((LocalDate) value).getYear());
                         }
-                
+
                         return new SimpleObjectProperty<>(value.toString());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         return null;
                     }
                 });
-    
+
                 mainTable.getColumns().add(column);
             }
         }
@@ -327,7 +339,7 @@ public class MainController {
 
         Button botaoDelete = criarBotaoDelete(mainTable, service);
         Button botaoAdd = criarBotaoAdd(mainTable, service);
-        
+
         HBox buttonHBox = new HBox();
         buttonHBox.getChildren().add(botaoAdd);
         buttonHBox.getChildren().add(botaoDelete);
@@ -341,7 +353,8 @@ public class MainController {
 
     private void atualizaTabela() {
         if (selection == MenuSelectionEnum.CLIENTE) {
-            criaTabela(List.of(PessoaBaseModel.class, ClienteModel.class), clienteService, List.of("id", "ID", "tipoPessoa"));
+            criaTabela(List.of(PessoaBaseModel.class, ClienteModel.class), clienteService,
+                    List.of("id", "ID", "tipoPessoa"));
         } else if (selection == MenuSelectionEnum.VEICULO) {
             criaTabela(List.of(VeiculoModel.class), veiculoService, List.of("id", "ID"));
         } else if (selection == MenuSelectionEnum.PRODUTO) {
@@ -349,9 +362,11 @@ public class MainController {
         } else if (selection == MenuSelectionEnum.SERVICO) {
             criaTabela(List.of(ServicoModel.class), servicoService, List.of("id", "ID"));
         } else if (selection == MenuSelectionEnum.FORNECEDOR) {
-            criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService, List.of("id", "ID", "tipoPessoa"));
+            criaTabela(List.of(PessoaBaseModel.class, FornecedorModel.class), fornecedorService,
+                    List.of("id", "ID", "tipoPessoa"));
         } else if (selection == MenuSelectionEnum.FUNCIONARIO) {
-            criaTabela(List.of(PessoaBaseModel.class, FuncionarioModel.class), funcionarioService, List.of("id", "ID", "tipoPessoa"));
+            criaTabela(List.of(PessoaBaseModel.class, FuncionarioModel.class), funcionarioService,
+                    List.of("id", "ID", "tipoPessoa"));
         } else if (selection == MenuSelectionEnum.ORDEM) {
             criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
         } else if (selection == MenuSelectionEnum.ORCAMENTO) {
@@ -363,15 +378,21 @@ public class MainController {
         Button addButton = new Button("Adicionar");
         addButton.setStyle(
                 "-fx-background-color:rgb(52, 219, 52); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
-                
+
         try {
             FXMLLoader loader;
-            if (selection == MenuSelectionEnum.VEICULO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
-            else if (selection == MenuSelectionEnum.CLIENTE) loader = new FXMLLoader(MecanicaApplication.class.getResource("addCliente.fxml"));
-            else if (selection == MenuSelectionEnum.PRODUTO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addProduto.fxml"));
-            // else if (selection == MenuSelectionEnum.SERVICO) loader = new FXMLLoader(MecanicaApplication.class.getResource("addServico.fxml"));
-            // else if (selection == MenuSelectionEnum.FORNECEDOR) loader = new FXMLLoader(MecanicaApplication.class.getResource("addFornecedor.fxml"));
-            else return addButton;
+            if (selection == MenuSelectionEnum.VEICULO)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addVeiculo.fxml"));
+            else if (selection == MenuSelectionEnum.CLIENTE)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addCliente.fxml"));
+            else if (selection == MenuSelectionEnum.PRODUTO)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addProduto.fxml"));
+            else if (selection == MenuSelectionEnum.SERVICO)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addServico.fxml"));
+            else if (selection == MenuSelectionEnum.FORNECEDOR)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addFornecedor.fxml"));
+            else
+                return addButton;
 
             addButton.setOnAction(event -> {
                 Parent root;
@@ -389,7 +410,7 @@ public class MainController {
                     e.printStackTrace();
                 }
             });
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -445,7 +466,6 @@ public class MainController {
         }
     }
 
-
     @SuppressWarnings("unused")
     private void createTestClient() {
 
@@ -453,15 +473,18 @@ public class MainController {
             return;
         }
 
-        ClienteModel cliente = new ClienteModel(PessoaEnum.FISICA, "João", "10451721977", "joaoalt0502@gmail.com", null, null, null);
+        ClienteModel cliente = new ClienteModel(PessoaEnum.FISICA, "João", "10451721977", "joaoalt0502@gmail.com", null,
+                null, null);
 
         VeiculoModel veiculo1 = new VeiculoModel("ABC1234", "Uno", "Fiat", 2010, CorEnum.AMARELO, cliente);
 
         VeiculoModel veiculo2 = new VeiculoModel("DEF5678", "Gol", "Volkswagen", 2015, CorEnum.AZUL, cliente);
 
-        EnderecoModel endereco = new EnderecoModel("07083450", "Rua 123", "Bairro 1", "Cidade 1", "SP", "123", "complemento", "referencia", ContatoEnum.COMERCIAL, cliente);
+        EnderecoModel endereco = new EnderecoModel("07083450", "Rua 123", "Bairro 1", "Cidade 1", "SP", "123",
+                "complemento", "referencia", ContatoEnum.COMERCIAL, cliente);
 
-        EnderecoModel endereco2 = new EnderecoModel("07083450", "Rua 321", "Bairro 2", "Cidade 2", "PR", "321", "complemento", "referencia", ContatoEnum.COMERCIAL, cliente);
+        EnderecoModel endereco2 = new EnderecoModel("07083450", "Rua 321", "Bairro 2", "Cidade 2", "PR", "321",
+                "complemento", "referencia", ContatoEnum.COMERCIAL, cliente);
 
         TelefoneModel telefone = new TelefoneModel("4498337046", ContatoEnum.RESIDENCIAL, cliente);
 
@@ -477,7 +500,6 @@ public class MainController {
             e.printStackTrace();
         }
     }
-
 
     @SuppressWarnings("unused")
     private void createTestData() {
