@@ -50,17 +50,16 @@ public class AddVeiculoController {
         corChoiceBox.getItems().addAll(CorEnum.values());
         corChoiceBox.setValue(CorEnum.BRANCO);
 
-        ObservableList<String> cpfs = FXCollections.observableArrayList(clienteService.get().stream().map(cliente -> cliente.getCpf()).toList());
+        ObservableList<String> cpfs = FXCollections
+                .observableArrayList(clienteService.get().stream().map(cliente -> cliente.getCpf()).toList());
 
         cpfComboBox.getItems().addAll(cpfs);
 
-        // Adiciona um listener para buscar CPFs semelhantes ao texto digitado
         cpfComboBox.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue.isEmpty()) {
                 ObservableList<String> filteredCpfs = cpfs.filtered(cpf -> cpf.contains(newValue));
                 cpfComboBox.setItems(filteredCpfs);
 
-                // Abre o menu do ComboBox automaticamente
                 if (!filteredCpfs.isEmpty()) {
                     cpfComboBox.show();
                 }
@@ -81,7 +80,8 @@ public class AddVeiculoController {
         String cpf = cpfComboBox.getValue().toString();
         CorEnum cor = corChoiceBox.getValue();
 
-        if (placa.isEmpty() || modelo.isEmpty() || marca.isEmpty() || cpf.isEmpty() || anoTextField.getText().isEmpty()) {
+        if (placa.isEmpty() || modelo.isEmpty() || marca.isEmpty() || cpf.isEmpty()
+                || anoTextField.getText().isEmpty()) {
             Utils.errorMessage(erroLabel, "Preencha todos os campos");
             return;
         }
@@ -101,5 +101,5 @@ public class AddVeiculoController {
     void cancelar(ActionEvent event) {
         modeloTextField.getScene().getWindow().hide();
     }
-    
+
 }

@@ -28,6 +28,7 @@ import br.com.gps.mecanica.services.OrdemServicoService;
 import br.com.gps.mecanica.services.ProdutoService;
 import br.com.gps.mecanica.services.ServicoService;
 import br.com.gps.mecanica.services.VeiculoService;
+import br.com.gps.mecanica.utils.Utils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -336,6 +337,19 @@ public class MainController {
             if (event.getClickCount() == 2 && selected != null) {
                 if (selected instanceof ClienteModel) {
                     lerCliente((ClienteModel) selected);
+                } else if (selected instanceof VeiculoModel) {
+                    Utils.lerVeiculo((VeiculoModel) selected);
+                    atualizaTabela();
+                } else if (selected instanceof ProdutoModel) {
+                    // lerProduto((ProdutoModel) selected);
+                } else if (selected instanceof ServicoModel) {
+                    // lerServico((ServicoModel) selected);
+                } else if (selected instanceof FornecedorModel) {
+                    // lerFornecedor((FornecedorModel) selected);
+                } else if (selected instanceof FuncionarioModel) {
+                    // lerFuncionario((FuncionarioModel) selected);
+                } else if (selected instanceof OrdemServicoModel) {
+                    // lerOrdemServico((OrdemServicoModel) selected);
                 }
             }
         });
@@ -364,7 +378,7 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readCliente.fxml"));
             Parent root = loader.load();
 
-            readClienteController controller = loader.getController();
+            ReadClienteController controller = loader.getController();
             controller.carregarCliente(cliente);
 
             Stage stage = new Stage();

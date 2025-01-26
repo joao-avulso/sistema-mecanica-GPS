@@ -22,7 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class readClienteController {
+public class ReadClienteController {
 
     @FXML
     private TextField estadoTextField;
@@ -126,6 +126,22 @@ public class readClienteController {
         corColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCor().toString()));
 
         veiculosTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        veiculosTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && veiculosTable.getSelectionModel().getSelectedItem() != null) {
+                VeiculoModel veiculoSelecionado = veiculosTable.getSelectionModel().getSelectedItem();
+                Utils.lerVeiculo(veiculoSelecionado);
+                atualizaTabela();
+            }
+        });
+    }
+
+    private void atualizaTabela() {
+        try {
+            veiculosTable.getItems().setAll(clienteService.get(clienteId).getVeiculos());
+        } catch (Exception e) {
+            Utils.errorMessage(erroLabel, "Erro ao atualizar tabela de veículos: " + e.getMessage());
+        }
     }
 
     public void carregarCliente(ClienteModel cliente) {

@@ -7,12 +7,20 @@ import java.util.regex.Pattern;
 
 import org.springframework.web.client.RestTemplate;
 
+import br.com.gps.mecanica.MecanicaApplication;
+import br.com.gps.mecanica.controllers.ReadVeiculoController;
 import br.com.gps.mecanica.dto.EnderecoDto;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Utils {
     public static String formatarString(String string) {
@@ -338,5 +346,25 @@ public class Utils {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public static void lerVeiculo(VeiculoModel veiculo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readVeiculo.fxml"));
+            Parent root = loader.load();
+
+            ReadVeiculoController controller = loader.getController();
+            controller.carregarVeiculo(veiculo);
+
+            Stage stage = new Stage();
+            stage.setTitle("Detalhes do Veículo");
+            stage.setScene(new Scene(root));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
