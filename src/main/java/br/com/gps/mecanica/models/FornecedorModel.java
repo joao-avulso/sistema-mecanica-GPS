@@ -46,11 +46,12 @@ public class FornecedorModel extends PessoaBaseModel {
         this.produtos = produtos;
     }
 
+    /*
     @Override
     public String toString() {
         return "FornecedorModel [cnpj=" + cnpj + ", produtos=" + produtos.toString() + "endereco="
                 + enderecos.toString()
                 + ", telefones=" + telefones.toString() + ", tipoPessoa=" + tipoPessoa + ", nome=" + nome + ", email="
                 + email + ", id=" + id + "]";
-    }
+    } */
 }
