@@ -2,7 +2,9 @@ package br.com.gps.mecanica.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,26 +47,6 @@ public class FornecedorService {
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
 
-        if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
-            throw new Exception("Email inválido");
-        }
-
-        if (Utils.verificarCnpj(fornecedor.getCnpj()) == false) {
-            throw new Exception("CNPJ inválido");
-        }
-
-        if (fornecedorRepository.findByCnpj(fornecedor.getCnpj()) != null) {
-            throw new Exception("CNPJ já cadastrado");
-        }
-
-        if (fornecedorRepository.findByEmail(fornecedor.getEmail()) != null) {
-            throw new Exception("Email já cadastrado");
-        }
-
-        if (fornecedorRepository.existsByNome(fornecedor.getNome())) {
-            throw new Exception("Nome já cadastrado " + fornecedor.getNome());
-        }
-
         List<EnderecoModel> enderecos = new ArrayList<>();
 
         if (enderecos != null && !enderecos.isEmpty()) {
@@ -89,13 +71,33 @@ public class FornecedorService {
             fornecedor.setTelefones(telefonesFormatados);
         }
 
+        if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
+            throw new Exception("Email inválido");
+        }
+
+        if (Utils.verificarCnpj(fornecedor.getCnpj()) == false) {
+            throw new Exception("CNPJ inválido");
+        }
+
+        if (fornecedorRepository.findByCnpj(fornecedor.getCnpj()) != null) {
+            throw new Exception("CNPJ já cadastrado");
+        }
+
+        if (fornecedorRepository.findByEmail(fornecedor.getEmail()) != null) {
+            throw new Exception("Email já cadastrado");
+        }
+
+        if ( fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
+            throw new Exception("Nome já cadastrado");
+        }
+
+
         return fornecedorRepository.save(fornecedor);
     }
 
     public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
         FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
 
-        
         fornecedor.setNome(Utils.formatarString(fornecedor.getNome()));
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
@@ -113,7 +115,7 @@ public class FornecedorService {
         if (nome != null && nome != fornecedorAtual.getNome()) {
             fornecedorAtual.setNome(Utils.formatarString(nome));
         }
-
+        
         String cnpj = fornecedor.getCnpj();
 
         if (cnpj != null && cnpj != fornecedorAtual.getCnpj() && !fornecedorRepository.existsByCnpj(cnpj)) {
@@ -121,6 +123,7 @@ public class FornecedorService {
         }
         
         String email = fornecedor.getEmail();
+
 
         if (email != null && email != fornecedorAtual.getEmail() && !fornecedorRepository.existsByEmail(email)) {
             fornecedorAtual.setEmail(Utils.formatarEmail(email));
@@ -148,16 +151,18 @@ public class FornecedorService {
     public void deleteEndereco(UUID id, UUID idEndereco) {
         FornecedorModel fornecedor = fornecedorRepository.findById(id).get();
         List<EnderecoModel> enderecos = fornecedor.getEnderecos();
-        enderecos.removeIf(endereco -> endereco.getId().equals(idEndereco));
-        fornecedor.setEnderecos(enderecos);
+        List<EnderecoModel> mutableEnderecos = new ArrayList<>(enderecos);
+        mutableEnderecos.removeIf(mutableEndereco -> mutableEndereco.getId().equals(idEndereco));
+        fornecedor.setEnderecos(mutableEnderecos);
         fornecedorRepository.save(fornecedor);
     }
 
     public void deleteTelefone(UUID id, UUID idTelefone) {
         FornecedorModel fornecedor = fornecedorRepository.findById(id).get();
         List<TelefoneModel> telefones = fornecedor.getTelefones();
-        telefones.removeIf(telefone -> telefone.getId().equals(idTelefone));
-        fornecedor.setTelefones(telefones);
+        List<TelefoneModel> mutableTelefones = new ArrayList<>(telefones);
+        mutableTelefones.removeIf(mutableTelefone -> mutableTelefone.getId().equals(idTelefone));
+        fornecedor.setTelefones(mutableTelefones);
         fornecedorRepository.save(fornecedor);
     }
 
