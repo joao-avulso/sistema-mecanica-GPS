@@ -242,7 +242,7 @@ public class DadosTeste {
                 "Honda",
                 2020,
                 CorEnum.PRETO,
-                null // This can be associated with a specific ClienteModel if needed
+                null 
         );
 
         VeiculoModel veiculo2 = new VeiculoModel(
