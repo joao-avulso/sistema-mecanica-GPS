@@ -1,6 +1,5 @@
 package br.com.gps.mecanica.services;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -60,7 +59,7 @@ public class FuncionarioService {
 
         List<EnderecoModel> enderecos = funcionario.getEnderecos();
 
-        if ( enderecos != null && !enderecos.isEmpty()) {
+        if (enderecos != null && !enderecos.isEmpty()) {
             List<EnderecoModel> enderecosFormatados = new ArrayList<>();
 
             for (EnderecoModel endereco : enderecos) {
@@ -106,47 +105,69 @@ public class FuncionarioService {
             throw new Exception("Funcionário não encontrado");
         }
 
+        if (!Utils.verificarCpf(funcionario.getCpf())) {
+            throw new Exception("CPF inválido");
+        }
+
+        if (!Utils.verificarEmail(funcionario.getEmail())) {
+            throw new Exception("Email inválido");
+        }
+
         FuncionarioModel funcionarioAtual = funcionarioRepository.findById(id).get();
 
         String nome = funcionario.getNome();
 
-        if (nome != null && !nome.isEmpty()) {
+        if (nome != null && !nome.equals(funcionarioAtual.getNome())) {
             funcionarioAtual.setNome(Utils.formatarString(nome));
         }
 
         String cpf = funcionario.getCpf();
 
-        if (cpf != null && !cpf.isEmpty()) {
+        if (cpf != null && !cpf.equals(funcionarioAtual.getCpf())) {
+            if (!Utils.verificarCpf(cpf)) {
+                throw new Exception("CPF inválido");
+            }
+
+            if (!funcionarioRepository.existsByCpf(cpf)) {
+                throw new Exception("CPF já cadastrado");
+            }
+
             funcionarioAtual.setCpf(Utils.formatarCpf(cpf));
         }
 
         String email = funcionario.getEmail();
 
-        if (email != null && !email.isEmpty()) {
+        if (email != null && !email.equals(funcionarioAtual.getEmail())) {
+            if (!Utils.verificarEmail(email)) {
+                throw new Exception("Email inválido");
+            }
+
+            if (!funcionarioRepository.existsByEmail(email)) {
+                throw new Exception("Email já cadastrado");
+            }
+
             funcionarioAtual.setEmail(Utils.formatarEmail(email));
         }
 
         CargoEnum cargo = funcionario.getCargo();
 
-        if (cargo != null) {
+        if (cargo != null && !cargo.equals(funcionarioAtual.getCargo())) {
             funcionarioAtual.setCargo(cargo);
-        }
-
-        LocalDate dataNascimento = funcionario.getDataAdmissao();
-
-        if (dataNascimento != null && !dataNascimento.toString().isEmpty()) {
-            funcionarioAtual.setDataAdmissao(dataNascimento);
         }
 
         List<EnderecoModel> enderecos = funcionario.getEnderecos();
 
-        if (!enderecos.isEmpty() && enderecos != null) {
-            List<EnderecoModel> enderecosFormatados = funcionarioAtual.getEnderecos();
+        if (enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = new ArrayList<>();
 
             for (EnderecoModel endereco : enderecos) {
-                endereco.setCep(Utils.formatarCep(endereco.getCep()));
-                Utils.formatarEndereco(endereco);
-                enderecosFormatados.add(endereco);
+                if (endereco.equals(funcionarioAtual.getEnderecos().get(0))) {
+                    continue;
+                } else {
+                    endereco.setCep(Utils.formatarCep(endereco.getCep()));
+                    Utils.formatarEndereco(endereco);
+                    enderecosFormatados.add(endereco);
+                }
             }
 
             funcionarioAtual.setEnderecos(enderecosFormatados);
@@ -155,32 +176,13 @@ public class FuncionarioService {
         List<TelefoneModel> telefones = funcionario.getTelefones();
 
         if (!telefones.isEmpty() && telefones != null) {
-            List<TelefoneModel> telefonesFormatados = funcionarioAtual.getTelefones();
+            List<TelefoneModel> telefonesFormatados = new ArrayList<>();
 
             for (TelefoneModel telefone : funcionario.getTelefones()) {
-                Utils.formatarTelefone(telefone);
-                telefonesFormatados.add(telefone);
+                telefonesFormatados.add(Utils.formatarTelefone(telefone));
             }
 
             funcionarioAtual.setTelefones(telefonesFormatados);
-        }
-
-        if (funcionarioRepository.findByCpf(funcionario.getCpf()) != null
-                && !funcionarioAtual.getCpf().equals(funcionario.getCpf())) {
-            throw new Exception("CPF já cadastrado");
-        }
-
-        if (funcionarioRepository.findByEmail(funcionario.getEmail()) != null
-                && !funcionarioAtual.getEmail().equals(funcionario.getEmail())) {
-            throw new Exception("Email já cadastrado");
-        }
-
-        if (Utils.verificarEmail(Utils.formatarEmail(funcionario.getEmail())) == false) {
-            throw new Exception("Email inválido");
-        }
-
-        if (Utils.verificarCpf(Utils.formatarCpf(funcionario.getCpf())) == false) {
-            throw new Exception("CPF inválido");
         }
 
         return funcionarioRepository.save(funcionarioAtual);

@@ -177,12 +177,15 @@ public class ReadClienteController {
     @FXML
     void atualizar(ActionEvent event) {
         try {
-            ClienteModel clienteAtualizado = new ClienteModel();
+            ClienteModel clienteAtualizado = clienteService.get(clienteId);
+
             clienteAtualizado.setNome(nomeTextField.getText());
             clienteAtualizado.setCpf(cpfTextField.getText());
             clienteAtualizado.setEmail(emailTextField.getText());
 
-            EnderecoModel endereco = new EnderecoModel();
+            EnderecoModel endereco = clienteAtualizado.getEnderecos().isEmpty()
+                    ? new EnderecoModel()
+                    : clienteAtualizado.getEnderecos().get(0);
             endereco.setCep(cepTextField.getText());
             endereco.setRua(ruaTextField.getText());
             endereco.setBairro(bairroTextField.getText());
@@ -191,16 +194,23 @@ public class ReadClienteController {
             endereco.setNumero(numeroTextField.getText());
             endereco.setComplemento(complementoTextField.getText());
             endereco.setReferencia(referenciaTextField.getText());
+            endereco.setPessoa(clienteAtualizado);
             clienteAtualizado.setEnderecos(List.of(endereco));
 
-            TelefoneModel telefone = new TelefoneModel();
+            // Atualiza ou cria o telefone
+            TelefoneModel telefone = clienteAtualizado.getTelefones().isEmpty()
+                    ? new TelefoneModel()
+                    : clienteAtualizado.getTelefones().get(0);
             telefone.setNumero(telefoneTextField.getText());
             telefone.setTipo((ContatoEnum) contatoChoiceBox.getValue());
+            telefone.setPessoa(clienteAtualizado);
+
             clienteAtualizado.setTelefones(List.of(telefone));
 
             clienteService.update(clienteId, clienteAtualizado);
 
             nomeTextField.getScene().getWindow().hide();
+
         } catch (Exception e) {
             Utils.errorMessage(erroLabel, "Erro ao atualizar cliente: " + e.getMessage());
             ;

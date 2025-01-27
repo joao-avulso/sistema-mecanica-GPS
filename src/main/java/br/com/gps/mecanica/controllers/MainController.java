@@ -204,7 +204,8 @@ public class MainController {
 
         selection = MenuSelectionEnum.ORCAMENTO;
 
-        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada", "finalizada"));
+        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService,
+                List.of("id", "ID", "contratada", "finalizada"));
     }
 
     private void criaTabela(List<Class<?>> models, Object service, List<String> camposIgnorados) {
@@ -376,7 +377,8 @@ public class MainController {
                     Utils.lerItem(MenuSelectionEnum.FORNECEDOR, (FornecedorModel) selected);
                     atualizaTabela();
                 } else if (selected instanceof FuncionarioModel) {
-
+                    Utils.lerItem(MenuSelectionEnum.FUNCIONARIO, (FuncionarioModel) selected);
+                    atualizaTabela();
                 } else if (selected instanceof OrdemServicoModel) {
 
                 }
@@ -421,7 +423,8 @@ public class MainController {
         } else if (selection == MenuSelectionEnum.ORDEM) {
             criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
         } else if (selection == MenuSelectionEnum.ORCAMENTO) {
-            criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada", "finalizada"));
+            criaTabela(List.of(OrdemServicoModel.class), ordemServicoService,
+                    List.of("id", "ID", "contratada", "finalizada"));
         }
     }
 
@@ -446,7 +449,8 @@ public class MainController {
                 loader = new FXMLLoader(MecanicaApplication.class.getResource("addFuncionario.fxml"));
             else if (selection == MenuSelectionEnum.ORDEM || selection == MenuSelectionEnum.ORCAMENTO)
                 loader = new FXMLLoader(MecanicaApplication.class.getResource("addOrdem.fxml"));
-            else return addButton;
+            else
+                return addButton;
 
             addButton.setOnAction(event -> {
                 Parent root;

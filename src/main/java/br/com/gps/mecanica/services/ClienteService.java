@@ -136,7 +136,7 @@ public class ClienteService {
 
         String nome = cliente.getNome();
 
-        if (nome != null && nome != clienteAtual.getNome()) {
+        if (nome != null && !nome.equals(clienteAtual.getNome())) {
             clienteAtual.setNome(Utils.formatarNome(nome));
         }
 
@@ -164,6 +164,36 @@ public class ClienteService {
                 throw new Exception("Email inválido");
             }
             clienteAtual.setEmail(Utils.formatarEmail(email));
+        }
+
+        List<EnderecoModel> enderecos = cliente.getEnderecos();
+
+        if (enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = new ArrayList<>();
+
+            for (EnderecoModel endereco : enderecos) {
+                if (endereco.equals(clienteAtual.getEnderecos().get(0))) {
+                    continue;
+                } else {
+                    endereco.setCep(Utils.formatarCep(endereco.getCep()));
+                    Utils.formatarEndereco(endereco);
+                    enderecosFormatados.add(endereco);
+                }
+            }
+
+            clienteAtual.setEnderecos(enderecosFormatados);
+        }
+
+        List<TelefoneModel> telefones = cliente.getTelefones();
+
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = new ArrayList<>();
+
+            for (TelefoneModel telefone : cliente.getTelefones()) {
+                telefonesFormatados.add(Utils.formatarTelefone(telefone));
+            }
+
+            clienteAtual.setTelefones(telefonesFormatados);
         }
 
         return clienteRepository.save(clienteAtual);
