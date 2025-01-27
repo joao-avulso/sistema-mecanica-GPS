@@ -1,6 +1,7 @@
 package br.com.gps.mecanica.controllers;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -99,6 +100,8 @@ public class MainController {
     private FuncionarioService funcionarioService;
 
     private OrdemServicoService ordemServicoService;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     @FXML
     void initialize() {
@@ -201,7 +204,7 @@ public class MainController {
 
         selection = MenuSelectionEnum.ORCAMENTO;
 
-        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
+        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada", "finalizada"));
     }
 
     private void criaTabela(List<Class<?>> models, Object service, List<String> camposIgnorados) {
@@ -280,6 +283,8 @@ public class MainController {
                         } else if (value instanceof LocalDate) {
                             return new SimpleObjectProperty<>(((LocalDate) value).getDayOfMonth() + "/"
                                     + ((LocalDate) value).getMonthValue() + "/" + ((LocalDate) value).getYear());
+                        } else if (value instanceof Double) {
+                            return new SimpleObjectProperty<>("R$ " + df.format(value));
                         }
 
                         return new SimpleObjectProperty<>(value.toString());
@@ -318,6 +323,26 @@ public class MainController {
                 mainTable.getItems().add(funcionario);
             });
         } else if (service instanceof OrdemServicoService) {
+            TableColumn<Object, Object> column = new TableColumn<>("VALOR TOTAL");
+            column.setCellValueFactory(data -> {
+                try {
+                    OrdemServicoModel value = ((OrdemServicoModel) data.getValue());
+                    if (value == null) {
+                        return new SimpleObjectProperty<>("N/A");
+                    }
+
+                    Double valorTotal = value.getServicos().stream().mapToDouble(servico -> servico.getValor()).sum()
+                            + value.getProdutos().stream().mapToDouble(produto -> produto.getValorVenda()).sum();
+
+                    return new SimpleObjectProperty<>("R$ " + df.format(valorTotal));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+
+            mainTable.getColumns().add(column);
+
             ordemServicoService.get().forEach(ordemServico -> {
                 if (selection == MenuSelectionEnum.ORDEM && ordemServico.getContratada()) {
                     mainTable.getItems().add(ordemServico);
@@ -396,7 +421,7 @@ public class MainController {
         } else if (selection == MenuSelectionEnum.ORDEM) {
             criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
         } else if (selection == MenuSelectionEnum.ORCAMENTO) {
-            criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
+            criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada", "finalizada"));
         }
     }
 
@@ -417,13 +442,20 @@ public class MainController {
                 loader = new FXMLLoader(MecanicaApplication.class.getResource("addServico.fxml"));
             else if (selection == MenuSelectionEnum.FORNECEDOR)
                 loader = new FXMLLoader(MecanicaApplication.class.getResource("addFornecedor.fxml"));
-            else
-                return addButton;
+            else if (selection == MenuSelectionEnum.FUNCIONARIO)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addFuncionario.fxml"));
+            else if (selection == MenuSelectionEnum.ORDEM || selection == MenuSelectionEnum.ORCAMENTO)
+                loader = new FXMLLoader(MecanicaApplication.class.getResource("addOrdem.fxml"));
+            else return addButton;
 
             addButton.setOnAction(event -> {
                 Parent root;
                 try {
                     root = loader.load();
+                    if (selection == MenuSelectionEnum.ORCAMENTO) {
+                        AddOrdemController controller = loader.getController();
+                        controller.setIsOrcamento(true);
+                    }
                     Stage stage = new Stage();
                     stage.initStyle(StageStyle.UNDECORATED);
                     stage.setResizable(false);
