@@ -7,7 +7,6 @@ import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.dto.EnderecoDto;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.MenuSelectionEnum;
-import br.com.gps.mecanica.enums.PessoaEnum;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.FornecedorModel;
 import br.com.gps.mecanica.models.ProdutoModel;
@@ -178,6 +177,8 @@ public class ReadFornecedorController {
     @FXML
     void atualizar(ActionEvent event) {
         try {
+            FornecedorModel fornecedorAtualizado = fornecedorService.get(fornecedorId);
+
             String cnpj = cpfTextField.getText();
             String nome = nomeTextField.getText();
             String email = emailTextField.getText();
@@ -196,20 +197,43 @@ public class ReadFornecedorController {
                 throw new Exception("Preencha todos os campos obrigatórios");
             }
 
-            FornecedorModel fornecedor = new FornecedorModel(PessoaEnum.JURIDICA, nome, email, null, null, cnpj, null);
+            fornecedorAtualizado.setCnpj(cnpj);
+            fornecedorAtualizado.setNome(nome);
+            fornecedorAtualizado.setEmail(email);
 
             if (!telefone.isEmpty()) {
-                fornecedor.setTelefones(List.of(new TelefoneModel(telefone, contatoChoiceBox.getValue(), fornecedor)));
+                TelefoneModel telefoneModel = fornecedorAtualizado.getTelefones().isEmpty()
+                        ? new TelefoneModel()
+                        : fornecedorAtualizado.getTelefones().get(0);
+                telefoneModel.setNumero(telefone);
+                telefoneModel.setTipo(contatoChoiceBox.getValue());
+                telefoneModel.setPessoa(fornecedorAtualizado);
+                fornecedorAtualizado.setTelefones(List.of(telefoneModel));
             }
 
+            // Atualiza ou cria o endereço
             if (!cep.isEmpty() || !rua.isEmpty() || !numero.isEmpty() || !bairro.isEmpty() || !cidade.isEmpty()
                     || !estado.isEmpty() || !complemento.isEmpty() || !referencia.isEmpty()) {
-                fornecedor.setEnderecos(List.of(new EnderecoModel(cep, rua, numero, bairro, cidade, estado, complemento,
-                        referencia, contato, fornecedor)));
+                EnderecoModel enderecoModel = fornecedorAtualizado.getEnderecos().isEmpty()
+                        ? new EnderecoModel()
+                        : fornecedorAtualizado.getEnderecos().get(0);
+                enderecoModel.setCep(cep);
+                enderecoModel.setRua(rua);
+                enderecoModel.setNumero(numero);
+                enderecoModel.setBairro(bairro);
+                enderecoModel.setCidade(cidade);
+                enderecoModel.setEstado(estado);
+                enderecoModel.setComplemento(complemento);
+                enderecoModel.setReferencia(referencia);
+                enderecoModel.setTipo(contato);
+                enderecoModel.setPessoa(fornecedorAtualizado);
+                fornecedorAtualizado.setEnderecos(List.of(enderecoModel));
             }
 
-            fornecedorService.update(fornecedorId, fornecedor);
+            fornecedorService.update(fornecedorId, fornecedorAtualizado);
+
             nomeTextField.getScene().getWindow().hide();
+
         } catch (Exception e) {
             Utils.errorMessage(erroLabel, "Erro ao atualizar fornecedor: " + e.getMessage());
         }

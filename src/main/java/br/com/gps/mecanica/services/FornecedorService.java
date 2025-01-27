@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -86,10 +85,9 @@ public class FornecedorService {
             throw new Exception("Email já cadastrado");
         }
 
-        if ( fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
+        if (fornecedorRepository.findByNome(fornecedor.getNome()).size() != 0) {
             throw new Exception("Nome já cadastrado");
         }
-
 
         return fornecedorRepository.save(fornecedor);
     }
@@ -99,7 +97,7 @@ public class FornecedorService {
         fornecedor.setNome(Utils.formatarString(fornecedor.getNome()));
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
-        
+
         if (!Utils.verificarEmail(fornecedor.getEmail())) {
             throw new Exception("Email inválido");
         }
@@ -113,7 +111,7 @@ public class FornecedorService {
         if (nome != null && nome != fornecedorAtual.getNome()) {
             fornecedorAtual.setNome(Utils.formatarString(nome));
         }
-        
+
         String cnpj = fornecedor.getCnpj();
 
         if (cnpj != null && !cnpj.equals(fornecedorAtual.getCnpj())) {
@@ -127,7 +125,7 @@ public class FornecedorService {
 
             fornecedorAtual.setCnpj(Utils.formatarCnpj(cnpj));
         }
-        
+
         String email = fornecedor.getEmail();
 
         if (email != null && !email.equals(fornecedorAtual.getEmail())) {

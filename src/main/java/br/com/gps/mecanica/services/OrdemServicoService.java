@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.FuncionarioModel;
 import br.com.gps.mecanica.models.OrdemServicoModel;
+import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.ClienteRepository;
@@ -57,6 +58,22 @@ public class OrdemServicoService {
 
     public List<OrdemServicoModel> getByPlacaVeiculo(String placa) {
         return ordemServicoRepository.findByVeiculo(veiculoRepository.findByPlaca(placa));
+    }
+
+    public List<ServicoModel> getServicos(UUID id) throws Exception {
+        if (ordemServicoRepository.findById(id).isEmpty()) {
+            throw new Exception("Ordem de serviço não encontrada");
+        }
+
+        return ordemServicoRepository.findById(id).get().getServicos();
+    }
+
+    public List<ProdutoModel> getProdutos(UUID id) throws Exception {
+        if (ordemServicoRepository.findById(id).isEmpty()) {
+            throw new Exception("Ordem de serviço não encontrada");
+        }
+
+        return ordemServicoRepository.findById(id).get().getProdutos();
     }
 
     public void ContratarOrdemServico(UUID id) throws Exception {
