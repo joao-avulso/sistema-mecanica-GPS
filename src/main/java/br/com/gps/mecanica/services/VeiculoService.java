@@ -69,6 +69,10 @@ public class VeiculoService {
         return veiculoRepository.findByModelo(modelo);
     }
 
+    public List<VeiculoModel> getByCliente(ClienteModel cliente) {
+        return veiculoRepository.findByCliente(cliente);
+    }
+
     public VeiculoModel update(UUID id, VeiculoModel veiculo) throws Exception {
         if (veiculoRepository.findById(id).isEmpty()) {
             throw new Exception("Veículo não encontrado");

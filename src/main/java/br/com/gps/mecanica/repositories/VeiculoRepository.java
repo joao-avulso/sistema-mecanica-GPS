@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.VeiculoModel;
 
 public interface VeiculoRepository extends JpaRepository<VeiculoModel, UUID> {
@@ -14,4 +15,6 @@ public interface VeiculoRepository extends JpaRepository<VeiculoModel, UUID> {
     List<VeiculoModel> findByModelo(String modelo);
 
     List<VeiculoModel> findByMarca(String marca);
+
+    List<VeiculoModel> findByCliente(ClienteModel cliente);
 }
