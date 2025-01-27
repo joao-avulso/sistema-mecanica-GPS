@@ -207,6 +207,9 @@
                   <TableColumn fx:id="valorCompraColumn" prefWidth="75.0" text="VALOR COMPRA" />
                   <TableColumn fx:id="quantidadeColumn" prefWidth="75.0" text="QUANTIDADE" />
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
             <Label fx:id="erroLabel" alignment="CENTER" contentDisplay="CENTER" text="Error" textFill="#db3434" visible="false" wrapText="true">
                <font>

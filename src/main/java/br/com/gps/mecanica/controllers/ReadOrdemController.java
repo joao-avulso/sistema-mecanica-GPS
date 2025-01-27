@@ -13,8 +13,6 @@ import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.FuncionarioService;
 import br.com.gps.mecanica.services.OrdemServicoService;
-import br.com.gps.mecanica.services.ProdutoService;
-import br.com.gps.mecanica.services.ServicoService;
 import br.com.gps.mecanica.services.VeiculoService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.beans.property.SimpleObjectProperty;
@@ -88,9 +86,9 @@ public class ReadOrdemController {
 
     private FuncionarioService funcionarioService;
 
-    private ProdutoService produtoService;
+    // private ProdutoService produtoService;
 
-    private ServicoService servicoService;
+    // private ServicoService servicoService;
 
     private UUID ordemId;
 
@@ -101,8 +99,8 @@ public class ReadOrdemController {
         this.clienteService = MecanicaFxMainApplication.getBean(ClienteService.class);
         this.veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
         this.funcionarioService = MecanicaFxMainApplication.getBean(FuncionarioService.class);
-        this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
-        this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
+        // this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
+        // this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
 
         // Configuração das colunas da tabela de serviços
         nomeServicoColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getNome()));
