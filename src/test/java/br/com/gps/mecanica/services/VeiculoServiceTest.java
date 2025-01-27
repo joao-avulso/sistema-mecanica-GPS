@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.gps.mecanica.enums.CorEnum;
@@ -17,7 +16,6 @@ import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.repositories.ClienteRepository;
 import br.com.gps.mecanica.repositories.VeiculoRepository;
 
-//@ActiveProfiles("test")
 @SpringBootTest
 @Transactional 
 public class VeiculoServiceTest {
