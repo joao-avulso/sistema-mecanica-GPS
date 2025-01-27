@@ -77,7 +77,7 @@ public class ProdutoServiceTest {
             assertEquals("OLEO DE MOTOR", produtoService.get(result.getId()).getNome());  
 
         } catch (Exception e) {
-            fail("Nao foi possivel criar o fornecedor no testCreate do FornecedorServiceTest");
+            fail("Nao foi possivel criar o produto no testCreate do ProdutoServiceTest");
         }
 
     }
@@ -85,7 +85,6 @@ public class ProdutoServiceTest {
     @Test
     void testUpdate() {
         
-
         ProdutoModel produto1 = new ProdutoModel(
             "Óleo de Motor",
             "Óleo sintético para motores a gasolina",
@@ -96,8 +95,8 @@ public class ProdutoServiceTest {
 
         //FORNECEDOR
         FornecedorModel fornecedor = new FornecedorModel(PessoaEnum.JURIDICA, "Alvo Dumbledor","dumbledore@gmail.com",
-        new ArrayList<>() ,new ArrayList<>(),"36.578.284/0001-45",new ArrayList<>());
-            
+        new ArrayList<>() ,new ArrayList<>(),"36.578.284/0001-45", new ArrayList<>());
+
         ProdutoModel produto2 = new ProdutoModel(
             "Filtro de Ar",
             "Filtro de ar de alta eficiência para veículos compactos",
@@ -108,13 +107,29 @@ public class ProdutoServiceTest {
             
         try {
             ProdutoModel result = produtoService.create(produto1);
-            assertEquals("OLEO DE MOTOR", produtoService.get(result.getId()).getNome());  
+            ProdutoModel result2 = produtoService.update(result.getId(), produto2);
             
-            ProdutoModel result2 = produtoService.update(produto1.getId(), produto2);
-            assertEquals("FILTRO DE AR", produtoService.get(result2.getId()).getNome());  
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1");
+            System.out.println(result.getId());
+            System.out.println(result2.getId());
+            System.out.println(produtoService.get(result2.getId()).getNome()); //ISSO AQUI NAO TA FUNCIONANDO EU N SEI PQ
+
+            assertEquals("FILTRO DE AR", produtoService.get(result2.getId()).getNome()); 
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2"); 
+            assertEquals("FILTRO DE AR DE ALTA EFICIENCIA PARA VEICULOS COMPACTOS", produtoService.get(result2.getId()).getDescricao());
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3");  
+            assertEquals(30.0, produtoService.get(result2.getId()).getValorVenda());  
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4");
+            assertEquals(20.0, produtoService.get(result2.getId()).getValorCompra());  
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5");
+            assertEquals(150, produtoService.get(result2.getId()).getQuantidade());  
+            
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6");
+            assertEquals(fornecedor, produtoService.get(result2.getId()).getFornecedor());  
+            
 
         } catch (Exception e) {
-            fail("Nao foi possivel criar o fornecedor no testCreate do FornecedorServiceTest");
+            fail("Nao foi possivel fazer o update do produto no testUpdate do ProdutoServiceTest");
         }
 
     }

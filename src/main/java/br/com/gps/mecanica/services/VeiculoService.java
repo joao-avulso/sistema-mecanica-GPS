@@ -38,6 +38,8 @@ public class VeiculoService {
         veiculo.setModelo(Utils.formatarMarcaModeloVeiculo(veiculo.getModelo()));
         veiculo.setMarca(Utils.formatarMarcaModeloVeiculo(veiculo.getMarca()));
 
+
+
         return veiculoRepository.save(veiculo);
     }
 
@@ -110,6 +112,12 @@ public class VeiculoService {
 
         if (cor != null) {
             veiculoAtual.setCor(cor);
+        }
+
+        ClienteModel cliente = veiculo.getCliente();
+        
+        if (cliente != null) {
+            veiculoAtual.setCliente(cliente);
         }
 
         return veiculoRepository.save(veiculoAtual);

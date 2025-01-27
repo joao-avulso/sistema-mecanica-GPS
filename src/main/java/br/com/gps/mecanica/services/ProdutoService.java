@@ -91,7 +91,7 @@ public class ProdutoService {
         ProdutoModel produtoAtual = produtoRepository.findById(id).get();
 
         String nome = produto.getNome();
-
+        
         if (nome != null && !nome.isEmpty()) {
             produtoAtual.setNome(Utils.formatarString(nome));
         }
@@ -100,6 +100,30 @@ public class ProdutoService {
 
         if (descricao != null && !descricao.isEmpty()) {
             produtoAtual.setDescricao(Utils.formatarString(descricao));
+        }
+
+        Double valorVenda = produto.getValorVenda();
+
+        if (valorVenda != null && valorVenda != 0) {
+            produtoAtual.setValorVenda(valorVenda);
+        }
+
+        Double valorCompra = produto.getValorCompra();
+
+        if (valorCompra != null && valorCompra != 0) {
+            produtoAtual.setValorCompra(valorCompra);
+        }
+        
+        Integer quantidade = produto.getQuantidade();
+
+        if (quantidade != null) {
+            produtoAtual.setQuantidade(quantidade);
+        }
+
+        FornecedorModel fornecedor = produto.getFornecedor();
+
+        if (fornecedor != null) {
+            produtoAtual.setFornecedor(fornecedor);
         }
 
         return produtoRepository.save(produtoAtual);
