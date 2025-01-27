@@ -102,24 +102,25 @@ public class ProdutoService {
             produtoAtual.setDescricao(Utils.formatarString(descricao));
         }
 
-        Double valorVenda = produto.getValorVenda();
-
-        if (valorVenda != null && valorVenda != 0) {
-            produtoAtual.setValorVenda(valorVenda);
-        }
 
         Double valorCompra = produto.getValorCompra();
 
-        if (valorCompra != null && valorCompra != 0) {
+        if (valorCompra != null) {
             produtoAtual.setValorCompra(valorCompra);
         }
-        
+
+        Double valorVenda = produto.getValorVenda();
+
+        if (valorVenda != null) {
+            produtoAtual.setValorVenda(valorVenda);
+        }
+
         Integer quantidade = produto.getQuantidade();
 
         if (quantidade != null) {
             produtoAtual.setQuantidade(quantidade);
         }
-
+      
         FornecedorModel fornecedor = produto.getFornecedor();
 
         if (fornecedor != null) {

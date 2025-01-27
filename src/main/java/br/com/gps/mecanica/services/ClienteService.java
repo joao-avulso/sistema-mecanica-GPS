@@ -136,23 +136,67 @@ public class ClienteService {
 
         String nome = cliente.getNome();
 
-        if (nome != null && nome != clienteAtual.getNome()) {
+        if (nome != null && !nome.equals(clienteAtual.getNome())) {
             clienteAtual.setNome(Utils.formatarNome(nome));
         }
 
         String cpf = cliente.getCpf();
 
-        if (cpf != null && cpf != clienteAtual.getCpf() && !clienteRepository.existsByCpf(cpf)) {
+        if (cpf != null && !cpf.equals(clienteAtual.getCpf())) {
+            if (clienteRepository.existsByCpf(cpf)) {
+                throw new Exception("CPF já cadastrado");
+            }
+
+            if (!Utils.verificarCpf(Utils.formatarCpf(cpf))) {
+                throw new Exception("CPF inválido");
+            }
             clienteAtual.setCpf(Utils.formatarCpf(cpf));
         }
 
         String email = cliente.getEmail();
 
-        if (email != null && email != clienteAtual.getCpf() && !clienteRepository.existsByEmail(email)) {
+        if (email != null && !email.equals(clienteAtual.getEmail())) {
+            if (clienteRepository.existsByEmail(email)) {
+                throw new Exception("Email já cadastrado");
+            }
+
+            if (!Utils.verificarEmail(Utils.formatarEmail(email))) {
+                throw new Exception("Email inválido");
+            }
             clienteAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        return clienteRepository.save(cliente);
+        List<EnderecoModel> enderecos = cliente.getEnderecos();
+
+        if (enderecos != null) {
+            List<EnderecoModel> enderecosFormatados = new ArrayList<>();
+
+            for (EnderecoModel endereco : enderecos) {
+                if (endereco.equals(clienteAtual.getEnderecos().get(0))) {
+                    continue;
+                } else {
+                    endereco.setCep(Utils.formatarCep(endereco.getCep()));
+                    Utils.formatarEndereco(endereco);
+                    enderecosFormatados.add(endereco);
+                }
+            }
+
+            clienteAtual.setEnderecos(enderecosFormatados);
+        }
+
+        List<TelefoneModel> telefones = cliente.getTelefones();
+
+        if (!telefones.isEmpty() && telefones != null) {
+            List<TelefoneModel> telefonesFormatados = new ArrayList<>();
+
+            for (TelefoneModel telefone : cliente.getTelefones()) {
+                telefonesFormatados.add(Utils.formatarTelefone(telefone));
+            }
+
+            clienteAtual.setTelefones(telefonesFormatados);
+        }
+
+        return clienteRepository.save(clienteAtual);
     };
 
     public ClienteModel addEndereco(UUID id, EnderecoModel endereco) throws Exception {

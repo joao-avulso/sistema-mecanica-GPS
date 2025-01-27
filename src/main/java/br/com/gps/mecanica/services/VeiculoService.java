@@ -71,6 +71,10 @@ public class VeiculoService {
         return veiculoRepository.findByModelo(modelo);
     }
 
+    public List<VeiculoModel> getByCliente(ClienteModel cliente) {
+        return veiculoRepository.findByCliente(cliente);
+    }
+
     public VeiculoModel update(UUID id, VeiculoModel veiculo) throws Exception {
         if (veiculoRepository.findById(id).isEmpty()) {
             throw new Exception("Veículo não encontrado");
@@ -123,13 +127,40 @@ public class VeiculoService {
         return veiculoRepository.save(veiculoAtual);
     }
 
-    public void delete(UUID id) throws Exception {
+    public void updateDono(UUID id, String cpf) throws Exception {
         VeiculoModel veiculo = veiculoRepository.findById(id).get();
-        
+
         if (veiculo == null) {
             throw new Exception("Veículo não encontrado");
         }
-        
+
+        ClienteModel cliente = clienteRepository.findByCpf(cpf);
+
+        if (cliente == null) {
+            throw new Exception("Cliente não encontrado");
+        }
+
+        ClienteModel clienteAtual = veiculo.getCliente();
+
+        if (clienteAtual != null) {
+            clienteAtual.getVeiculos().remove(veiculo);
+            clienteRepository.save(clienteAtual);
+        }
+
+        veiculo.setCliente(cliente);
+        veiculoRepository.save(veiculo);
+
+        cliente.getVeiculos().add(veiculo);
+        clienteRepository.save(cliente);
+    }
+
+    public void delete(UUID id) throws Exception {
+        VeiculoModel veiculo = veiculoRepository.findById(id).get();
+
+        if (veiculo == null) {
+            throw new Exception("Veículo não encontrado");
+        }
+
         ClienteModel cliente = veiculo.getCliente();
 
         if (cliente != null) {

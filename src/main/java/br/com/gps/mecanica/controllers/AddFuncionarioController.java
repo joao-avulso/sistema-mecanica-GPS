@@ -1,15 +1,17 @@
 package br.com.gps.mecanica.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.dto.EnderecoDto;
+import br.com.gps.mecanica.enums.CargoEnum;
 import br.com.gps.mecanica.enums.ContatoEnum;
 import br.com.gps.mecanica.enums.PessoaEnum;
 import br.com.gps.mecanica.models.EnderecoModel;
-import br.com.gps.mecanica.models.FornecedorModel;
+import br.com.gps.mecanica.models.FuncionarioModel;
 import br.com.gps.mecanica.models.TelefoneModel;
-import br.com.gps.mecanica.services.FornecedorService;
+import br.com.gps.mecanica.services.FuncionarioService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +20,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class AddFornecedorController {
-
+public class AddFuncionarioController {
     @FXML
     private TextField estadoTextField;
 
@@ -34,6 +35,9 @@ public class AddFornecedorController {
 
     @FXML
     private ChoiceBox<ContatoEnum> contatoChoiceBox;
+
+    @FXML
+    private ChoiceBox<CargoEnum> cargoChoiceBox;
 
     @FXML
     private TextField telefoneTextField;
@@ -65,14 +69,17 @@ public class AddFornecedorController {
     @FXML
     private TextField cidadeTextField;
 
-    private FornecedorService fornecedorService;
+    private FuncionarioService funcionarioService;
 
     @FXML
     void initialize() {
-        this.fornecedorService = MecanicaFxMainApplication.getBean(FornecedorService.class);
+        funcionarioService = MecanicaFxMainApplication.getBean(FuncionarioService.class);
 
-        contatoChoiceBox.setValue(ContatoEnum.RESIDENCIAL);
         contatoChoiceBox.getItems().addAll(ContatoEnum.values());
+        contatoChoiceBox.setValue(ContatoEnum.RESIDENCIAL);
+
+        cargoChoiceBox.getItems().addAll(CargoEnum.values());
+        cargoChoiceBox.setValue(CargoEnum.ATENDENTE);
 
         Utils.formatterInt(telefoneTextField);
         Utils.formatterInt(cepTextField);
@@ -98,28 +105,30 @@ public class AddFornecedorController {
     @FXML
     void adicionar(ActionEvent event) {
         try {
-            String cnpj = cpfTextField.getText();
+            String cpf = cpfTextField.getText();
             String nome = nomeTextField.getText();
             String email = emailTextField.getText();
             String telefone = telefoneTextField.getText();
-            String cep = cepTextField.getText();
             String rua = ruaTextField.getText();
             String numero = numeroTextField.getText();
+            String complemento = complementoTextField.getText();
             String bairro = bairroTextField.getText();
             String cidade = cidadeTextField.getText();
             String estado = estadoTextField.getText();
-            String complemento = complementoTextField.getText();
+            String cep = cepTextField.getText();
             String referencia = referenciaTextField.getText();
+            ContatoEnum contato = contatoChoiceBox.getValue();
+            CargoEnum cargo = cargoChoiceBox.getValue();
 
-            if (cnpj.isEmpty() || nome.isEmpty() || email.isEmpty()) {
-                throw new Exception("Preencha todos os campos obrigatórios");
+            if (cpf.isEmpty() || nome.isEmpty() || email.isEmpty()) {
+                Utils.errorMessage(erroLabel, "Preencha os campos obrigatórios CPF, NOME e EMAIL");
+                return;
             }
 
-            FornecedorModel fornecedor = new FornecedorModel(PessoaEnum.JURIDICA, nome, email, null, null,
-                    cnpj, null);
+            FuncionarioModel funcionario = new FuncionarioModel(PessoaEnum.FISICA, nome, cpf, email, null, null, cargo, LocalDate.now());
 
             if (!telefone.isEmpty()) {
-                fornecedor.setTelefones(List.of(new TelefoneModel(telefone, contatoChoiceBox.getValue(), fornecedor)));
+                funcionario.setTelefones(List.of(new TelefoneModel(telefone, contato, funcionario)));
             }
 
             if (!cep.isEmpty() || !rua.isEmpty() || !numero.isEmpty() || !bairro.isEmpty() || !cidade.isEmpty()
@@ -130,11 +139,11 @@ public class AddFornecedorController {
                     return;
                 }
 
-                fornecedor.setEnderecos(List.of(new EnderecoModel(cep, rua, bairro, cidade, estado, numero, complemento,
-                        referencia, contatoChoiceBox.getValue(), fornecedor)));
+                funcionario.setEnderecos(List.of(new EnderecoModel(cep, rua, bairro, cidade, estado, numero, complemento,
+                        referencia, contato, funcionario)));
             }
 
-            fornecedorService.create(fornecedor);
+            funcionarioService.create(funcionario);
             nomeTextField.getScene().getWindow().hide();
         } catch (Exception e) {
             Utils.errorMessage(erroLabel, e.getMessage());
@@ -145,5 +154,4 @@ public class AddFornecedorController {
     void cancelar(ActionEvent event) {
         nomeTextField.getScene().getWindow().hide();
     }
-
 }
