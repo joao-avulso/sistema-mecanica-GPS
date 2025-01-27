@@ -98,7 +98,7 @@ public class Utils {
         numero = numero.replace(" ", "");
 
         telefone.setNumero(numero);
-        return null;
+        return telefone;
     }
 
     public static String formatarCpf(String cpf) {

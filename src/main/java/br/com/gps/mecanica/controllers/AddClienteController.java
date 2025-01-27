@@ -96,6 +96,7 @@ public class AddClienteController {
 
         Utils.formatterInt(anoTextField);
         Utils.formatterInt(telefoneTextField);
+        Utils.formatterInt(cepTextField);
 
         cepTextField.setOnKeyTyped(e -> {
             String cep = cepTextField.getText();
@@ -112,8 +113,6 @@ public class AddClienteController {
                     Utils.errorMessage(erroLabel, ex.getMessage());
                 }
             }
-
-            System.out.println(cep);
         });
     }
 
