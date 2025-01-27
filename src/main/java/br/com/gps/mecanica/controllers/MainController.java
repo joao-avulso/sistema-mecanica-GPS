@@ -380,7 +380,8 @@ public class MainController {
                     Utils.lerItem(MenuSelectionEnum.FUNCIONARIO, (FuncionarioModel) selected);
                     atualizaTabela();
                 } else if (selected instanceof OrdemServicoModel) {
-
+                    Utils.lerItem(MenuSelectionEnum.ORDEM, (OrdemServicoModel) selected);
+                    atualizaTabela();
                 }
             }
         });

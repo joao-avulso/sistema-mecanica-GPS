@@ -11,6 +11,7 @@ import br.com.gps.mecanica.MecanicaApplication;
 import br.com.gps.mecanica.controllers.ReadClienteController;
 import br.com.gps.mecanica.controllers.ReadFornecedorController;
 import br.com.gps.mecanica.controllers.ReadFuncionarioController;
+import br.com.gps.mecanica.controllers.ReadOrdemController;
 import br.com.gps.mecanica.controllers.ReadProdutoController;
 import br.com.gps.mecanica.controllers.ReadServicoController;
 import br.com.gps.mecanica.controllers.ReadVeiculoController;
@@ -20,6 +21,7 @@ import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.FornecedorModel;
 import br.com.gps.mecanica.models.FuncionarioModel;
+import br.com.gps.mecanica.models.OrdemServicoModel;
 import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
@@ -410,6 +412,23 @@ public class Utils {
                     ReadFuncionarioController controllerFuncionario = loaderFuncionario.getController();
                     controllerFuncionario.carregarFuncionario((FuncionarioModel) item);
                     break;
+                case ORDEM:
+                    FXMLLoader loaderOrdem = new FXMLLoader(
+                            MecanicaApplication.class.getResource("readOrdem.fxml"));
+                    root = loaderOrdem.load();
+
+                    ReadOrdemController controllerOrdem = loaderOrdem.getController();
+                    controllerOrdem.carregarOrdem((OrdemServicoModel) item);
+                    break;
+                case ORCAMENTO:
+                    FXMLLoader loaderOrcamento = new FXMLLoader(
+                            MecanicaApplication.class.getResource("readOrdem.fxml"));
+                    root = loaderOrcamento.load();
+
+                    ReadOrdemController controllerOrcamento = loaderOrcamento.getController();
+                    controllerOrcamento.carregarOrdem((OrdemServicoModel) item);
+                    break;
+
                 default:
                     break;
             }
