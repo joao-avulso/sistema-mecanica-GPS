@@ -18,8 +18,6 @@ import br.com.gps.mecanica.services.ServicoService;
 import br.com.gps.mecanica.services.VeiculoService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
