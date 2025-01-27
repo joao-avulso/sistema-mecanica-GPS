@@ -6,6 +6,7 @@ import java.util.UUID;
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.dto.EnderecoDto;
 import br.com.gps.mecanica.enums.ContatoEnum;
+import br.com.gps.mecanica.enums.MenuSelectionEnum;
 import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.EnderecoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
@@ -130,7 +131,7 @@ public class ReadClienteController {
         veiculosTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && veiculosTable.getSelectionModel().getSelectedItem() != null) {
                 VeiculoModel veiculoSelecionado = veiculosTable.getSelectionModel().getSelectedItem();
-                Utils.lerVeiculo(veiculoSelecionado);
+                Utils.lerItem(MenuSelectionEnum.VEICULO, veiculoSelecionado);
                 atualizaTabela();
             }
         });

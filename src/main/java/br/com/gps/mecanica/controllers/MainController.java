@@ -336,20 +336,24 @@ public class MainController {
         mainTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && selected != null) {
                 if (selected instanceof ClienteModel) {
-                    lerCliente((ClienteModel) selected);
+                    Utils.lerItem(MenuSelectionEnum.CLIENTE, (ClienteModel) selected);
+                    atualizaTabela();
                 } else if (selected instanceof VeiculoModel) {
-                    Utils.lerVeiculo((VeiculoModel) selected);
+                    Utils.lerItem(MenuSelectionEnum.VEICULO, (VeiculoModel) selected);
                     atualizaTabela();
                 } else if (selected instanceof ProdutoModel) {
-                    lerProduto((ProdutoModel) selected);
+                    Utils.lerItem(MenuSelectionEnum.PRODUTO, (ProdutoModel) selected);
+                    atualizaTabela();
                 } else if (selected instanceof ServicoModel) {
-                    lerServico((ServicoModel) selected);
+                    Utils.lerItem(MenuSelectionEnum.SERVICO, (ServicoModel) selected);
+                    atualizaTabela();
                 } else if (selected instanceof FornecedorModel) {
-                    // lerFornecedor((FornecedorModel) selected);
+                    Utils.lerItem(MenuSelectionEnum.FORNECEDOR, (FornecedorModel) selected);
+                    atualizaTabela();
                 } else if (selected instanceof FuncionarioModel) {
-                    // lerFuncionario((FuncionarioModel) selected);
+
                 } else if (selected instanceof OrdemServicoModel) {
-                    // lerOrdemServico((OrdemServicoModel) selected);
+
                 }
             }
         });
@@ -371,72 +375,6 @@ public class MainController {
         VBox.setVgrow(mainTable, Priority.ALWAYS);
         buttonBorderPane.setRight(buttonHBox);
         mainVBox.getChildren().add(buttonBorderPane);
-    }
-
-    private void lerProduto(ProdutoModel produto) {
-        try {
-            FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readProduto.fxml"));
-            Parent root = loader.load();
-
-            ReadProdutoController controller = loader.getController();
-            controller.carregarProduto(produto);
-
-            Stage stage = new Stage();
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setResizable(false);
-            stage.setTitle("Detalhes do Produto");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            atualizaTabela();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void lerServico(ServicoModel servico) {
-        try {
-            FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readServico.fxml"));
-            Parent root = loader.load();
-
-            ReadServicoController controller = loader.getController();
-            controller.carregarServico(servico);
-
-            Stage stage = new Stage();
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setResizable(false);
-            stage.setTitle("Detalhes do Serviço");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            atualizaTabela();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void lerCliente(ClienteModel cliente) {
-        try {
-            FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readCliente.fxml"));
-            Parent root = loader.load();
-
-            ReadClienteController controller = loader.getController();
-            controller.carregarCliente(cliente);
-
-            Stage stage = new Stage();
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setResizable(false);
-            stage.setTitle("Detalhes do Cliente");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-
-            atualizaTabela();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void atualizaTabela() {

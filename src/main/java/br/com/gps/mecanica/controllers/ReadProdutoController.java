@@ -65,7 +65,11 @@ public class ReadProdutoController {
         this.valorCompraTextField.setText(String.valueOf(produto.getValorCompra()));
         this.valorVendaTextField.setText(String.valueOf(produto.getValorVenda()));
         this.quantidadeTextField.setText(String.valueOf(produto.getQuantidade()));
-        this.fornecedorTextField.setText(produto.getFornecedor().getCnpj());
+        if (produto.getFornecedor() == null) {
+            this.fornecedorTextField.setText("N/A");
+        } else {
+            this.fornecedorTextField.setText(produto.getFornecedor().getNome());
+        }
         fornecedorTextField.setEditable(false);
     }
 

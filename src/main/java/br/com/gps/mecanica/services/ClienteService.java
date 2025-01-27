@@ -142,7 +142,7 @@ public class ClienteService {
 
         String cpf = cliente.getCpf();
 
-        if (cpf != null && cpf != clienteAtual.getCpf() && !clienteRepository.existsByCpf(cpf)) {
+        if (cpf != null && !cpf.equals(clienteAtual.getCpf())) {
             if (clienteRepository.existsByCpf(cpf)) {
                 throw new Exception("CPF já cadastrado");
             }
@@ -155,7 +155,7 @@ public class ClienteService {
 
         String email = cliente.getEmail();
 
-        if (email != null && email != clienteAtual.getEmail() && !clienteRepository.existsByEmail(email)) {
+        if (email != null && !email.equals(clienteAtual.getEmail())) {
             if (clienteRepository.existsByEmail(email)) {
                 throw new Exception("Email já cadastrado");
             }
