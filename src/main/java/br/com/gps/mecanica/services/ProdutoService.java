@@ -102,6 +102,24 @@ public class ProdutoService {
             produtoAtual.setDescricao(Utils.formatarString(descricao));
         }
 
+        Double valorCompra = produto.getValorCompra();
+
+        if (valorCompra != null) {
+            produtoAtual.setValorCompra(valorCompra);
+        }
+
+        Double valorVenda = produto.getValorVenda();
+
+        if (valorVenda != null) {
+            produtoAtual.setValorVenda(valorVenda);
+        }
+
+        Integer quantidade = produto.getQuantidade();
+
+        if (quantidade != null) {
+            produtoAtual.setQuantidade(quantidade);
+        }
+
         return produtoRepository.save(produtoAtual);
     }
 }

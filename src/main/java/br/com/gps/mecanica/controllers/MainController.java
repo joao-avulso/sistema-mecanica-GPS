@@ -29,6 +29,7 @@ import br.com.gps.mecanica.services.OrdemServicoService;
 import br.com.gps.mecanica.services.ProdutoService;
 import br.com.gps.mecanica.services.ServicoService;
 import br.com.gps.mecanica.services.VeiculoService;
+import br.com.gps.mecanica.utils.Utils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -354,6 +355,31 @@ public class MainController {
         mainTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 selected = newValue;
+            }
+        });
+
+        mainTable.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && selected != null) {
+                if (selected instanceof ClienteModel) {
+                    Utils.lerItem(MenuSelectionEnum.CLIENTE, (ClienteModel) selected);
+                    atualizaTabela();
+                } else if (selected instanceof VeiculoModel) {
+                    Utils.lerItem(MenuSelectionEnum.VEICULO, (VeiculoModel) selected);
+                    atualizaTabela();
+                } else if (selected instanceof ProdutoModel) {
+                    Utils.lerItem(MenuSelectionEnum.PRODUTO, (ProdutoModel) selected);
+                    atualizaTabela();
+                } else if (selected instanceof ServicoModel) {
+                    Utils.lerItem(MenuSelectionEnum.SERVICO, (ServicoModel) selected);
+                    atualizaTabela();
+                } else if (selected instanceof FornecedorModel) {
+                    Utils.lerItem(MenuSelectionEnum.FORNECEDOR, (FornecedorModel) selected);
+                    atualizaTabela();
+                } else if (selected instanceof FuncionarioModel) {
+
+                } else if (selected instanceof OrdemServicoModel) {
+
+                }
             }
         });
 

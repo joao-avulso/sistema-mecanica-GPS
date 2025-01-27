@@ -97,16 +97,15 @@ public class FornecedorService {
 
     public FornecedorModel update(UUID id, FornecedorModel fornecedor) throws Exception {
         FornecedorModel fornecedorAtual = fornecedorRepository.findById(id).get();
-
         fornecedor.setNome(Utils.formatarString(fornecedor.getNome()));
         fornecedor.setCnpj(Utils.formatarCnpj(fornecedor.getCnpj()));
         fornecedor.setEmail(Utils.formatarEmail(fornecedor.getEmail()));
         
-        if (Utils.verificarEmail(fornecedor.getEmail()) == false) {
+        if (!Utils.verificarEmail(fornecedor.getEmail())) {
             throw new Exception("Email inválido");
         }
 
-        if (Utils.verificarCnpj(fornecedor.getCnpj()) == false) {
+        if (!Utils.verificarCnpj(fornecedor.getCnpj())) {
             throw new Exception("CNPJ inválido");
         }
 
@@ -118,18 +117,32 @@ public class FornecedorService {
         
         String cnpj = fornecedor.getCnpj();
 
-        if (cnpj != null && cnpj != fornecedorAtual.getCnpj() && !fornecedorRepository.existsByCnpj(cnpj)) {
+        if (cnpj != null && !cnpj.equals(fornecedorAtual.getCnpj())) {
+            if (fornecedorRepository.existsByCnpj(cnpj)) {
+                throw new Exception("CNPJ já cadastrado");
+            }
+
+            if (!Utils.verificarCnpj(cnpj)) {
+                throw new Exception("CNPJ inválido");
+            }
+
             fornecedorAtual.setCnpj(Utils.formatarCnpj(cnpj));
         }
         
         String email = fornecedor.getEmail();
 
+        if (email != null && !email.equals(fornecedorAtual.getEmail())) {
+            if (fornecedorRepository.existsByEmail(email)) {
+                throw new Exception("Email já cadastrado");
+            }
 
-        if (email != null && email != fornecedorAtual.getEmail() && !fornecedorRepository.existsByEmail(email)) {
+            if (!Utils.verificarEmail(email)) {
+                throw new Exception("Email inválido");
+            }
             fornecedorAtual.setEmail(Utils.formatarEmail(email));
         }
 
-        return fornecedorRepository.save(fornecedor);
+        return fornecedorRepository.save(fornecedorAtual);
     }
 
     public FornecedorModel addEndereco(UUID id, EnderecoModel endereco) {

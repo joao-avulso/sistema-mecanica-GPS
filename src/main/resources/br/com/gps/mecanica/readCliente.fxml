@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="960.0" minWidth="670.0" prefHeight="960.0" prefWidth="670.0" style="-fx-border-style: solid; -fx-border-width: 3; -fx-border-color: gray;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.gps.mecanica.controllers.ReadClienteController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="0.0" vgrow="ALWAYS" />
+  </rowConstraints>
+   <children>
+      <VBox spacing="20.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+         <GridPane.margin>
+            <Insets left="50.0" right="50.0" top="20.0" />
+         </GridPane.margin>
+         <children>
+            <VBox spacing="5.0" style="-fx-border-style: solid; -fx-border-radius: 5; -fx-border-color: gray;">
+               <children>
+                  <Label text="NOME*">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="nomeTextField" promptText="Digite o nome do cliente" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="99.0" spacing="5.0" style="-fx-border-style: solid; -fx-border-radius: 5; -fx-border-color: gray;">
+               <children>
+                  <Label text="CPF*">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="cpfTextField" promptText="Digite o CPF do cliente" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox spacing="5.0" style="-fx-border-style: solid; -fx-border-radius: 5; -fx-border-color: gray;">
+               <children>
+                  <Label text="E-MAIL*">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="emailTextField" promptText="Digite o e-mail do cliente" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </VBox>
+            <VBox layoutX="60.0" layoutY="119.0" spacing="5.0" style="-fx-border-style: solid; -fx-border-radius: 5; -fx-border-color: gray;">
+               <children>
+                  <Label text="TELEFONE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="telefoneTextField" promptText="Digite o telefone do cliente" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </VBox>
+            <VBox spacing="5.0" style="-fx-border-style: solid; -fx-border-radius: 5; -fx-border-color: gray;">
+               <children>
+                  <Label text="ENDEREÇO">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <FlowPane prefWidth="200.0">
+                     <children>
+                        <Label text="CEP:">
+                           <FlowPane.margin>
+                              <Insets />
+                           </FlowPane.margin>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="cepTextField" prefHeight="25.0" prefWidth="104.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Label layoutX="10.0" layoutY="10.0" prefHeight="37.0" prefWidth="73.0" text="RUA:">
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="ruaTextField" layoutX="51.0" layoutY="15.0" prefHeight="27.0" prefWidth="318.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Label layoutX="155.0" layoutY="10.0" prefHeight="37.0" prefWidth="75.0" text="BAIRRO:">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="bairroTextField" layoutX="209.0" layoutY="15.0" prefHeight="27.0" prefWidth="250.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Label prefHeight="37.0" prefWidth="75.0" text="CIDADE:">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="cidadeTextField" prefHeight="27.0" prefWidth="139.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Label prefHeight="37.0" prefWidth="75.0" text="ESTADO:">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="estadoTextField" prefHeight="27.0" prefWidth="70.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Label layoutX="155.0" layoutY="121.0" prefHeight="37.0" prefWidth="85.0" text="NUMERO:">
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="numeroTextField" layoutX="230.0" layoutY="126.0" prefHeight="27.0" prefWidth="56.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Separator opacity="0.0" prefWidth="200.0" />
+                        <Label prefHeight="37.0" prefWidth="116.0" text="COMPLEMENTO:">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="complementoTextField" prefHeight="27.0" prefWidth="209.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Separator opacity="0.0" prefWidth="200.0" />
+                        <Label prefHeight="37.0" prefWidth="116.0" text="REFERÊNCIA:">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="referenciaTextField" prefHeight="27.0" prefWidth="209.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                        <Separator opacity="0.0" prefHeight="3.0" prefWidth="145.0" visible="false" />
+                        <Label prefHeight="37.0" prefWidth="116.0" text="CONTATO:">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
+                           </padding>
+                        </Label>
+                        <ChoiceBox fx:id="contatoChoiceBox" prefHeight="25.0" prefWidth="143.0" />
+                        <Separator prefHeight="3.0" prefWidth="145.0" visible="false" />
+                        <Separator prefHeight="3.0" prefWidth="145.0" visible="false" />
+                        <Separator prefHeight="3.0" prefWidth="145.0" visible="false" />
+                        <Separator prefHeight="3.0" prefWidth="145.0" visible="false" />
+                        <Separator prefHeight="3.0" prefWidth="145.0" visible="false" />
+                     </children>
+                  </FlowPane>
+               </children>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <TableView fx:id="veiculosTable" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="placaColumn" prefWidth="75.0" text="PLACA" />
+                <TableColumn fx:id="modeloColumn" prefWidth="75.0" text="MODELO" />
+                  <TableColumn fx:id="marcaColumn" prefWidth="75.0" text="MARCA" />
+                  <TableColumn fx:id="anoColumn" prefWidth="75.0" text="ANO" />
+                  <TableColumn fx:id="corColumn" minWidth="-1.0" prefWidth="75.0" text="COR" />
+              </columns>
+            </TableView>
+            <Label fx:id="erroLabel" alignment="CENTER" contentDisplay="CENTER" text="Error" textFill="#db3434" visible="false" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" spacing="50.0" GridPane.rowIndex="1">
+         <children>
+            <Button id="addButton" fx:id="atualizarButton" mnemonicParsing="false" onAction="#atualizar" text="Atualizar" />
+            <Button id="cancelarButton" mnemonicParsing="false" onAction="#cancelar" prefHeight="19.0" prefWidth="51.0" text="Fechar" />
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</GridPane>
