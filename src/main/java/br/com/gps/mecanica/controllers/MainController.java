@@ -341,7 +341,7 @@ public class MainController {
                     Utils.lerVeiculo((VeiculoModel) selected);
                     atualizaTabela();
                 } else if (selected instanceof ProdutoModel) {
-                    // lerProduto((ProdutoModel) selected);
+                    lerProduto((ProdutoModel) selected);
                 } else if (selected instanceof ServicoModel) {
                     lerServico((ServicoModel) selected);
                 } else if (selected instanceof FornecedorModel) {
@@ -371,6 +371,28 @@ public class MainController {
         VBox.setVgrow(mainTable, Priority.ALWAYS);
         buttonBorderPane.setRight(buttonHBox);
         mainVBox.getChildren().add(buttonBorderPane);
+    }
+
+    private void lerProduto(ProdutoModel produto) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readProduto.fxml"));
+            Parent root = loader.load();
+
+            ReadProdutoController controller = loader.getController();
+            controller.carregarProduto(produto);
+
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setResizable(false);
+            stage.setTitle("Detalhes do Produto");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            atualizaTabela();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void lerServico(ServicoModel servico) {
