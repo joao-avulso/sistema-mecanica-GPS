@@ -7,12 +7,29 @@ import java.util.regex.Pattern;
 
 import org.springframework.web.client.RestTemplate;
 
+import br.com.gps.mecanica.MecanicaApplication;
+import br.com.gps.mecanica.controllers.ReadClienteController;
+import br.com.gps.mecanica.controllers.ReadFornecedorController;
+import br.com.gps.mecanica.controllers.ReadProdutoController;
+import br.com.gps.mecanica.controllers.ReadServicoController;
+import br.com.gps.mecanica.controllers.ReadVeiculoController;
 import br.com.gps.mecanica.dto.EnderecoDto;
+import br.com.gps.mecanica.enums.MenuSelectionEnum;
+import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.EnderecoModel;
+import br.com.gps.mecanica.models.FornecedorModel;
+import br.com.gps.mecanica.models.ProdutoModel;
+import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Utils {
     public static String formatarString(String string) {
@@ -338,5 +355,64 @@ public class Utils {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public static void lerItem(MenuSelectionEnum tipo, Object item) {
+        try {
+            Parent root = null;
+            switch (tipo) {
+                case VEICULO:
+                    FXMLLoader loader = new FXMLLoader(MecanicaApplication.class.getResource("readVeiculo.fxml"));
+                    root = loader.load();
+
+                    ReadVeiculoController controller = loader.getController();
+                    controller.carregarVeiculo((VeiculoModel) item);
+                    break;
+                case SERVICO:
+                    FXMLLoader loaderServico = new FXMLLoader(
+                            MecanicaApplication.class.getResource("readServico.fxml"));
+                    root = loaderServico.load();
+
+                    ReadServicoController controllerServico = loaderServico.getController();
+                    controllerServico.carregarServico((ServicoModel) item);
+                    break;
+                case PRODUTO:
+                    FXMLLoader loaderProduto = new FXMLLoader(
+                            MecanicaApplication.class.getResource("readProduto.fxml"));
+                    root = loaderProduto.load();
+
+                    ReadProdutoController controllerProduto = loaderProduto.getController();
+                    controllerProduto.carregarProduto((ProdutoModel) item);
+                    break;
+                case FORNECEDOR:
+                    FXMLLoader loaderFornecedor = new FXMLLoader(
+                            MecanicaApplication.class.getResource("readFornecedor.fxml"));
+                    root = loaderFornecedor.load();
+
+                    ReadFornecedorController controllerFornecedor = loaderFornecedor.getController();
+                    controllerFornecedor.carregarFornecedor((FornecedorModel) item);
+                    break;
+                case CLIENTE:
+                    FXMLLoader loaderCliente = new FXMLLoader(
+                            MecanicaApplication.class.getResource("readCliente.fxml"));
+                    root = loaderCliente.load();
+
+                    ReadClienteController controllerCliente = loaderCliente.getController();
+                    controllerCliente.carregarCliente((ClienteModel) item);
+                    break;
+                default:
+                    break;
+            }
+
+            Stage stage = new Stage();
+            stage.setTitle("Detalhes");
+            stage.setScene(new Scene(root));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
