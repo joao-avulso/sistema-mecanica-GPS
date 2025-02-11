@@ -59,7 +59,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="servicosTable" prefHeight="212.0" prefWidth="472.0">
+                  <TableView fx:id="servicosTable" maxHeight="100.0">
                     <columns>
                       <TableColumn fx:id="nomeServicoColumn" prefWidth="75.0" text="NOME" />
                       <TableColumn fx:id="descricaoServicoColumn" prefWidth="75.0" text="DESCRICAO" />
@@ -85,7 +85,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="produtosTable" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="produtosTable" maxHeight="100.0">
                     <columns>
                       <TableColumn fx:id="nomeProdutosColumn" prefWidth="75.0" text="NOME" />
                         <TableColumn fx:id="valorVendaProdutosColumn" prefWidth="75.0" text="VALOR VENDA" />

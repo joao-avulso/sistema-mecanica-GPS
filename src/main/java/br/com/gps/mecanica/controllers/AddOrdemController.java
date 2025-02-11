@@ -2,6 +2,7 @@ package br.com.gps.mecanica.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.models.ClienteModel;
@@ -19,6 +20,7 @@ import br.com.gps.mecanica.services.VeiculoService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -67,6 +69,15 @@ public class AddOrdemController {
     private Label erroLabel;
 
     @FXML
+    private Label cpfFuncionarioLabel;
+
+    @FXML
+    private Label modeloVeiculoLabel;
+    
+    @FXML
+    private Label nomeClienteLabel;
+
+    @FXML
     private VBox servicosVBox;
 
     @FXML
@@ -89,6 +100,18 @@ public class AddOrdemController {
 
     private Boolean isOrcamento = false;
 
+    private AtomicBoolean updatingSelection = new AtomicBoolean(false);
+
+    FilteredList<String> filteredClientes;
+
+    FilteredList<String> filteredVeiculos;
+
+    FilteredList<String> filteredFuncionarios;
+    
+    FilteredList<String> filteredServicos;
+
+    FilteredList<String> filteredProdutos;
+
     @FXML
     void initialize() {
         this.ordemServicoService = MecanicaFxMainApplication.getBean(OrdemServicoService.class);
@@ -104,53 +127,75 @@ public class AddOrdemController {
         ObservableList<String> produtos = FXCollections.observableArrayList(produtoService.get().stream().map(produto -> produto.getNome()).toList());
         ObservableList<String> servicos = FXCollections.observableArrayList(servicoService.get().stream().map(servico -> servico.getNome()).toList());
 
-        clienteComboBox.getItems().addAll(clientes);
-        veiculoComboBox.getItems().addAll(veiculos);
-        funcionarioComboBox.getItems().addAll(funcionarios);
-        produtoComboBox.getItems().addAll(produtos);
-        servicoComboBox.getItems().addAll(servicos);
+        filteredClientes = new FilteredList<>(clientes, cliente -> true);
+        filteredVeiculos = new FilteredList<>(veiculos, veiculo -> true);
+        filteredFuncionarios = new FilteredList<>(funcionarios, funcionario -> true);
+        filteredProdutos = new FilteredList<>(produtos, produto -> true);
+        filteredServicos = new FilteredList<>(servicos, servico -> true);
 
-        // Adiciona um listener para buscar clientes semelhantes ao texto digitado
-        clienteComboBox.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                ObservableList<String> filteredClientes = clientes.filtered(cliente -> cliente.contains(newValue));
-                clienteComboBox.setItems(filteredClientes);
+        clienteComboBox.setItems(filteredClientes);
+        veiculoComboBox.setItems(filteredVeiculos);
+        funcionarioComboBox.setItems(filteredFuncionarios);
+        produtoComboBox.setItems(filteredProdutos);
+        servicoComboBox.setItems(filteredServicos);
 
-                if (!filteredClientes.isEmpty()) {
-                    clienteComboBox.show();
-                }
-            } else {
-                clienteComboBox.setItems(clientes);
-                clienteComboBox.hide();
-            }
-        });
+        Utils.searchComboBox(funcionarioComboBox, filteredFuncionarios, updatingSelection);
+        Utils.searchComboBox(clienteComboBox, filteredClientes, updatingSelection);
+        Utils.searchComboBox(veiculoComboBox, filteredVeiculos, updatingSelection);
+        Utils.searchComboBox(produtoComboBox, filteredProdutos, updatingSelection);
+        Utils.searchComboBox(servicoComboBox, filteredServicos, updatingSelection);
 
         clienteComboBox.setOnAction(event -> {
             try {
                 String cpf = clienteComboBox.getValue();
-                if (cpf == null || cpf.isEmpty()) return;
+                if (cpf == null || cpf.isEmpty()) {
+                    nomeClienteLabel.setVisible(false);
+                    filteredVeiculos.setPredicate(veiculo -> true);
+                    veiculoComboBox.getEditor().clear();
+                    modeloVeiculoLabel.setVisible(false);
+                    return;
+                }
                 ClienteModel clienteModel;
                 clienteModel = clienteService.get(cpf);
-                ObservableList<String> filteredVeiculos = veiculos.filtered(veiculo -> veiculoService.getByCliente(clienteModel).stream().map(v -> v.getPlaca()).toList().contains(veiculo));
+
+                filteredVeiculos.setPredicate(veiculo -> veiculoService.getByCliente(clienteModel).stream().map(v -> v.getPlaca()).toList().contains(veiculo));
                 if (filteredVeiculos.isEmpty()) return;
                 veiculoComboBox.setValue(filteredVeiculos.get(0));
+
+                nomeClienteLabel.setVisible(true);
+                nomeClienteLabel.setText(clienteModel.getNome());
             } catch (Exception e) {
-                e.printStackTrace();
+                Utils.errorMessage(erroLabel, e.getMessage());
             }
         });
 
-        // Adiciona um listener para buscar funcionarios semelhantes ao texto digitado
-        funcionarioComboBox.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                ObservableList<String> filteredFuncionarios = funcionarios.filtered(funcionario -> funcionario.contains(newValue));
-                funcionarioComboBox.setItems(filteredFuncionarios);
-
-                // Abre o menu do ComboBox automaticamente
-                if (!filteredFuncionarios.isEmpty()) {
-                    funcionarioComboBox.show();
+        funcionarioComboBox.setOnAction(event -> {
+            try {
+                String nome = funcionarioComboBox.getValue();
+                if (nome == null || nome.isEmpty()) {
+                    cpfFuncionarioLabel.setVisible(false);
+                    return;
                 }
-            } else {
-                funcionarioComboBox.setItems(funcionarios);
+                FuncionarioModel funcionarioModel = funcionarioService.getByNome(nome).get(0);
+                cpfFuncionarioLabel.setVisible(true);
+                cpfFuncionarioLabel.setText(funcionarioModel.getCpf());
+            } catch (Exception e) {
+                Utils.errorMessage(erroLabel, e.getMessage());
+            }
+        });
+
+        veiculoComboBox.setOnAction(event -> {
+            try {
+                String placa = veiculoComboBox.getValue();
+                if (placa == null || placa.isEmpty()) {
+                    modeloVeiculoLabel.setVisible(false);
+                    return;
+                }
+                VeiculoModel veiculoModel = veiculoService.getByPlaca(placa);
+                modeloVeiculoLabel.setVisible(true);
+                modeloVeiculoLabel.setText(veiculoModel.getModelo());
+            } catch (Exception e) {
+                Utils.errorMessage(erroLabel, e.getMessage());
             }
         });
 
@@ -163,6 +208,7 @@ public class AddOrdemController {
         servico.setPrefWidth(450);
         servico.setPromptText("Digite o nome do serviço");
         servicosVBox.getChildren().add(servico);
+        Utils.searchComboBox(servico, filteredServicos, updatingSelection);
         Stage stage = (Stage) servicoComboBox.getScene().getWindow();
         stage.sizeToScene();
     }
@@ -174,6 +220,7 @@ public class AddOrdemController {
         produto.setPrefWidth(450);
         produto.setPromptText("Digite o nome do produto");
         produtosVBox.getChildren().add(produto);
+        Utils.searchComboBox(produto, filteredProdutos, updatingSelection);
         Stage stage = (Stage) produtoComboBox.getScene().getWindow();
         stage.sizeToScene();
     }

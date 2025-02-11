@@ -1,12 +1,16 @@
 package br.com.gps.mecanica.controllers;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import br.com.gps.mecanica.MecanicaFxMainApplication;
+import br.com.gps.mecanica.models.FornecedorModel;
 import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.services.FornecedorService;
 import br.com.gps.mecanica.services.ProdutoService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -26,10 +30,13 @@ public class AddProdutoController {
     private TextField nomeTextField;
 
     @FXML
-    private ComboBox<String> cnpjComboBox;
+    private ComboBox<String> fornecedorComboBox;
 
     @FXML
     private Label erroLabel;
+
+    @FXML
+    private Label cnpjFornecedorLabel;
 
     @FXML
     private Button addButton;
@@ -47,6 +54,8 @@ public class AddProdutoController {
 
     private ProdutoService produtoService;
 
+    private AtomicBoolean isUpdating = new AtomicBoolean(false);
+
     @FXML
     void initialize() {
         this.fornecedorService = MecanicaFxMainApplication.getBean(FornecedorService.class);
@@ -56,21 +65,28 @@ public class AddProdutoController {
         Utils.formatterDouble(valorVendaTextField);
         Utils.formatterInt(quantidadeTextField);
 
-        ObservableList<String> cnpjs = FXCollections.observableArrayList(fornecedorService.get().stream().map(fornecedor -> fornecedor.getCnpj()).toList());
+        ObservableList<String> fornecedores = FXCollections.observableArrayList(fornecedorService.get().stream().map(fornecedor -> fornecedor.getNome()).toList());
 
-        cnpjComboBox.getItems().addAll(cnpjs);
+        FilteredList<String> filteredFornecedores = new FilteredList<>(fornecedores, p -> true);
 
-        cnpjComboBox.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                ObservableList<String> filteredCpfs = cnpjs.filtered(cpf -> cpf.contains(newValue));
-                cnpjComboBox.setItems(filteredCpfs);
+        fornecedorComboBox.setItems(filteredFornecedores);
 
-                if (!filteredCpfs.isEmpty()) {
-                    cnpjComboBox.show();
+        Utils.searchComboBox(fornecedorComboBox, filteredFornecedores, isUpdating);
+
+        fornecedorComboBox.setOnAction(event -> {
+            try {
+                String nome = fornecedorComboBox.getValue();
+                if (nome == null || nome.isEmpty()) {
+                    cnpjFornecedorLabel.setVisible(false);
+                    return;
                 }
-            } else {
-                cnpjComboBox.setItems(cnpjs);
-                cnpjComboBox.hide();
+                FornecedorModel fornecedorModel;
+                fornecedorModel = fornecedorService.getByNome(nome).get(0);
+
+                cnpjFornecedorLabel.setVisible(true);
+                cnpjFornecedorLabel.setText(fornecedorModel.getCnpj());
+            } catch (Exception e) {
+                Utils.errorMessage(erroLabel, e.getMessage());
             }
         });
     }
@@ -78,7 +94,7 @@ public class AddProdutoController {
     @FXML
     void adicionar(ActionEvent event) {
         String nome = nomeTextField.getText();
-        String cnpj = cnpjComboBox.getValue();
+        String nomeFornecedor = fornecedorComboBox.getValue();
         String descricao = descricaoTextField.getText();
         
         if (nome.isBlank() || valorVendaTextField.getText().isEmpty() || quantidadeTextField.getText().isEmpty()) {
@@ -94,7 +110,7 @@ public class AddProdutoController {
         int quantidade = Integer.parseInt(quantidadeTextField.getText());
 
         try {
-            ProdutoModel produto = new ProdutoModel(nome, descricao, valorVenda, valorCompra, quantidade, fornecedorService.get(cnpj));
+            ProdutoModel produto = new ProdutoModel(nome, descricao, valorVenda, valorCompra, quantidade, fornecedorService.getByNome(nomeFornecedor).get(0));
             produtoService.create(produto);
             nomeTextField.getScene().getWindow().hide();            
         } catch (Exception e) {
