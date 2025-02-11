@@ -155,6 +155,22 @@ public class OrdemServicoService {
             ordemServicoAtual.setDescricao(Utils.formatarString(ordemServico.getDescricao()));
         }
 
+        if (ordemServicoAtual.getDataContratacao() != ordemServico.getDataContratacao()) {
+            ordemServicoAtual.setDataContratacao(ordemServico.getDataContratacao());
+        }
+
+        if (ordemServicoAtual.getDataFinalizacao() != ordemServico.getDataFinalizacao()) {
+            ordemServicoAtual.setDataFinalizacao(ordemServico.getDataFinalizacao());
+        }
+
+        if (ordemServicoAtual.getDataPrevista() != ordemServico.getDataPrevista()) {
+            ordemServicoAtual.setDataPrevista(ordemServico.getDataPrevista());
+        }
+
+        if (ordemServicoAtual.getContratada() != ordemServico.getContratada()) {
+            ordemServicoAtual.setContratada();
+        }
+
         return ordemServicoRepository.save(ordemServicoAtual);
     }
 
