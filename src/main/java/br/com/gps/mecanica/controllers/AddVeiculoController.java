@@ -1,13 +1,17 @@
 package br.com.gps.mecanica.controllers;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.CorEnum;
+import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.VeiculoModel;
 import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.VeiculoService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -33,14 +37,19 @@ public class AddVeiculoController {
     private Label erroLabel;
 
     @FXML
+    private Label nomeClienteLabel;
+
+    @FXML
     private ChoiceBox<CorEnum> corChoiceBox;
 
     @FXML
     private ComboBox<String> cpfComboBox;
 
-    VeiculoService veiculoService;
+    private VeiculoService veiculoService;
 
-    ClienteService clienteService;
+    private ClienteService clienteService;
+
+    private AtomicBoolean isUpdating = new AtomicBoolean(false);
 
     @FXML
     void initialize() {
@@ -50,26 +59,31 @@ public class AddVeiculoController {
         corChoiceBox.getItems().addAll(CorEnum.values());
         corChoiceBox.setValue(CorEnum.BRANCO);
 
-        ObservableList<String> cpfs = FXCollections
+        ObservableList<String> clientes = FXCollections
                 .observableArrayList(clienteService.get().stream().map(cliente -> cliente.getCpf()).toList());
+        
+        FilteredList<String> filteredClientes = new FilteredList<>(clientes, p -> true);
 
-        cpfComboBox.getItems().addAll(cpfs);
+        cpfComboBox.setItems(filteredClientes);
 
-        cpfComboBox.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                ObservableList<String> filteredCpfs = cpfs.filtered(cpf -> cpf.contains(newValue));
-                cpfComboBox.setItems(filteredCpfs);
+        Utils.searchComboBox(cpfComboBox, filteredClientes, isUpdating);
 
-                if (!filteredCpfs.isEmpty()) {
-                    cpfComboBox.show();
+        cpfComboBox.setOnAction(event -> {
+            try {
+                String cpf = cpfComboBox.getValue();
+                if (cpf == null || cpf.isEmpty()) {
+                    nomeClienteLabel.setVisible(false);
+                    return;
                 }
-            } else {
-                cpfComboBox.setItems(cpfs);
-                cpfComboBox.hide();
+                ClienteModel clienteModel;
+                clienteModel = clienteService.get(cpf);
+
+                nomeClienteLabel.setVisible(true);
+                nomeClienteLabel.setText(clienteModel.getNome());
+            } catch (Exception e) {
+                Utils.errorMessage(erroLabel, e.getMessage());
             }
         });
-
-        Utils.formatterInt(anoTextField);
     }
 
     @FXML

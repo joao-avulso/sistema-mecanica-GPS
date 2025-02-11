@@ -29,7 +29,16 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="cpfComboBox" editable="true" promptText="Digite o CPF do cliente" />
+                  <HBox spacing="15.0">
+                     <children>
+                        <ComboBox fx:id="cpfComboBox" editable="true" promptText="Digite o CPF do cliente" />
+                        <Label fx:id="nomeClienteLabel" opacity="0.32" text="NOME" visible="false">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

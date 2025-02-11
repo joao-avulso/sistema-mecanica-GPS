@@ -3,6 +3,7 @@ package br.com.gps.mecanica.utils;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import org.springframework.web.client.RestTemplate;
@@ -26,9 +27,12 @@ import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
 import br.com.gps.mecanica.models.TelefoneModel;
 import br.com.gps.mecanica.models.VeiculoModel;
+import javafx.application.Platform;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -443,5 +447,41 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void searchComboBox(ComboBox<String> comboBox, FilteredList<String> filteredList, AtomicBoolean isUpdating) {
+        comboBox.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+
+            if (isUpdating.get()) return;
+
+            if (newValue != null && !newValue.isEmpty()) {
+                filteredList.setPredicate(funcionario -> 
+                    funcionario.contains(newValue.toUpperCase()));
+                
+                if (!filteredList.isEmpty()) {
+                    comboBox.show();
+                }
+            } else {
+                filteredList.setPredicate(funcionario -> true);
+            }
+
+        });
+
+        comboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            isUpdating.set(true);
+
+            if (newValue != null && !newValue.isEmpty()) {
+                comboBox.getEditor().setText(newValue);
+            } else {
+                comboBox.setValue(null);
+
+                Platform.runLater(() -> {
+                    comboBox.getEditor().clear();
+                });
+            }
+
+            isUpdating.set(false);
+        });
+
     }
 }
