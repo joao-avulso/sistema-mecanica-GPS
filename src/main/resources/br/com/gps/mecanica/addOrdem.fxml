@@ -29,7 +29,16 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="clienteComboBox" editable="true" prefHeight="25.0" prefWidth="202.0" promptText="Digite o CPF do cliente" />
+                  <HBox spacing="15.0">
+                     <children>
+                        <ComboBox fx:id="clienteComboBox" editable="true" prefHeight="25.0" prefWidth="202.0" promptText="Digite o CPF do cliente" />
+                        <Label fx:id="nomeClienteLabel" opacity="0.32" text="NOME" visible="false">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -45,7 +54,16 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="veiculoComboBox" editable="true" prefHeight="25.0" prefWidth="202.0" promptText="Digite a placa do veículo" />
+                  <HBox spacing="15.0">
+                     <children>
+                        <ComboBox fx:id="veiculoComboBox" editable="true" prefHeight="25.0" prefWidth="202.0" promptText="Digite a placa do veículo" />
+                        <Label fx:id="modeloVeiculoLabel" opacity="0.32" text="NOME" visible="false">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -73,12 +91,12 @@
                   </ScrollPane>
                   <HBox spacing="20.0">
                      <children>
-                        <Button fx:id="addServicoButton" mnemonicParsing="false" onAction="#addServico" style="-fx-padding: 2 8; -fx-background-radius: 5;" text="+">
+                        <Button fx:id="addServicoButton" mnemonicParsing="false" onAction="#addServico" style="-fx-padding: 2 8; -fx-background-radius: 5; -fx-background-color: green; -fx-text-fill: white;" text="+">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
-                        <Button fx:id="delServicoButton" mnemonicParsing="false" onAction="#delServico" style="-fx-padding: 2 10; -fx-background-radius: 5;" text="-">
+                        <Button fx:id="delServicoButton" mnemonicParsing="false" onAction="#delServico" style="-fx-padding: 2 10; -fx-background-radius: 5; -fx-background-color: red; -fx-text-fill: white;" text="-">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -112,12 +130,12 @@
                   </ScrollPane>
                   <HBox spacing="20.0">
                      <children>
-                        <Button fx:id="addProdutoButton" mnemonicParsing="false" onAction="#addProduto" style="-fx-padding: 2 8; -fx-background-radius: 5;" text="+">
+                        <Button fx:id="addProdutoButton" mnemonicParsing="false" onAction="#addProduto" style="-fx-padding: 2 8; -fx-background-radius: 5; -fx-background-color: green; -fx-text-fill: white;" text="+">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
-                        <Button fx:id="delProdutoButton" mnemonicParsing="false" onAction="#delProduto" style="-fx-padding: 2 10; -fx-background-radius: 5;" text="-">
+                        <Button fx:id="delProdutoButton" mnemonicParsing="false" onAction="#delProduto" style="-fx-padding: 2 10; -fx-background-radius: 5; -fx-background-color: red; -fx-text-fill: white;" text="-">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -136,7 +154,16 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="funcionarioComboBox" editable="true" prefHeight="25.0" prefWidth="202.0" promptText="Digite o nome do funcionário" />
+                  <HBox spacing="15.0">
+                     <children>
+                        <ComboBox fx:id="funcionarioComboBox" editable="true" prefHeight="25.0" prefWidth="202.0" promptText="Digite o nome do funcionário" />
+                        <Label fx:id="cpfFuncionarioLabel" opacity="0.32" text="NOME" visible="false">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
