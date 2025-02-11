@@ -2,6 +2,7 @@ package br.com.gps.mecanica.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,6 +52,12 @@ public class OrdemServicoModel implements Serializable {
     private Boolean contratada = false;
 
     private Boolean finalizada = false;
+
+    private LocalDate dataContratacao;
+
+    private LocalDate dataFinalizacao;
+
+    private LocalDate dataPrevista;
 
     public OrdemServicoModel() {
     }
@@ -135,6 +142,30 @@ public class OrdemServicoModel implements Serializable {
 
     public void setFinalizada() {
         this.finalizada = !this.finalizada;
+    }
+
+    public LocalDate getDataContratacao() {
+        return dataContratacao;
+    }
+
+    public void setDataContratacao(LocalDate dataContratacao) {
+        this.dataContratacao = dataContratacao;
+    }
+
+    public LocalDate getDataFinalizacao() {
+        return dataFinalizacao;
+    }
+
+    public void setDataFinalizacao(LocalDate dataFinalizacao) {
+        this.dataFinalizacao = dataFinalizacao;
+    }
+
+    public LocalDate getDataPrevista() {
+        return dataPrevista;
+    }
+
+    public void setDataPrevista(LocalDate dataPrevista) {
+        this.dataPrevista = dataPrevista;
     }
 
     @Override

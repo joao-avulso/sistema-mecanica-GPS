@@ -1,5 +1,6 @@
 package br.com.gps.mecanica.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,8 +25,12 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -121,11 +126,16 @@ public class AddOrdemController {
         this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
         this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
 
-        ObservableList<String> clientes = FXCollections.observableArrayList(clienteService.get().stream().map(cliente -> cliente.getCpf()).toList());
-        ObservableList<String> veiculos = FXCollections.observableArrayList(veiculoService.get().stream().map(veiculo -> veiculo.getPlaca()).toList());
-        ObservableList<String> funcionarios = FXCollections.observableArrayList(funcionarioService.get().stream().map(funcionario -> funcionario.getNome()).toList());
-        ObservableList<String> produtos = FXCollections.observableArrayList(produtoService.get().stream().map(produto -> produto.getNome()).toList());
-        ObservableList<String> servicos = FXCollections.observableArrayList(servicoService.get().stream().map(servico -> servico.getNome()).toList());
+        ObservableList<String> clientes = FXCollections
+                .observableArrayList(clienteService.get().stream().map(cliente -> cliente.getCpf()).toList());
+        ObservableList<String> veiculos = FXCollections
+                .observableArrayList(veiculoService.get().stream().map(veiculo -> veiculo.getPlaca()).toList());
+        ObservableList<String> funcionarios = FXCollections.observableArrayList(
+                funcionarioService.get().stream().map(funcionario -> funcionario.getNome()).toList());
+        ObservableList<String> produtos = FXCollections
+                .observableArrayList(produtoService.get().stream().map(produto -> produto.getNome()).toList());
+        ObservableList<String> servicos = FXCollections
+                .observableArrayList(servicoService.get().stream().map(servico -> servico.getNome()).toList());
 
         filteredClientes = new FilteredList<>(clientes, cliente -> true);
         filteredVeiculos = new FilteredList<>(veiculos, veiculo -> true);
@@ -243,24 +253,26 @@ public class AddOrdemController {
 
     @FXML
     void adicionar(ActionEvent event) {
-        
-        if (clienteComboBox.getValue() == null || veiculoComboBox.getValue() == null  || funcionarioComboBox.getValue() == null  || servicoComboBox.getValue() == null ) {
+
+        if (clienteComboBox.getValue() == null || veiculoComboBox.getValue() == null
+                || funcionarioComboBox.getValue() == null || servicoComboBox.getValue() == null) {
             Utils.errorMessage(erroLabel, "Preencha os campos obrigatórios");
             return;
         }
-        
+
         try {
             String clienteCpf = clienteComboBox.getValue();
             String veiculoPlaca = veiculoComboBox.getValue();
             String funcionario = funcionarioComboBox.getValue();
             String descricao = descricaoTextField.getText();
-            
+
             List<ServicoModel> servicos = new ArrayList<ServicoModel>();
 
             for (Node servico : servicosVBox.getChildren()) {
                 @SuppressWarnings("unchecked")
                 String servicoNome = ((ComboBox<String>) servico).getValue();
-                if (servicoNome == null) continue;
+                if (servicoNome == null)
+                    continue;
                 ServicoModel servicoModel = servicoService.getByNome(servicoNome).get(0);
                 servicos.add(servicoModel);
             }
@@ -270,7 +282,8 @@ public class AddOrdemController {
             for (Node produto : produtosVBox.getChildren()) {
                 @SuppressWarnings("unchecked")
                 String produtoNome = ((ComboBox<String>) produto).getValue();
-                if (produtoNome == null) continue;
+                if (produtoNome == null)
+                    continue;
                 ProdutoModel produtoModel = produtoService.getByNome(produtoNome).get(0);
                 produtos.add(produtoModel);
             }
@@ -284,9 +297,49 @@ public class AddOrdemController {
                 return;
             }
 
-            OrdemServicoModel ordem = new OrdemServicoModel(clienteModel, veiculoModel, servicos, produtos, funcionarioModel, descricao);
+            OrdemServicoModel ordem = new OrdemServicoModel(clienteModel, veiculoModel, servicos, produtos,
+                    funcionarioModel, descricao);
 
-            if (!isOrcamento) ordem.setContratada();
+            if (!isOrcamento)
+                ordem.setContratada();
+
+            if (!isOrcamento)
+                ordem.setDataContratacao(LocalDate.now());
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setGraphic(null);
+            alert.setTitle("Previsão de Conclusão");
+            alert.setHeaderText("Selecione a data prevista para concluir a ordem");
+
+            DatePicker datePicker = new DatePicker();
+            datePicker.setValue(LocalDate.now());
+
+            datePicker.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    if (date.isBefore(LocalDate.now())) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #cccccc;");
+                    }
+                }
+            });
+
+            VBox content = new VBox(10);
+            content.getChildren().add(datePicker);
+
+            alert.getDialogPane().setContent(content);
+            alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK && datePicker.getValue() != null) {
+                    try {
+                        ordem.setDataPrevista(datePicker.getValue());
+                    } catch (Exception e) {
+                        Utils.errorMessage(erroLabel, "Erro ao definir a data");
+                    }
+                }
+            });
 
             ordemServicoService.create(ordem);
             clienteComboBox.getScene().getWindow().hide();

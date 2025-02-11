@@ -39,7 +39,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -193,7 +196,8 @@ public class MainController {
 
         selection = MenuSelectionEnum.ORDEM;
 
-        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService, List.of("id", "ID", "contratada"));
+        criaTabela(List.of(OrdemServicoModel.class), ordemServicoService,
+                List.of("id", "ID", "contratada", "dataFinalizacao"));
     }
 
     @FXML
@@ -205,7 +209,7 @@ public class MainController {
         selection = MenuSelectionEnum.ORCAMENTO;
 
         criaTabela(List.of(OrdemServicoModel.class), ordemServicoService,
-                List.of("id", "ID", "contratada", "finalizada"));
+                List.of("id", "ID", "contratada", "finalizada", "dataFinalizacao", "dataContratacao", "dataPrevista"));
     }
 
     private void criaTabela(List<Class<?>> models, Object service, List<String> camposIgnorados) {
@@ -391,10 +395,73 @@ public class MainController {
         buttonBorderPane.prefHeight(Region.USE_COMPUTED_SIZE);
         buttonBorderPane.paddingProperty().setValue(new javafx.geometry.Insets(8, 8, 8, 8));
 
+        HBox buttonHBox = new HBox();
         Button botaoDelete = criarBotaoDelete(mainTable, service);
         Button botaoAdd = criarBotaoAdd(mainTable, service);
 
-        HBox buttonHBox = new HBox();
+        if (selection == MenuSelectionEnum.ORCAMENTO) {
+            Button botaoContratar = new Button("Contratar Serviço");
+            buttonHBox.getChildren().add(botaoContratar);
+
+            botaoContratar.setStyle(
+                    "-fx-background-color:rgb(219, 219, 0); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+
+            botaoContratar.setOnAction(event -> {
+                if (selected != null) {
+                    OrdemServicoModel ordemServico = (OrdemServicoModel) selected;
+
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setGraphic(null);
+                    alert.setTitle("Contratar Serviço");
+                    alert.setHeaderText("Selecione a previsão para concluir a ordem");
+
+                    DatePicker datePicker = new DatePicker();
+                    datePicker.setValue(LocalDate.now());
+
+                    datePicker.setDayCellFactory(picker -> new DateCell() {
+                        @Override
+                        public void updateItem(LocalDate date, boolean empty) {
+                            super.updateItem(date, empty);
+                            if (date.isBefore(LocalDate.now())) {
+                                setDisable(true);
+                                setStyle("-fx-background-color: #cccccc;");
+                            }
+                        }
+                    });
+
+                    VBox content = new VBox(10);
+                    content.getChildren().add(datePicker);
+
+                    alert.getDialogPane().setContent(content);
+
+                    ButtonType contratarButton = new ButtonType("Contratar", ButtonData.OK_DONE);
+                    ButtonType cancelarButton = new ButtonType("Cancelar", ButtonData.CANCEL_CLOSE);
+                    alert.getButtonTypes().setAll(contratarButton, cancelarButton);
+
+                    ((Button) alert.getDialogPane().lookupButton(contratarButton)).setDefaultButton(false);
+                    ((Button) alert.getDialogPane().lookupButton(cancelarButton)).setDefaultButton(true);
+
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == contratarButton && datePicker.getValue() != null) {
+                            try {
+                                ordemServico.setContratada();
+                                ordemServico.setDataContratacao(LocalDate.now());
+                                ordemServico.setDataPrevista(datePicker.getValue());
+                                ordemServicoService.update(ordemServico.getId(), ordemServico);
+                                atualizaTabela();
+                            } catch (Exception e) {
+                                Alert error = new Alert(Alert.AlertType.ERROR);
+                                error.setTitle("Erro");
+                                error.setHeaderText("Erro ao contratar serviço");
+                                error.setContentText(e.getMessage());
+                                error.showAndWait();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
         buttonHBox.getChildren().add(botaoAdd);
         buttonHBox.getChildren().add(botaoDelete);
         buttonHBox.setSpacing(10);
