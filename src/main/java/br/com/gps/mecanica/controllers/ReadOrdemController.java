@@ -1,29 +1,31 @@
 package br.com.gps.mecanica.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import br.com.gps.mecanica.MecanicaFxMainApplication;
 import br.com.gps.mecanica.enums.MenuSelectionEnum;
-import br.com.gps.mecanica.models.ClienteModel;
 import br.com.gps.mecanica.models.FuncionarioModel;
 import br.com.gps.mecanica.models.OrdemServicoModel;
 import br.com.gps.mecanica.models.ProdutoModel;
 import br.com.gps.mecanica.models.ServicoModel;
-import br.com.gps.mecanica.models.VeiculoModel;
-import br.com.gps.mecanica.services.ClienteService;
 import br.com.gps.mecanica.services.FuncionarioService;
 import br.com.gps.mecanica.services.OrdemServicoService;
-import br.com.gps.mecanica.services.VeiculoService;
+import br.com.gps.mecanica.services.ProdutoService;
+import br.com.gps.mecanica.services.ServicoService;
 import br.com.gps.mecanica.utils.Utils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class ReadOrdemController {
 
@@ -49,10 +51,10 @@ public class ReadOrdemController {
     private TextField descricaoTextField;
 
     @FXML
-    private ComboBox<String> veiculoComboBox;
+    private Label nomeClienteLabel;
 
     @FXML
-    private ComboBox<String> clienteComboBox;
+    private Label placaVeiculoLabel;
 
     @FXML
     private TableView<ServicoModel> servicosTable;
@@ -70,6 +72,18 @@ public class ReadOrdemController {
     private Label erroLabel;
 
     @FXML
+    private Button addServicoButton;
+
+    @FXML
+    private Button addProdutoButton;
+
+    @FXML
+    private Button removerServicoButton;
+
+    @FXML
+    private Button removerProdutoButton;
+
+    @FXML
     private TableColumn<ProdutoModel, String> fornecedorProdutosColumn;
 
     @FXML
@@ -80,29 +94,21 @@ public class ReadOrdemController {
 
     private OrdemServicoService ordemServicoService;
 
-    private ClienteService clienteService;
-
-    private VeiculoService veiculoService;
-
     private FuncionarioService funcionarioService;
 
-    // private ProdutoService produtoService;
+    private ProdutoService produtoService;
 
-    // private ServicoService servicoService;
+    private ServicoService servicoService;
 
     private UUID ordemId;
 
     @FXML
     void initialize() {
-        // Inicialização dos serviços
         this.ordemServicoService = MecanicaFxMainApplication.getBean(OrdemServicoService.class);
-        this.clienteService = MecanicaFxMainApplication.getBean(ClienteService.class);
-        this.veiculoService = MecanicaFxMainApplication.getBean(VeiculoService.class);
         this.funcionarioService = MecanicaFxMainApplication.getBean(FuncionarioService.class);
-        // this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
-        // this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
+        this.produtoService = MecanicaFxMainApplication.getBean(ProdutoService.class);
+        this.servicoService = MecanicaFxMainApplication.getBean(ServicoService.class);
 
-        // Configuração das colunas da tabela de serviços
         nomeServicoColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getNome()));
         descricaoServicoColumn
                 .setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDescricao()));
@@ -117,7 +123,23 @@ public class ReadOrdemController {
             }
         });
 
-        // Configuração das colunas da tabela de produtos
+        addServicoButton.setOnAction(event -> abrirPopupAdicionarServicoProduto(true));
+
+        removerServicoButton.setOnAction(event -> {
+            try {
+                ServicoModel servicoSelecionado = servicosTable.getSelectionModel().getSelectedItem();
+                if (servicoSelecionado != null) {
+                    ordemServicoService.removeServico(ordemId, servicoSelecionado);
+                    servicosTable.getItems().remove(servicoSelecionado);
+                    atualizaTabela();
+                } else {
+                    Utils.errorMessage(erroLabel, "Selecione um serviço para remover");
+                }
+            } catch (Exception e) {
+                Utils.errorMessage(erroLabel, "Erro ao remover serviço: " + e.getMessage());
+            }
+        });
+
         nomeProdutosColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getNome()));
         valorVendaProdutosColumn
                 .setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getValorVenda()));
@@ -137,11 +159,23 @@ public class ReadOrdemController {
             }
         });
 
-        // Desabilitando os ComboBox e TextField para exibição apenas
-        clienteComboBox.setDisable(true);
-        veiculoComboBox.setDisable(true);
-        funcionarioComboBox.setDisable(true);
-        descricaoTextField.setDisable(true);
+        addProdutoButton.setOnAction(event -> abrirPopupAdicionarServicoProduto(false));
+
+        removerProdutoButton.setOnAction(event -> {
+            try {
+                ProdutoModel produtoSelecionado = produtosTable.getSelectionModel().getSelectedItem();
+                if (produtoSelecionado != null) {
+                    ordemServicoService.removeProduto(ordemId, produtoSelecionado);
+                    produtosTable.getItems().remove(produtoSelecionado);
+                    atualizaTabela();
+                } else {
+                    Utils.errorMessage(erroLabel, "Selecione um produto para remover");
+                }
+            } catch (Exception e) {
+                Utils.errorMessage(erroLabel, "Erro ao remover produto: " + e.getMessage());
+            }
+        });
+
     }
 
     private void atualizaTabela() {
@@ -162,11 +196,11 @@ public class ReadOrdemController {
             descricaoTextField.setText(ordemServico.getDescricao());
 
             if (ordemServico.getCliente() != null) {
-                clienteComboBox.setValue(ordemServico.getCliente().getCpf());
+                nomeClienteLabel.setText(ordemServico.getCliente().getNome());
             }
 
             if (ordemServico.getVeiculo() != null) {
-                veiculoComboBox.setValue(ordemServico.getVeiculo().getPlaca());
+                placaVeiculoLabel.setText(ordemServico.getVeiculo().getPlaca());
             }
 
             if (ordemServico.getFuncionario() != null) {
@@ -198,22 +232,6 @@ public class ReadOrdemController {
 
             ordemServicoAtualizada.setDescricao(descricaoTextField.getText());
 
-            String cpfCliente = clienteComboBox.getValue();
-            if (cpfCliente != null && !cpfCliente.isEmpty()) {
-                ClienteModel cliente = clienteService.get(cpfCliente);
-                ordemServicoAtualizada.setCliente(cliente);
-            } else {
-                throw new Exception("Cliente não selecionado.");
-            }
-
-            String placaVeiculo = veiculoComboBox.getValue();
-            if (placaVeiculo != null && !placaVeiculo.isEmpty()) {
-                VeiculoModel veiculo = veiculoService.getByPlaca(placaVeiculo);
-                ordemServicoAtualizada.setVeiculo(veiculo);
-            } else {
-                throw new Exception("Veículo não selecionado.");
-            }
-
             String nomeFuncionario = funcionarioComboBox.getValue();
             if (nomeFuncionario != null && !nomeFuncionario.isEmpty()) {
                 FuncionarioModel funcionario = funcionarioService.getByNome(nomeFuncionario).get(0);
@@ -237,6 +255,56 @@ public class ReadOrdemController {
     @FXML
     void fechar(ActionEvent event) {
         nomeServicoColumn.getTableView().getScene().getWindow().hide();
+    }
+
+    private void abrirPopupAdicionarServicoProduto(boolean isServico) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setGraphic(null);
+        alert.setTitle("Adicionar " + (isServico ? "Serviço" : "Produto"));
+        alert.setHeaderText("Selecione um " + (isServico ? "serviço" : "produto") + " para adicionar:");
+
+        ComboBox<String> comboBox = new ComboBox<>();
+
+        if (isServico) {
+            List<ServicoModel> servicosDisponiveis = servicoService.get();
+            for (ServicoModel servico : servicosDisponiveis) {
+                comboBox.getItems().add(servico.getNome());
+            }
+        } else {
+            List<ProdutoModel> produtosDisponiveis = produtoService.get();
+            for (ProdutoModel produto : produtosDisponiveis) {
+                comboBox.getItems().add(produto.getNome());
+            }
+        }
+
+        comboBox.setPromptText("Selecione uma opção");
+
+        VBox content = new VBox(10);
+        content.getChildren().add(comboBox);
+
+        alert.getDialogPane().setContent(content);
+
+        alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK && comboBox.getValue() != null) {
+                try {
+                    if (isServico) {
+                        ServicoModel servicoSelecionado = servicoService.getByNome(comboBox.getValue()).get(0);
+                        ordemServicoService.addServico(ordemId, servicoSelecionado);
+                        servicosTable.getItems().add(servicoSelecionado);
+                    } else {
+                        ProdutoModel produtoSelecionado = produtoService.getByNome(comboBox.getValue()).get(0);
+                        ordemServicoService.addProduto(ordemId, produtoSelecionado);
+                        produtosTable.getItems().add(produtoSelecionado);
+                    }
+                    servicosTable.refresh();
+                    produtosTable.refresh();
+                } catch (Exception e) {
+                    Utils.errorMessage(erroLabel, "Erro ao adicionar: " + e.getMessage());
+                }
+            }
+        });
     }
 
 }

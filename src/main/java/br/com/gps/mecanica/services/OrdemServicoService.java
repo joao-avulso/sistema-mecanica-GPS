@@ -1,6 +1,7 @@
 package br.com.gps.mecanica.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,10 +120,26 @@ public class OrdemServicoService {
             throw new Exception("Funcionário não encontrado");
         }
 
+        List<ServicoModel> servicos = ordemServico.getServicos();
+        for (ServicoModel servico : servicos) {
+            if (servicoRepository.findById(servico.getId()).isEmpty()) {
+                throw new Exception("Serviço " + servico.getNome() + " não encontrado");
+            }
+        }
+
+        List<ProdutoModel> produtos = ordemServico.getProdutos();
+        for (ProdutoModel produto : produtos) {
+            if (produtoRepository.findById(produto.getId()).isEmpty()) {
+                throw new Exception("Produto " + produto.getNome() + " não encontrado");
+            }
+        }
+
         ordemServico.setCliente(clienteRepository.findByCpf(cliente.getCpf()));
         ordemServico.setVeiculo(veiculoRepository.findByPlaca(veiculo.getPlaca()));
         ordemServico.setFuncionario(funcionarioRepository.findById(funcionario.getId()).get());
         ordemServico.setDescricao(Utils.formatarString(ordemServico.getDescricao()));
+        ordemServico.setServicos(servicos);
+        ordemServico.setProdutos(produtos);
 
         return ordemServicoRepository.save(ordemServico);
     }
@@ -141,68 +158,90 @@ public class OrdemServicoService {
         return ordemServicoRepository.save(ordemServicoAtual);
     }
 
-    public OrdemServicoModel addServico(UUID id, ServicoModel servico) throws Exception {
-        if (ordemServicoRepository.findById(id).isEmpty()) {
+    public ServicoModel addServico(UUID id, ServicoModel servico) throws Exception {
+        Optional<OrdemServicoModel> ordemServicoOpt = ordemServicoRepository.findById(id);
+        if (ordemServicoOpt.isEmpty()) {
             throw new Exception("Ordem de serviço não encontrada");
         }
 
-        OrdemServicoModel ordemServico = ordemServicoRepository.findById(id).get();
+        OrdemServicoModel ordemServico = ordemServicoOpt.get();
 
-        if (servicoRepository.findById(servico.getId()).isEmpty()) {
+        Optional<ServicoModel> servicoOpt = servicoRepository.findById(servico.getId());
+        if (servicoOpt.isEmpty()) {
             throw new Exception("Serviço não encontrado");
         }
 
-        ordemServico.getServicos().add(servicoRepository.findById(servico.getId()).get());
+        ServicoModel servicoParaAdicionar = servicoOpt.get();
 
-        return ordemServicoRepository.save(ordemServico);
+        ordemServico.getServicos().add(servicoParaAdicionar);
+
+        ordemServicoRepository.save(ordemServico);
+
+        return servicoParaAdicionar;
     }
 
-    public OrdemServicoModel removeServico(UUID id, ServicoModel servico) throws Exception {
-        if (ordemServicoRepository.findById(id).isEmpty()) {
+    public ServicoModel removeServico(UUID id, ServicoModel servico) throws Exception {
+        Optional<OrdemServicoModel> ordemServicoOpt = ordemServicoRepository.findById(id);
+        if (ordemServicoOpt.isEmpty()) {
             throw new Exception("Ordem de serviço não encontrada");
         }
 
-        if (servicoRepository.findById(servico.getId()).isEmpty()) {
+        Optional<ServicoModel> servicoOpt = servicoRepository.findById(servico.getId());
+        if (servicoOpt.isEmpty()) {
             throw new Exception("Serviço não encontrado");
         }
 
-        OrdemServicoModel ordemServico = ordemServicoRepository.findById(id).get();
+        OrdemServicoModel ordemServico = ordemServicoOpt.get();
+        ServicoModel servicoParaRemover = servicoOpt.get();
 
-        ordemServico.getServicos().remove(servicoRepository.findById(servico.getId()).get());
+        ordemServico.getServicos().removeIf(s -> s.getId().equals(servicoParaRemover.getId()));
 
-        return ordemServicoRepository.save(ordemServico);
+        ordemServicoRepository.save(ordemServico);
+
+        return servicoParaRemover;
     }
 
-    public OrdemServicoModel addProduto(UUID id, ServicoModel produto) throws Exception {
-        if (ordemServicoRepository.findById(id).isEmpty()) {
+    public ProdutoModel addProduto(UUID id, ProdutoModel produto) throws Exception {
+        Optional<OrdemServicoModel> ordemServicoOpt = ordemServicoRepository.findById(id);
+        if (ordemServicoOpt.isEmpty()) {
             throw new Exception("Ordem de serviço não encontrada");
         }
 
-        if (produtoRepository.findById(produto.getId()).isEmpty()) {
+        Optional<ProdutoModel> produtoOpt = produtoRepository.findById(produto.getId());
+        if (produtoOpt.isEmpty()) {
             throw new Exception("Produto não encontrado");
         }
 
-        OrdemServicoModel ordemServico = ordemServicoRepository.findById(id).get();
+        OrdemServicoModel ordemServico = ordemServicoOpt.get();
 
-        ordemServico.getProdutos().add(produtoRepository.findById(produto.getId()).get());
+        ProdutoModel produtoParaAdicionar = produtoOpt.get();
 
-        return ordemServicoRepository.save(ordemServico);
+        ordemServico.getProdutos().add(produtoParaAdicionar);
+
+        ordemServicoRepository.save(ordemServico);
+
+        return produtoParaAdicionar;
     }
 
-    public OrdemServicoModel removeProduto(UUID id, ServicoModel produto) throws Exception {
-        if (ordemServicoRepository.findById(id).isEmpty()) {
+    public ProdutoModel removeProduto(UUID id, ProdutoModel produto) throws Exception {
+        Optional<OrdemServicoModel> ordemServicoOpt = ordemServicoRepository.findById(id);
+        if (ordemServicoOpt.isEmpty()) {
             throw new Exception("Ordem de serviço não encontrada");
         }
 
-        if (produtoRepository.findById(produto.getId()).isEmpty()) {
+        Optional<ProdutoModel> produtoOpt = produtoRepository.findById(produto.getId());
+        if (produtoOpt.isEmpty()) {
             throw new Exception("Produto não encontrado");
         }
 
-        OrdemServicoModel ordemServico = ordemServicoRepository.findById(id).get();
+        OrdemServicoModel ordemServico = ordemServicoOpt.get();
+        ProdutoModel produtoParaRemover = produtoOpt.get();
 
-        ordemServico.getProdutos().remove(produtoRepository.findById(produto.getId()).get());
+        ordemServico.getProdutos().removeIf(p -> p.getId().equals(produtoParaRemover.getId()));
 
-        return ordemServicoRepository.save(ordemServico);
+        ordemServicoRepository.save(ordemServico);
+
+        return produtoParaRemover;
     }
 
     public void delete(UUID id) throws Exception {
