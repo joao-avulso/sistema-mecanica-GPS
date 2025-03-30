@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 @Table(name = "clientes")
 public class ClienteModel extends PessoaBaseModel {
     @Column(unique = true, nullable = false)
-    private String cpf;
+    private int cpf;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<VeiculoModel> veiculos;
@@ -23,7 +23,8 @@ public class ClienteModel extends PessoaBaseModel {
     public ClienteModel() {
     }
 
-    public ClienteModel(PessoaEnum tipoPessoa, String nome, String cpf, String email, List<TelefoneModel> telefones, List<EnderecoModel> enderecos, List<VeiculoModel> veiculos) {
+    public ClienteModel(PessoaEnum tipoPessoa, String nome, String cpf, String email, List<TelefoneModel> telefones,
+            List<EnderecoModel> enderecos, List<VeiculoModel> veiculos) {
         super(tipoPessoa, nome, email, telefones, enderecos);
         this.cpf = cpf;
         this.veiculos = veiculos;
